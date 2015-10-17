@@ -1,4 +1,4 @@
-var PORT_NUMBER = 1337;
+var PORT_NUMBER = 8080;
 var NAME_LENGTH_LIMIT = 16;
 
 console.log(".:Balls Server:.");
@@ -24,7 +24,15 @@ var server = http.createServer(function(request, response) {
 			response.end();
 		});
 	} else if (request.url.indexOf('.css') != -1) {
+		fs.readFile("./" + request.url, function(err, script) {
+			if (err) {
+				throw err;
+			}
 
+			response.writeHeader(200, {"Content-Type": "text/css"});
+			response.write(script);
+			response.end();
+		});
 	} else if (request.url.indexOf('.ico') != -1) {
 
 	} else {

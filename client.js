@@ -1,6 +1,6 @@
 var CL = (function () {
     // Private
-    var SERVER_ADDR = "ws://192.168.0.12:1337";
+    var SERVER_ADDR = "ws://lateralus.duckdns.org:80";
     var CHAT_MSG_LIMIT = 128;
 
     var connection;
