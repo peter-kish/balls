@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<head>
+		<title>Balls</title>
+	</head>
+	<body onload="FE.onPageLoad();">
+		<script type="text/javascript" src="sh_vector.js"></script>
+		<script type="text/javascript" src="sh_simulation.js"></script>
+		<script type="text/javascript" src="client.js"></script>
+		<script type="text/javascript" src="draw.js"></script>
+		<script type="text/javascript" src="simulation_render.js"></script>
+		<script type="text/javascript" src="frontend.js"></script>
+
+		<div id="screen_main">
+			<span id="span_name">Enter name:</span>
+			<br/>
+			<input id="input_name" type="text" onkeydown="FE.handleNameKeyPress(event)">
+			<button id="button_main_ok" type="button" onclick="FE.setName()">Connect</button><br/>
+			<button id="button_main_host" type="button" onclick="FE.hostMenu()">Host</button>
+			<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/><br/>
+			<span><b>Online Players:</b></span><br/>
+			<table id = "table_main_players">
+			</table>
+		</div>
+		<div id="screen_host">
+			<span>Waiting for a player...</span>
+			<br/>
+			<button id="button_host_back" type="button" onclick="FE.mainMenu()">Back</button>
+		</div>
+		<div id="screen_join">
+			<span>Select a player to join</span>
+			<br/>
+			<select id="list_join_clients" size="20"></select>
+			<br/>
+			<button id="button_join_join" type="button" onclick="FE.joinClient()">Join</button>
+			<button id="button_join_refresh" type="button" onclick="FE.joinRefresh()">Refresh</button>
+			<button id="button_join_back" type="button" onclick="FE.mainMenu()">Back</button>
+		</div>
+		<div id="screen_game">
+			<canvas id="game_canvas" width="480" height="640"></canvas>
+			<textarea id="text_game_chatbox" rows="20" cols="50" disabled="true"></textarea>
+			<br/>
+			<input id="input_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
+			<button id="button_game_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+			<br/>
+			<button id="button_game_back" type="button" onclick="FE.mainMenu()">Back</button>
+		</div>
+	</body>
+</html>
