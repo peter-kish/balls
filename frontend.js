@@ -1,6 +1,11 @@
 var FE = (function () {
     // Private
 
+    var gameFrame = {
+    	width: 480,
+    	height: 640
+    }
+
     function getSafeString(s) {
         var lt = /</g,
         gt = />/g,
@@ -79,18 +84,25 @@ var FE = (function () {
     function startGame(id1, id2) {
         hideAllMenus();
         showElement("screen_game", true);
+        resizeCanvas();
         SIMR.start(document.getElementById("game_canvas"));
     }
 
     function canvasClick(e) {
-        var x = e.pageX - this.offsetLeft;
-        var y = e.pageY - this.offsetTop;
+        var rect = this.getBoundingClientRect();
+        var x = e.pageX - rect.left;
+        var y = e.pageY - rect.top;
+        x /= CDRAW.getDrawRatio();
+        y /= CDRAW.getDrawRatio();
         CL.playTurn(x, y);
     }
 
     function canvasMouseMove(e) {
-        var x = e.pageX - this.offsetLeft;
-        var y = e.pageY - this.offsetTop;
+        var rect = this.getBoundingClientRect();
+        var x = e.pageX - rect.left;
+        var y = e.pageY - rect.top;
+        x /= CDRAW.getDrawRatio();
+        y /= CDRAW.getDrawRatio();
         SIMR.setMouseCoords(x, y);
     }
 
@@ -112,6 +124,26 @@ var FE = (function () {
         textArea.scrollTop = textArea.scrollHeight;
     }
 
+    function resizeCanvas() {
+        var canvas = document.getElementById("game_canvas");
+        var container = document.getElementById("game_canvas_container");
+        var input = document.getElementById("game_input_area");
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+
+        if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
+        	CDRAW.setDrawRatio(canvas.height / gameFrame.height);
+        } else {
+        	CDRAW.setDrawRatio(canvas.width / gameFrame.width);
+        }
+        canvas.width = CDRAW.getDrawRatio() * gameFrame.width;
+        canvas.height = CDRAW.getDrawRatio() * gameFrame.height;
+    }
+
+    function onWindowResize(e) {
+        resizeCanvas();
+    }
+
     // Public
 
     var module = {};
@@ -123,9 +155,10 @@ var FE = (function () {
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
-        var canvas = document.getElementById("game_canvas");
+        var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('click', canvasClick, false);
         canvas.addEventListener('mousemove', canvasMouseMove);
+        window.onresize = onWindowResize;
     }
 
     module.setName = function() {
