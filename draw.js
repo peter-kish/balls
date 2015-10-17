@@ -14,6 +14,10 @@ var CDRAW = (function () {
 		drawRatio = ratio;
 	}
 
+	module.getDrawRatio = function() {
+		return drawRatio;
+	}
+
 	module.setAlpha = function(alpha) {
 		context.globalAlpha = alpha;
 	}
@@ -140,6 +144,8 @@ var CDRAW = (function () {
 	}
 
 	module.drawImage = function(image, x, y, hflip, vflip) {
+		x *= drawRatio;
+		y *= drawRatio;
 		if (!image)
 			return;
 
@@ -168,6 +174,10 @@ var CDRAW = (function () {
 	}
 
 	module.drawImageResized = function(image, x, y, w, h, hflip, vflip) {
+		x *= drawRatio;
+		y *= drawRatio;
+		w *= drawRatio;
+		h *= drawRatio;
 		if (!image)
 			return;
 
@@ -199,6 +209,10 @@ var CDRAW = (function () {
 
 	module.drawImageCropped = function(image, sourceX, sourceY, sourceW, sourceH,
 		destX, destY, destW, destH, hflip, vflip) {
+		destX *= drawRatio;
+		destY *= drawRatio;
+		destW *= drawRatio;
+		destH *= drawRatio;
 		if (!image)
 			return;
 
