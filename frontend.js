@@ -1,6 +1,8 @@
 var FE = (function () {
     // Private
 
+    var CHAT_HIDE_TIME = 4000;
+
     var gameFrame = {
     	width: 480,
     	height: 640
@@ -32,8 +34,8 @@ var FE = (function () {
             enableElement("button_main_join", false);
             enableElement("button_main_ok", false);
         }
-        var textArea = document.getElementById("text_game_chatbox");
-        textArea.value = "";
+        var chatDiv = document.getElementById("game_chat_container");
+        chatDiv.innerHTML = "";
         SIMR.stop();
     }
 
@@ -106,22 +108,34 @@ var FE = (function () {
         SIMR.setMouseCoords(x, y);
     }
 
-    function displayChatMessage(name, message) {
-        var textArea = document.getElementById("text_game_chatbox");
-        var message = "[" + getSafeString(name) + "]: " + getSafeString(message);
-        if (textArea.value != "")
-            textArea.value += "\n";
-        textArea.value += message;
-        textArea.scrollTop = textArea.scrollHeight;
+    function adjustChatbox() {
+        var chatDiv = document.getElementById("game_chat_container");
+        var canvas = document.getElementById("game_canvas");
+        while (chatDiv.offsetHeight > canvas.offsetHeight) {
+            chatDiv.removeChild(chatDiv.childNodes[0]);
+        }
     }
 
+    var chatIntervalHandle = null;
     function displayInfoMessage(message) {
-        var textArea = document.getElementById("text_game_chatbox");
-        var message = getSafeString(message);
-        if (textArea.value != "")
-            textArea.value += "\n";
-        textArea.value += message;
-        textArea.scrollTop = textArea.scrollHeight;
+        showElement("game_chat_container", true);
+        var chatDiv = document.getElementById("game_chat_container");
+        if (chatDiv.innerHTML != "")
+            chatDiv.innerHTML += "<br/>"
+        chatDiv.innerHTML += "<span>" + message + "</span>";
+        adjustChatbox();
+        if (chatIntervalHandle) window.clearInterval(chatIntervalHandle);
+        chatIntervalHandle = window.setInterval(hideChat, CHAT_HIDE_TIME);
+    }
+
+    function displayChatMessage(name, message) {
+        var message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+        displayInfoMessage(message);
+    }
+
+    function hideChat() {
+        showElement("game_chat_container", false);
+        window.clearInterval(chatIntervalHandle);
     }
 
     function resizeCanvas() {
@@ -142,6 +156,7 @@ var FE = (function () {
 
     function onWindowResize(e) {
         resizeCanvas();
+        adjustChatbox();
     }
 
     // Public
