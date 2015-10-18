@@ -134,13 +134,13 @@ var CL = (function () {
                         break;
                     case "turn":
                         var client = getClient(json.msgData.id);
-                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ")");
+                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ") - " + SIM.getStrengthString(json.msgData.strength));
                         if (module.simulation) {
                             if (client.id != module.clientId) {
                                 if (module.latestServerState) {
                                     SIM.setState(module.simulation, module.latestServerState);
                                 }
-                                SIM.turn(module.simulation, json.msgData.id, json.msgData.x, json.msgData.y);
+                                SIM.turn(module.simulation, json.msgData.id, json.msgData.x, json.msgData.y, json.msgData.strength);
                             }
                             module.latestServerState = json.msgData.result;
                         }
@@ -187,11 +187,11 @@ var CL = (function () {
             connection.send(JSON.stringify({msgType: "idle"}));
     }
 
-    module.playTurn = function (x, y) {
+    module.playTurn = function (x, y, strength) {
         if (module.connected) {
-            connection.send(JSON.stringify({msgType: "turn", msgData: {x: x, y: y}}));
+            connection.send(JSON.stringify({msgType: "turn", msgData: {x: x, y: y, strength: strength}}));
             if (module.simulation)
-                SIM.turn(module.simulation, module.clientId, x, y);
+                SIM.turn(module.simulation, module.clientId, x, y, strength);
         }
     }
 

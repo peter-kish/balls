@@ -162,9 +162,12 @@
         return null;
     };
 
-    Simulation.prototype.kickBall = function (ball, x, y) {
+    Simulation.prototype.kickBall = function (ball, x, y, strength) {
         var mousePos = new V2D.Vector2d(x, y);
-        ball.applyForce(V2D.multiply(V2D.normalized(V2D.add(mousePos, V2D.multiply(ball.position, -1))), movementForce));
+        if (strength != 0 && strength != 1 && strength != 2)
+            strength = 2
+        var force = (movementForce / 3) * (strength + 1);
+        ball.applyForce(V2D.multiply(V2D.normalized(V2D.add(mousePos, V2D.multiply(ball.position, -1))), force));
     };
 
     Simulation.prototype.areAllBallsIdle = function () {
@@ -290,9 +293,9 @@
         return new Simulation(id1, id2);
     }
 
-    exports.simulateTurn = function(sim, id, x, y) {
+    exports.simulateTurn = function(sim, id, x, y, strength) {
         if (exports.isTurnValid(sim, id, x, y)) {
-            sim.kickBall(sim.playerBall[sim.currentTurn], x, y);
+            sim.kickBall(sim.playerBall[sim.currentTurn], x, y, strength);
             var tickCount = 0;
             var victory = -1;
             while (!sim.areAllBallsIdle()) {
@@ -337,9 +340,9 @@
         sim.playBall.position.set(state.ballPos);
     }
 
-    exports.turn = function(sim, id, x, y) {
-        if (exports.isTurnValid(sim, id, x, y)) {
-            sim.kickBall(sim.playerBall[sim.currentTurn], x, y);
+    exports.turn = function(sim, id, x, y, strength) {
+        if (exports.isTurnValid(sim, id, x, y, strength)) {
+            sim.kickBall(sim.playerBall[sim.currentTurn], x, y, strength);
             sim.switchTurns();
 
             return true;
@@ -347,11 +350,27 @@
         return false;
     }
 
-    exports.isTurnValid = function(sim, id, x, y) {
+    exports.isTurnValid = function(sim, id, x, y, strength) {
         if (sim.playerBall[sim.currentTurn].id == id && sim.areAllBallsIdle()) {
             return true
         }
         return false;
+    }
+
+    exports.getStrengthString = function(strength) {
+        switch (strength) {
+            case 0:
+                return "Weak";
+                break;
+            case 1:
+                return "Medium";
+                break;
+            case 2:
+                return "Strong";
+                break;
+            default:
+                return "Strong";
+        }
     }
 
 })(typeof exports === 'undefined'? this['SIM']={}: exports);

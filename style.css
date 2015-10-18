@@ -17,25 +17,29 @@ html, body {
     background-color: #FFFFFF;
 }
 
+#game_canvas_wrapper {
+    display: inline-block;
+}
+
 #game_canvas_container {
     position: absolute;
-    top: 30px;
+    top: 60px;
     bottom: 0;
     left: 0;
     right: 0;
 }
 
 #game_chat_container {
-    //visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 5;
     opacity: 0.5;
+    overflow: hidden;
+    width: 100%;
 }
 
 #game_input_area {
-    //visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;

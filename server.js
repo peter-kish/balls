@@ -86,7 +86,7 @@ function handleWsRequest(request) {
                     handleClientIdle(id);
                     break;
                 case "turn":
-                    handleClientTurn(id, json.msgData.x, json.msgData.y);
+                    handleClientTurn(id, json.msgData.x, json.msgData.y, json.msgData.strength);
                     break;
                 case "chat":
                     handleClientChat(id, json.msgData.message);
@@ -174,16 +174,16 @@ function handleClientIdle(id) {
     }
 }
 
-function handleClientTurn(id, x, y) {
+function handleClientTurn(id, x, y, strength) {
     var clientData = getClient(id);
     if (clientData && clientData.state == "playing") {
         var game = getGameContainingClient(id);
-		if (game && sim.isTurnValid(game.simulation, id, x, y)) {
-			console.log(getClient(id).name + " played (" + x + "," + y + ")");
+		if (game && sim.isTurnValid(game.simulation, id, x, y, strength)) {
+			console.log(getClient(id).name + " played (" + x + "," + y + ") - " + sim.getStrengthString(strength));
         	var opponentId = getOpponentId(id);
-        	var state = sim.simulateTurn(game.simulation, id, x, y);
-        	unicast(id, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, result: state}}));
-        	unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, result: state}}));
+        	var state = sim.simulateTurn(game.simulation, id, x, y, strength);
+        	unicast(id, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: state}}));
+        	unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: state}}));
 		}
     }
 }

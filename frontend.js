@@ -96,7 +96,8 @@ var FE = (function () {
         var y = e.pageY - rect.top;
         x /= CDRAW.getDrawRatio();
         y /= CDRAW.getDrawRatio();
-        CL.playTurn(x, y);
+        var select = document.getElementById("list_game_strength");
+        CL.playTurn(x, y, parseInt(select.options[select.selectedIndex].value));
     }
 
     function canvasMouseMove(e) {
@@ -152,6 +153,9 @@ var FE = (function () {
         }
         canvas.width = CDRAW.getDrawRatio() * gameFrame.width;
         canvas.height = CDRAW.getDrawRatio() * gameFrame.height;
+
+        var chat = document.getElementById("game_chat_container");
+        chat.style.maxWidth = CDRAW.getDrawRatio() * gameFrame.width + "px";
     }
 
     function onWindowResize(e) {
