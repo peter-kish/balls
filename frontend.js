@@ -1,7 +1,7 @@
 var FE = (function () {
     // Private
 
-    var CHAT_HIDE_TIME = 4000;
+    var CHAT_HIDE_TIME = 15000;
 
     var gameFrame = {
     	width: 480,
