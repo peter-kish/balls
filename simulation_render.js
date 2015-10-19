@@ -24,6 +24,7 @@ var SIMR = (function () {
     }
 
     var mouseX = 0, mouseY = 0;
+    var mouseDown = false;
     var playerName = [];
 
     function initAnimationFrame() {
@@ -64,7 +65,7 @@ var SIMR = (function () {
     }
 
     function renderBall(ball, color, name) {
-        if (ball.marked && ball.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
+        if (mouseDown && ball.marked && ball.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
             //drawCircleOutline(this.position.x, this.position.y, this.radius + 3, 2, this.color);
             CDRAW.setAlpha(0.25);
             CDRAW.setLineCap("round");
@@ -134,6 +135,10 @@ var SIMR = (function () {
     module.setMouseCoords = function(x, y) {
         mouseX = x;
         mouseY = y;
+    }
+
+    module.setMouseDownState = function(state) {
+        mouseDown = state;
     }
 
     return module;

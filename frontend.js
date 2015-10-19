@@ -87,26 +87,73 @@ var FE = (function () {
         hideAllMenus();
         showElement("screen_game", true);
         resizeCanvas();
+        document.getElementById("list_game_strength").value = "2";
         SIMR.start(document.getElementById("game_canvas"));
     }
 
+    function getMouseCoords(event, element) {
+        var result = {};
+        var rect = element.getBoundingClientRect();
+        result.x = event.pageX - rect.left;
+        result.y = event.pageY - rect.top;
+        result.x /= CDRAW.getDrawRatio();
+        result.y /= CDRAW.getDrawRatio();
+        return result;
+    }
+
     function canvasClick(e) {
-        var rect = this.getBoundingClientRect();
-        var x = e.pageX - rect.left;
-        var y = e.pageY - rect.top;
-        x /= CDRAW.getDrawRatio();
-        y /= CDRAW.getDrawRatio();
+        var mouse = getMouseCoords(e, this);
         var select = document.getElementById("list_game_strength");
-        CL.playTurn(x, y, parseInt(select.options[select.selectedIndex].value));
+        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
     }
 
     function canvasMouseMove(e) {
-        var rect = this.getBoundingClientRect();
-        var x = e.pageX - rect.left;
-        var y = e.pageY - rect.top;
-        x /= CDRAW.getDrawRatio();
-        y /= CDRAW.getDrawRatio();
-        SIMR.setMouseCoords(x, y);
+        var mouse = getMouseCoords(e, this);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
+    }
+
+    function canvasMouseDown(e) {
+        SIMR.setMouseDownState(true);
+    }
+
+    function canvasMouseUp(e) {
+        var mouse = getMouseCoords(e, this);
+        var select = document.getElementById("list_game_strength");
+        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
+        SIMR.setMouseDownState(false);
+    }
+
+    function getTouchCoords(event, element) {
+        var touchobj = event.changedTouches[0];
+        var result = {};
+        var rect = element.getBoundingClientRect();
+        result.x = touchobj.clientX - rect.left;
+        result.y = touchobj.clientY - rect.top;
+        result.x /= CDRAW.getDrawRatio();
+        result.y /= CDRAW.getDrawRatio();
+        return result;
+    }
+
+    function canvasTouchMove(e) {
+        var mouse = getTouchCoords(e, this);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
+        e.preventDefault()
+    }
+
+    function canvasTouchDown(e) {
+        var mouse = getTouchCoords(e, this);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
+        SIMR.setMouseDownState(true);
+        e.preventDefault();
+    }
+
+    function canvasTouchUp(e) {
+        var mouse = getTouchCoords(e, this);
+        var select = document.getElementById("list_game_strength");
+        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
+        SIMR.setMouseDownState(false);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
+        e.preventDefault();
     }
 
     function adjustChatbox() {
@@ -175,8 +222,13 @@ var FE = (function () {
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
         var canvas = document.getElementById("game_input_area");
-        canvas.addEventListener('click', canvasClick, false);
+        // canvas.addEventListener('click', canvasClick, false);
         canvas.addEventListener('mousemove', canvasMouseMove);
+        canvas.addEventListener('mousedown', canvasMouseDown);
+        canvas.addEventListener('mouseup', canvasMouseUp);
+        canvas.addEventListener('touchmove', canvasTouchMove);
+        canvas.addEventListener('touchstart', canvasTouchDown);
+        canvas.addEventListener('touchend', canvasTouchUp);
         window.onresize = onWindowResize;
     }
 
