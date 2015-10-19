@@ -1,4 +1,5 @@
 var CL = (function () {
+    SIM.onTurnStart = onTurnStart;
     // Private
     var SERVER_ADDR = "ws://lateralus.duckdns.org:80";
     var CHAT_MSG_LIMIT = 128;
@@ -37,8 +38,12 @@ var CL = (function () {
         clientList = [];
     }
 
-    // Public
+    function onTurnStart(id) {
+        if (module.onTurnStart) module.onTurnStart(id);
+    }
 
+    // Public
+    
     var module = {};
 
     module.onConnectionSuccessfull = null;
@@ -49,6 +54,7 @@ var CL = (function () {
     module.onGameStarted = null;
     module.onChatMessage = null;
     module.onInfoMessage = null;
+    module.onTurnStart = null;
 
     module.clientName = "";
     module.clientId = "";

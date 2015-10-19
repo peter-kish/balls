@@ -114,6 +114,7 @@
         this.playerBall = [];
         this.playerScore = [];
         this.currentTurn = 0;
+        this.idle = true;
 
         this.playerBall[0] = this.createBall(id1, simFrame.width / 2, simFrame.height * 3 / 4, ballRadius);
         this.playerBall[0].marked = true;
@@ -273,7 +274,25 @@
             this.resetPlayers();
             this.playerScore[victory]++;
         }
+
+        if (this.areAllBallsIdle()) {
+            if (!this.idle) {
+                this.idle = true;
+                this.onStateChanged(this.idle);
+            }
+        } else {
+            if (this.idle) {
+                this.idle = false;
+                this.onStateChanged(this.idle);
+            }
+        }
+
         return victory;
+    };
+
+    Simulation.prototype.onStateChanged = function (idle) {
+        if (idle)
+            this.switchTurns();
     };
 
     Simulation.prototype.switchTurns = function () {
@@ -285,12 +304,17 @@
         this.playerBall[0].marked = false;
         this.playerBall[1].marked = false;
         this.playerBall[this.currentTurn].marked = true;
+        if (exports.onTurnStart) exports.onTurnStart(this.playerBall[this.currentTurn].id);
     };
 
     // Public
 
+    exports.onTurnStart = null;
+
     exports.createSimulation = function(id1, id2) {
-        return new Simulation(id1, id2);
+        var sim = new Simulation(id1, id2);
+        if (exports.onTurnStart) exports.onTurnStart(sim.playerBall[sim.currentTurn].id);
+        return sim;
     }
 
     exports.simulateTurn = function(sim, id, x, y, strength) {
@@ -302,7 +326,6 @@
                 victory = sim.update();
                 tickCount++;
             }
-            sim.switchTurns();
 
             var state = exports.getState(sim);
             state.tickCount = tickCount;
@@ -343,7 +366,6 @@
     exports.turn = function(sim, id, x, y, strength) {
         if (exports.isTurnValid(sim, id, x, y, strength)) {
             sim.kickBall(sim.playerBall[sim.currentTurn], x, y, strength);
-            sim.switchTurns();
 
             return true;
         }

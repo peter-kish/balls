@@ -1,4 +1,5 @@
 var SIMR = (function () {
+    CL.onTurnStart = onTurnStart;
     // Private
     var animationFrameRequest = null;
     // Constants
@@ -115,6 +116,10 @@ var SIMR = (function () {
                 3,
                 ballOutlineColor);
     	}
+    }
+
+    function onTurnStart(id) {
+        console.log(CL.getClientName(id) + "'s turn");
     }
 
     // Public
