@@ -344,6 +344,16 @@
         sim.update();
     }
 
+    exports.stepUntilFinished = function(sim) {
+        while (!sim.areAllBallsIdle()) {
+            sim.update();
+        }
+    }
+
+    exports.isIdle = function(sim) {
+        return sim.areAllBallsIdle();
+    }
+
     exports.getState = function (sim) {
         var state = {};
         state.p1Pos = new V2D.Vector2d(sim.playerBall[0].position.x, sim.playerBall[0].position.y);

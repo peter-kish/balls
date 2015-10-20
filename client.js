@@ -6,6 +6,7 @@ var CL = (function () {
 
     var connection;
     var clientList = [];
+    var missedTurnMsg = null;
 
     function addClient(id, name) {
         if (getClient(id))
@@ -40,10 +41,15 @@ var CL = (function () {
 
     function onTurnStart(id) {
         if (module.onTurnStart) module.onTurnStart(id);
+        if (missedTurnMsg) {
+            SIM.setState(module.simulation, missedTurnMsg.origin);
+            SIM.turn(module.simulation, missedTurnMsg.id, missedTurnMsg.x, missedTurnMsg.y, missedTurnMsg.strength);
+            missedTurnMsg = null;
+        }
     }
 
     // Public
-    
+
     var module = {};
 
     module.onConnectionSuccessfull = null;
@@ -64,7 +70,6 @@ var CL = (function () {
     module.authenticated = false;
 
     module.simulation = null;
-    module.latestServerState = null;
 
     module.connect = function(onConectedCallback) {
         module.onConnectionSuccessfull = onConectedCallback;
@@ -134,22 +139,22 @@ var CL = (function () {
                         if (json.msgData.player1 == module.clientId || json.msgData.player2 == module.clientId) {
                             module.opponenId = (json.msgData.player1 == module.clientId) ? json.msgData.player2 : json.msgData.player1;
                             module.simulation = new SIM.createSimulation(json.msgData.player1, json.msgData.player2);
-                            module.latestServerState = null;
                             if (module.onGameStarted) module.onGameStarted();
                         }
                         break;
                     case "turn":
                         var client = getClient(json.msgData.id);
-                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ") - " + SIM.getStrengthString(json.msgData.strength));
-                        if (module.simulation) {
-                            if (client.id != module.clientId) {
-                                if (module.latestServerState) {
-                                    SIM.setState(module.simulation, module.latestServerState);
+                        if (client.id != module.clientId) {
+                            if (module.simulation) {
+                                if (!SIM.isIdle(module.simulation)) {
+                                    missedTurnMsg = json.msgData;
+                                } else {
+                                    SIM.setState(module.simulation, json.msgData.origin);
+                                    SIM.turn(module.simulation, json.msgData.id, json.msgData.x, json.msgData.y, json.msgData.strength);
                                 }
-                                SIM.turn(module.simulation, json.msgData.id, json.msgData.x, json.msgData.y, json.msgData.strength);
                             }
-                            module.latestServerState = json.msgData.result;
                         }
+                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ") - " + SIM.getStrengthString(json.msgData.strength));
                         //console.log(JSON.stringify(json.msgData.result));
                         break;
                     case "chat":

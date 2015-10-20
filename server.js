@@ -181,9 +181,10 @@ function handleClientTurn(id, x, y, strength) {
 		if (game && sim.isTurnValid(game.simulation, id, x, y, strength)) {
 			console.log(getClient(id).name + " played (" + x + "," + y + ") - " + sim.getStrengthString(strength));
         	var opponentId = getOpponentId(id);
-        	var state = sim.simulateTurn(game.simulation, id, x, y, strength);
-        	unicast(id, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: state}}));
-        	unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: state}}));
+			var originalState = sim.getState(game.simulation);
+        	var resultState = sim.simulateTurn(game.simulation, id, x, y, strength);
+        	unicast(id, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
+        	unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
 		}
     }
 }
