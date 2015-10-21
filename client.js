@@ -154,7 +154,7 @@ var CL = (function () {
                                 }
                             }
                         }
-                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ") - " + SIM.getStrengthString(json.msgData.strength));
+                        console.log(client.name + " played (" + json.msgData.x + "," + json.msgData.y + ") - " + json.msgData.strength);
                         //console.log(JSON.stringify(json.msgData.result));
                         break;
                     case "chat":

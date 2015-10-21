@@ -30,6 +30,7 @@ var SIMR = (function () {
     var mouseX = 0, mouseY = 0;
     var mouseDown = false;
     var playerName = [];
+    var strength = 0.0;
 
     function initAnimationFrame() {
         var lastTime = 0;
@@ -73,7 +74,7 @@ var SIMR = (function () {
             //drawCircleOutline(this.position.x, this.position.y, this.radius + 3, 2, this.color);
             CDRAW.setAlpha(0.25);
             CDRAW.setLineCap("round");
-            CDRAW.drawLine(ball.position.x, ball.position.y, mouseX, mouseY, ball.radius * 2, '#000000');
+            CDRAW.drawLine(ball.position.x, ball.position.y, mouseX, mouseY, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
             CDRAW.setAlpha(1.0);
             CDRAW.setLineCap("butt");
         }
@@ -159,6 +160,10 @@ var SIMR = (function () {
 
     module.setMouseDownState = function(state) {
         mouseDown = state;
+    }
+
+    module.setStrength = function(str) {
+        strength = str;
     }
 
     return module;

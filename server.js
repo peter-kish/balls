@@ -179,7 +179,7 @@ function handleClientTurn(id, x, y, strength) {
     if (clientData && clientData.state == "playing") {
         var game = getGameContainingClient(id);
 		if (game && sim.isTurnValid(game.simulation, id, x, y, strength)) {
-			console.log(getClient(id).name + " played (" + x + "," + y + ") - " + sim.getStrengthString(strength));
+			console.log(getClient(id).name + " played (" + x + "," + y + ") - " + strength);
         	var opponentId = getOpponentId(id);
 			var originalState = sim.getState(game.simulation);
         	var resultState = sim.simulateTurn(game.simulation, id, x, y, strength);

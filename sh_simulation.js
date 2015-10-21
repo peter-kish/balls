@@ -165,9 +165,9 @@
 
     Simulation.prototype.kickBall = function (ball, x, y, strength) {
         var mousePos = new V2D.Vector2d(x, y);
-        if (strength != 0 && strength != 1 && strength != 2)
-            strength = 2
-        var force = (movementForce / 3) * (strength + 1);
+        strength = Math.max(0, strength);
+        strength = Math.min(1.0, strength);
+        var force = movementForce * strength;
         ball.applyForce(V2D.multiply(V2D.normalized(V2D.add(mousePos, V2D.multiply(ball.position, -1))), force));
     };
 
@@ -387,22 +387,6 @@
             return true
         }
         return false;
-    }
-
-    exports.getStrengthString = function(strength) {
-        switch (strength) {
-            case 0:
-                return "Weak";
-                break;
-            case 1:
-                return "Medium";
-                break;
-            case 2:
-                return "Strong";
-                break;
-            default:
-                return "Strong";
-        }
     }
 
 })(typeof exports === 'undefined'? this['SIM']={}: exports);

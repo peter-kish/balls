@@ -2,6 +2,7 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
+    var MAX_STRENGTH_DISTANCE = 200;
 
     var gameFrame = {
     	width: 480,
@@ -87,7 +88,6 @@ var FE = (function () {
         hideAllMenus();
         showElement("screen_game", true);
         resizeCanvas();
-        document.getElementById("list_game_strength").value = "2";
         SIMR.start(document.getElementById("game_canvas"));
     }
 
@@ -104,17 +104,20 @@ var FE = (function () {
     function canvasMouseMove(e) {
         var mouse = getMouseCoords(e, this);
         SIMR.setMouseCoords(mouse.x, mouse.y);
+        SIMR.setStrength(getStrength(mouse));
     }
 
     function canvasMouseDown(e) {
+        var mouse = getMouseCoords(e, this);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
         SIMR.setMouseDownState(true);
     }
 
     function canvasMouseUp(e) {
         var mouse = getMouseCoords(e, this);
-        var select = document.getElementById("list_game_strength");
-        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
+        CL.playTurn(mouse.x, mouse.y, getStrength(mouse));
         SIMR.setMouseDownState(false);
+        SIMR.setMouseCoords(mouse.x, mouse.y);
     }
 
     function getTouchCoords(event, element) {
@@ -132,6 +135,7 @@ var FE = (function () {
         var mouse = getTouchCoords(e, this);
         SIMR.setMouseCoords(mouse.x, mouse.y);
         e.preventDefault()
+        SIMR.setStrength(getStrength(mouse));
     }
 
     function canvasTouchDown(e) {
@@ -143,11 +147,20 @@ var FE = (function () {
 
     function canvasTouchUp(e) {
         var mouse = getTouchCoords(e, this);
-        var select = document.getElementById("list_game_strength");
-        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
+        CL.playTurn(mouse.x, mouse.y, getStrength(mouse));
         SIMR.setMouseDownState(false);
         SIMR.setMouseCoords(mouse.x, mouse.y);
         e.preventDefault();
+    }
+
+    function getStrength(mouse) {
+        var currentPlayerPos = CL.simulation.playerBall[CL.simulation.currentTurn].position;
+        var dragDistance = V2D.distance(currentPlayerPos, new V2D.Vector2d(mouse.x, mouse.y));
+        var strength = dragDistance;
+        strength /= CDRAW.getDrawRatio();
+        strength = Math.min(MAX_STRENGTH_DISTANCE / CDRAW.getDrawRatio(), strength);
+        strength /= MAX_STRENGTH_DISTANCE / CDRAW.getDrawRatio();
+        return strength;
     }
 
     function adjustChatbox() {

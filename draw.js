@@ -250,5 +250,9 @@ var CDRAW = (function () {
 		}
 	}
 
+	module.rgb = function(r, g, b) {
+		return "rgb(" + Math.floor(r*255) + "," + Math.floor(g*255) + "," + Math.floor(b*255) + ")"
+	}
+
 	return module;
 }());
