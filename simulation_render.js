@@ -18,6 +18,9 @@ var SIMR = (function () {
     var linesColor = '#d7d7d7';
     var goalPostRadius = 10;
     var goalSize = 200;
+    var notificationFader = new FADER.Fader();
+    var notificationFadeTime = 2000;
+    var notificationMessage = "";
 
     var gameFrame = {
     	width: 480,
@@ -116,10 +119,22 @@ var SIMR = (function () {
                 3,
                 ballOutlineColor);
     	}
+
+        if (!notificationFader.isTimeUp()) {
+            CDRAW.setAlpha(1.0 - notificationFader.getProgress());
+            CDRAW.drawText(gameFrame.width/2, gameFrame.height/2, notificationMessage, 'Calibri', 32, '#000000', 'bold', 'center', 'middle');
+            CDRAW.setAlpha(1.0);
+        }
     }
 
     function onTurnStart(id) {
         console.log(CL.getClientName(id) + "'s turn");
+        showNotification(CL.getClientName(id) + "'s turn");
+    }
+
+    function showNotification(message) {
+        notificationFader.start(notificationFadeTime);
+        notificationMessage = message;
     }
 
     // Public
