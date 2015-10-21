@@ -101,12 +101,6 @@ var FE = (function () {
         return result;
     }
 
-    function canvasClick(e) {
-        var mouse = getMouseCoords(e, this);
-        var select = document.getElementById("list_game_strength");
-        CL.playTurn(mouse.x, mouse.y, parseInt(select.options[select.selectedIndex].value));
-    }
-
     function canvasMouseMove(e) {
         var mouse = getMouseCoords(e, this);
         SIMR.setMouseCoords(mouse.x, mouse.y);
@@ -222,7 +216,6 @@ var FE = (function () {
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
         var canvas = document.getElementById("game_input_area");
-        // canvas.addEventListener('click', canvasClick, false);
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);
         canvas.addEventListener('mouseup', canvasMouseUp);
