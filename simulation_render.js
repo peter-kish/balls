@@ -202,7 +202,7 @@ var SIMR = (function () {
         canvasMouse.y = m.y;
         mouse.x = m.x;
         mouse.y = m.y;
-        mouse.add(camera);
+        mouse.add(V2D.multiply(camera, 1/CDRAW.getDrawRatio()));
         strength = module.getStrength();
     }
 
