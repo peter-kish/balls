@@ -8,8 +8,8 @@ var SIMR = (function () {
     var playerOutlineColor = [];
     playerColor[0] = '#4486f6'
     playerColor[1] = '#d84a38'
-    playerOutlineColor[0] = '#004196'
-    playerOutlineColor[1] = '#850007'
+    playerOutlineColor[0] = '#225ec3'
+    playerOutlineColor[1] = '#b32e1d'
     var ballColor = '#FFFFFF';
     var ballOutlineColor = '#6e6e6e';
     var goalPostColor = '#6e6e6e';
@@ -21,16 +21,19 @@ var SIMR = (function () {
     var notificationFader = new FADER.Fader();
     var notificationFadeTime = 2000;
     var notificationMessage = "";
+    var markerTime = 400; // ms
 
     var gameFrame = {
     	width: 480,
     	height: 640
     }
 
-    var mouseX = 0, mouseY = 0;
+    var mouse = new V2D.Vector2d(0, 0);
     var mouseDown = false;
     var playerName = [];
     var strength = 0.0;
+    var markerFader = new FADER.Fader();
+    var markerSign = 1;
 
     function initAnimationFrame() {
         var lastTime = 0;
@@ -69,16 +72,27 @@ var SIMR = (function () {
         CDRAW.drawRect(0, 0, gameFrame.width, gameFrame.height, grassColor);
     }
 
-    function renderBall(ball, color, name) {
+    function renderBall(ball, color, name, outlineColor) {
+        if (!outlineColor) outlineColor = '#000000'
         if (mouseDown && ball.marked && ball.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
-            //drawCircleOutline(this.position.x, this.position.y, this.radius + 3, 2, this.color);
             CDRAW.setAlpha(0.25);
             CDRAW.setLineCap("round");
-            CDRAW.drawLine(ball.position.x, ball.position.y, mouseX, mouseY, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
+            CDRAW.drawLine(ball.position.x, ball.position.y, mouse.x, mouse.y, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
             CDRAW.setAlpha(1.0);
             CDRAW.setLineCap("butt");
         }
     	CDRAW.drawCircle(ball.position.x, ball.position.y, ball.radius, color);
+        if (ball.marked && CL.simulation.areAllBallsIdle()) {
+            if (markerFader.isTimeUp()) {
+                markerFader.start(markerTime);
+                markerSign *= -1;
+            }
+            var alpha = markerFader.getProgress();
+            if (markerSign < 0) {
+                alpha = 1.0 - alpha;
+            }
+            CDRAW.drawCircleOutline(ball.position.x, ball.position.y, ball.radius + 6 * alpha, 6, outlineColor);
+        }
         CDRAW.drawText(ball.position.x, ball.position.y, name, "Calibri", 12, nameColor, "bold", "center", "middle");
     }
 
@@ -109,8 +123,8 @@ var SIMR = (function () {
             }
         }
 
-        renderBall(CL.simulation.playerBall[0], playerColor[0], playerName[0]);
-        renderBall(CL.simulation.playerBall[1], playerColor[1], playerName[1]);
+        renderBall(CL.simulation.playerBall[0], playerColor[0], playerName[0], playerOutlineColor[0]);
+        renderBall(CL.simulation.playerBall[1], playerColor[1], playerName[1], playerOutlineColor[1]);
 
         if (CL.simulation.playBall) {
             renderBall(CL.simulation.playBall, ballColor, "");
@@ -131,6 +145,8 @@ var SIMR = (function () {
     function onTurnStart(id) {
         console.log(CL.getClientName(id) + "'s turn");
         showNotification(CL.getClientName(id) + "'s turn");
+        markerFader.start(markerTime);
+        markerSign = 1;
     }
 
     function showNotification(message) {
@@ -154,8 +170,8 @@ var SIMR = (function () {
     }
 
     module.setMouseCoords = function(x, y) {
-        mouseX = x;
-        mouseY = y;
+        mouse.x = x;
+        mouse.y = y;
     }
 
     module.setMouseDownState = function(state) {
