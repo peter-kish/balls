@@ -2,7 +2,6 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
-    var MAX_STRENGTH_DISTANCE = 200;
 
     var gameFrame = {
     	width: 480,
@@ -103,21 +102,20 @@ var FE = (function () {
 
     function canvasMouseMove(e) {
         var mouse = getMouseCoords(e, this);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
-        SIMR.setStrength(getStrength(mouse));
+        SIMR.setMouse(mouse);
     }
 
     function canvasMouseDown(e) {
         var mouse = getMouseCoords(e, this);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
+        SIMR.setMouse(mouse);
         SIMR.setMouseDownState(true);
     }
 
     function canvasMouseUp(e) {
         var mouse = getMouseCoords(e, this);
-        CL.playTurn(mouse.x, mouse.y, getStrength(mouse));
+        CL.playTurn(SIMR.getMouse().x, SIMR.getMouse().y, SIMR.getStrength(mouse));
         SIMR.setMouseDownState(false);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
+        SIMR.setMouse(mouse);
     }
 
     function getTouchCoords(event, element) {
@@ -132,35 +130,24 @@ var FE = (function () {
     }
 
     function canvasTouchMove(e) {
-        var mouse = getTouchCoords(e, this);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
+        var touch = getTouchCoords(e, this);
+        SIMR.setMouse(touch);
         e.preventDefault()
-        SIMR.setStrength(getStrength(mouse));
     }
 
     function canvasTouchDown(e) {
-        var mouse = getTouchCoords(e, this);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
+        var touch = getTouchCoords(e, this);
+        SIMR.setMouse(touch);
         SIMR.setMouseDownState(true);
         e.preventDefault();
     }
 
     function canvasTouchUp(e) {
-        var mouse = getTouchCoords(e, this);
-        CL.playTurn(mouse.x, mouse.y, getStrength(mouse));
+        var touch = getTouchCoords(e, this);
+        CL.playTurn(SIMR.getMouse().x, SIMR.getMouse().y, SIMR.getStrength(touch));
         SIMR.setMouseDownState(false);
-        SIMR.setMouseCoords(mouse.x, mouse.y);
+        SIMR.setMouse(touch);
         e.preventDefault();
-    }
-
-    function getStrength(mouse) {
-        var currentPlayerPos = CL.simulation.playerBall[CL.simulation.currentTurn].position;
-        var dragDistance = V2D.distance(currentPlayerPos, new V2D.Vector2d(mouse.x, mouse.y));
-        var strength = dragDistance;
-        strength /= CDRAW.getDrawRatio();
-        strength = Math.min(MAX_STRENGTH_DISTANCE / CDRAW.getDrawRatio(), strength);
-        strength /= MAX_STRENGTH_DISTANCE / CDRAW.getDrawRatio();
-        return strength;
     }
 
     function adjustChatbox() {

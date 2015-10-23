@@ -26,6 +26,14 @@ var CDRAW = (function () {
 		context.lineCap = linecap;
 	}
 
+	module.setOrigin = function(originX, originY) {
+		context.translate(originX, originY);
+	}
+
+	module.resetOrigin = function() {
+		context.setTransform(1, 0, 0, 1, 0, 0);
+	}
+
 	module.drawLine = function(x1, y1, x2, y2, width, color) {
 		x1 *= drawRatio;
 		y1 *= drawRatio;
