@@ -60,15 +60,15 @@ var CDRAW = (function () {
 		context.fill();
 	}
 
-	module.drawCircleOutline = function(x, y, r, width, color) {
+	module.drawCircleOutline = function(x, y, r, lineWidth, color) {
 		x *= drawRatio;
 		y *= drawRatio;
 		r *= drawRatio;
-		width *= drawRatio;
+		lineWidth *= drawRatio;
 
 		context.beginPath();
 		context.arc(x, y, r, 0, 2 * Math.PI, false);
-		context.lineWidth = width;
+		context.lineWidth = lineWidth;
 		context.strokeStyle = color;
 		context.stroke();
 	}
@@ -90,6 +90,7 @@ var CDRAW = (function () {
 		y *= drawRatio;
 		w *= drawRatio;
 		h *= drawRatio;
+		lineWidth *= drawRatio;
 
 		context.beginPath();
 		context.rect(x, y, w, h);

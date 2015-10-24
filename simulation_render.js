@@ -23,7 +23,7 @@ var SIMR = (function () {
     var notificationMessage = "";
     var markerTime = 400; // ms
 
-    var playfieldBorder = 20;
+    var playfieldBorder = 100;
     var cameraSpeed = 4;
 
     var MAX_STRENGTH_DISTANCE = 200;
@@ -82,9 +82,16 @@ var SIMR = (function () {
     function renderBall(ball, color, name, outlineColor) {
         if (!outlineColor) outlineColor = '#000000'
         if (mouseDown && ball.marked && ball.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
+            var target = new V2D.Vector2d(mouse.x, mouse.y);
+            if (target.distance(ball.position) > MAX_STRENGTH_DISTANCE) {
+                target = V2D.sub(mouse, ball.position);
+                target.normalize();
+                target.multiply(MAX_STRENGTH_DISTANCE);
+                target.add(ball.position);
+            }
             CDRAW.setAlpha(0.25);
             CDRAW.setLineCap("round");
-            CDRAW.drawLine(ball.position.x, ball.position.y, mouse.x, mouse.y, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
+            CDRAW.drawLine(ball.position.x, ball.position.y, target.x, target.y, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
             CDRAW.setAlpha(1.0);
             CDRAW.setLineCap("butt");
         }
@@ -109,18 +116,21 @@ var SIMR = (function () {
 
         if (mouseDown && CL.simulation.areAllBallsIdle()) {
             if (canvasMouse.x < playfieldBorder && camera.x > -gameFrame.width / 2) {
-                camera.x -= cameraSpeed;
+                camera.x -= cameraSpeed * ((playfieldBorder - canvasMouse.x) / playfieldBorder);
             } else if (canvasMouse.x > gameFrame.width - playfieldBorder && camera.x < gameFrame.width / 2) {
-                camera.x += cameraSpeed;
+                camera.x += cameraSpeed * ((canvasMouse.x - gameFrame.width + playfieldBorder) / playfieldBorder);
             }
             if (canvasMouse.y < playfieldBorder && camera.y > -gameFrame.height / 2) {
-                camera.y -= cameraSpeed;
+                camera.y -= cameraSpeed * ((playfieldBorder - canvasMouse.y) / playfieldBorder);
             } else if (canvasMouse.y > gameFrame.height - playfieldBorder && camera.y < gameFrame.height / 2) {
-                camera.y += cameraSpeed;
+                camera.y += cameraSpeed * ((canvasMouse.y - gameFrame.height + playfieldBorder) / playfieldBorder);
             }
         } else {
-            camera.x = 0;
-            camera.y = 0;
+            camera.multiply(0.75);
+            if (camera.length() < 0.1) {
+                camera.x = 0;
+                camera.y = 0;
+            }
         }
 
         CDRAW.setOrigin(-camera.x, -camera.y);
@@ -134,7 +144,7 @@ var SIMR = (function () {
     	CDRAW.drawCircle(gameFrame.width/2, gameFrame.height/2, 20, linesColor);
 
         // Draw the playfield border
-        CDRAW.drawRectOutline(-2, -2, gameFrame.width + 2, gameFrame.height + 2, 2, '#000000');
+        CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, goalPostColor);
 
         // Draw the score
     	CDRAW.setAlpha(0.5);
@@ -168,6 +178,7 @@ var SIMR = (function () {
             CDRAW.setAlpha(1.0);
         }
         CDRAW.resetOrigin();
+        CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, '#000000');
     }
 
     function onTurnStart(id) {
