@@ -16,7 +16,7 @@ var SIMR = (function () {
     var grassColor = '#f1f1f1';
     var nameColor = '#000000';
     var linesColor = '#d7d7d7';
-    var goalPostRadius = 10;
+    var goalPostRadius = 15;
     var goalSize = 200;
     var notificationFader = new FADER.Fader();
     var notificationFadeTime = 2000;
@@ -26,7 +26,7 @@ var SIMR = (function () {
     var playfieldBorder = 100;
     var cameraSpeed = 4;
 
-    var MAX_STRENGTH_DISTANCE = 200;
+    var MAX_STRENGTH_DISTANCE = 250;
 
     var gameFrame = {
     	width: 480,
@@ -107,7 +107,7 @@ var SIMR = (function () {
             }
             CDRAW.drawCircleOutline(ball.position.x, ball.position.y, ball.radius + 6 * alpha, 6, outlineColor);
         }
-        CDRAW.drawText(ball.position.x, ball.position.y, name, "Calibri", 12, nameColor, "bold", "center", "middle");
+        CDRAW.drawText(ball.position.x, ball.position.y, name, "Calibri", 18, nameColor, "bold", "center", "middle");
     }
 
     function render() {

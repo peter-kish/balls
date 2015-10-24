@@ -13,11 +13,10 @@
     var epsilon = 0.01;
     var stoppingEpsilon = 0.1;
     var bounce = 1.0;
-    var movementForce = 10.0;
+    var movementForce = 12.0;
     // Other constants
-    var playerRadius = 20;
-    var ballRadius = 20;
-    var goalPostRadius = 10;
+    var ballRadius = 30;
+    var goalPostRadius = 15;
     var goalSize = 200;
 
     var simFrame = {
