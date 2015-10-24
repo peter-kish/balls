@@ -13,7 +13,7 @@
     var epsilon = 0.01;
     var stoppingEpsilon = 0.1;
     var bounce = 1.0;
-    var movementForce = 8.0;
+    var movementForce = 10.0;
     // Other constants
     var playerRadius = 20;
     var ballRadius = 20;
@@ -22,7 +22,7 @@
 
     var simFrame = {
     	width: 480,
-    	height: 640
+    	height: 800
     }
 
     // Circle-rectangle collision

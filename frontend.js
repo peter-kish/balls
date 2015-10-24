@@ -5,7 +5,7 @@ var FE = (function () {
 
     var gameFrame = {
     	width: 480,
-    	height: 640
+    	height: 800
     }
 
     function getSafeString(s) {

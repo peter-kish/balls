@@ -30,7 +30,7 @@ var SIMR = (function () {
 
     var gameFrame = {
     	width: 480,
-    	height: 640
+    	height: 800
     }
 
     var mouse = new V2D.Vector2d(0, 0);
