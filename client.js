@@ -200,9 +200,11 @@ var CL = (function () {
 
     module.playTurn = function (x, y, strength) {
         if (module.connected) {
-            connection.send(JSON.stringify({msgType: "turn", msgData: {x: x, y: y, strength: strength}}));
-            if (module.simulation)
-                SIM.turn(module.simulation, module.clientId, x, y, strength);
+            if (module.simulation) {
+                if (SIM.turn(module.simulation, module.clientId, x, y, strength)) {
+                    connection.send(JSON.stringify({msgType: "turn", msgData: {x: x, y: y, strength: strength}}));
+                }
+            }
         }
     }
 
