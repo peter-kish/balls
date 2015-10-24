@@ -86,8 +86,8 @@ var FE = (function () {
     function startGame(id1, id2) {
         hideAllMenus();
         showElement("screen_game", true);
-        resizeCanvas();
         SIMR.start(document.getElementById("game_canvas"));
+        resizeCanvas();
     }
 
     function getMouseCoords(event, element) {
@@ -95,8 +95,8 @@ var FE = (function () {
         var rect = element.getBoundingClientRect();
         result.x = event.pageX - rect.left;
         result.y = event.pageY - rect.top;
-        result.x /= CDRAW.getDrawRatio();
-        result.y /= CDRAW.getDrawRatio();
+        result.x /= CDRAW.getScale();
+        result.y /= CDRAW.getScale();
         return result;
     }
 
@@ -124,8 +124,8 @@ var FE = (function () {
         var rect = element.getBoundingClientRect();
         result.x = touchobj.clientX - rect.left;
         result.y = touchobj.clientY - rect.top;
-        result.x /= CDRAW.getDrawRatio();
-        result.y /= CDRAW.getDrawRatio();
+        result.x /= CDRAW.getScale();
+        result.y /= CDRAW.getScale();
         return result;
     }
 
@@ -188,15 +188,15 @@ var FE = (function () {
         canvas.height = container.clientHeight;
 
         if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
-        	CDRAW.setDrawRatio(canvas.height / gameFrame.height);
+        	CDRAW.setScale(canvas.height / gameFrame.height);
         } else {
-        	CDRAW.setDrawRatio(canvas.width / gameFrame.width);
+        	CDRAW.setScale(canvas.width / gameFrame.width);
         }
-        canvas.width = CDRAW.getDrawRatio() * gameFrame.width;
-        canvas.height = CDRAW.getDrawRatio() * gameFrame.height;
+        canvas.width = CDRAW.getScale() * gameFrame.width;
+        canvas.height = CDRAW.getScale() * gameFrame.height;
 
         var chat = document.getElementById("game_chat_container");
-        chat.style.maxWidth = CDRAW.getDrawRatio() * gameFrame.width + "px";
+        chat.style.maxWidth = CDRAW.getScale() * gameFrame.width + "px";
     }
 
     function onWindowResize(e) {

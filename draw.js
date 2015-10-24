@@ -1,6 +1,6 @@
 var CDRAW = (function () {
 	// Private
-	var drawRatio = 1.0;
+	var scale = 1.0;
 	var context = null;
 
 	// Public
@@ -10,12 +10,13 @@ var CDRAW = (function () {
 		context = canvas.getContext('2d');
 	}
 
-	module.setDrawRatio = function(ratio) {
-		drawRatio = ratio;
+	module.setScale = function(pScale) {
+		scale = pScale;
+		context.scale(scale, scale);
 	}
 
-	module.getDrawRatio = function() {
-		return drawRatio;
+	module.getScale = function() {
+		return scale;
 	}
 
 	module.setAlpha = function(alpha) {
@@ -32,15 +33,11 @@ var CDRAW = (function () {
 
 	module.resetOrigin = function() {
 		context.setTransform(1, 0, 0, 1, 0, 0);
+		// Keep the scale:
+		context.scale(scale, scale);
 	}
 
 	module.drawLine = function(x1, y1, x2, y2, width, color) {
-		x1 *= drawRatio;
-		y1 *= drawRatio;
-		x2 *= drawRatio;
-		y2 *= drawRatio;
-		width *= drawRatio;
-
 		context.beginPath();
 		context.moveTo(x1, y1);
 		context.lineTo(x2, y2);
@@ -50,10 +47,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawCircle = function(x, y, r, color) {
-		x *= drawRatio;
-		y *= drawRatio;
-		r *= drawRatio;
-
 		context.beginPath();
 		context.arc(x, y, r, 0, 2 * Math.PI, false);
 		context.fillStyle = color;
@@ -61,11 +54,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawCircleOutline = function(x, y, r, lineWidth, color) {
-		x *= drawRatio;
-		y *= drawRatio;
-		r *= drawRatio;
-		lineWidth *= drawRatio;
-
 		context.beginPath();
 		context.arc(x, y, r, 0, 2 * Math.PI, false);
 		context.lineWidth = lineWidth;
@@ -74,11 +62,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawRect = function(x, y, w, h, color) {
-		x *= drawRatio;
-		y *= drawRatio;
-		w *= drawRatio;
-		h *= drawRatio;
-
 		context.beginPath();
 		context.rect(x, y, w, h);
 		context.fillStyle = color;
@@ -86,12 +69,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawRectOutline = function(x, y, w, h, lineWidth, color) {
-		x *= drawRatio;
-		y *= drawRatio;
-		w *= drawRatio;
-		h *= drawRatio;
-		lineWidth *= drawRatio;
-
 		context.beginPath();
 		context.rect(x, y, w, h);
 		context.lineWidth = lineWidth;
@@ -100,10 +77,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawText = function(x, y, text, font, fontSize, color, style, align, baseline) {
-		x *= drawRatio;
-		y *= drawRatio;
-		fontSize *= drawRatio;
-
 		context.font = style + ' ' + fontSize + 'pt ' + font;
 		context.fillStyle = color;
 		context.textAlign = align;
@@ -153,8 +126,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawImage = function(image, x, y, hflip, vflip) {
-		x *= drawRatio;
-		y *= drawRatio;
 		if (!image)
 			return;
 
@@ -183,10 +154,6 @@ var CDRAW = (function () {
 	}
 
 	module.drawImageResized = function(image, x, y, w, h, hflip, vflip) {
-		x *= drawRatio;
-		y *= drawRatio;
-		w *= drawRatio;
-		h *= drawRatio;
 		if (!image)
 			return;
 
@@ -218,10 +185,6 @@ var CDRAW = (function () {
 
 	module.drawImageCropped = function(image, sourceX, sourceY, sourceW, sourceH,
 		destX, destY, destW, destH, hflip, vflip) {
-		destX *= drawRatio;
-		destY *= drawRatio;
-		destW *= drawRatio;
-		destH *= drawRatio;
 		if (!image)
 			return;
 
