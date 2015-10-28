@@ -388,4 +388,23 @@
         return false;
     }
 
+    exports.getGoalPosition = function(playerIndex) {
+        var position = new V2D.Vector2d(0, 0);
+        if (playerIndex == 0) { // Player 1
+            position.x = gameFrame.width / 2;
+            position.y = gameFrame.height - goalPostRadius;
+        } else if (playerIndex == 1) { // Player 2
+            position.x = gameFrame.width / 2;
+            position.y = goalPostRadius;
+        }
+        return position;
+    }
+
+    exports.getPlayFieldSize = function() {
+        var size = {};
+        size.width = simFrame.width;
+        size.height = simFrame.height;
+        return size
+    }
+
 })(typeof exports === 'undefined'? this['SIM']={}: exports);

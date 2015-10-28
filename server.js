@@ -8,6 +8,7 @@ var http = require('http');
 var uuid = require('node-uuid');
 var fs = require('fs');
 var sim = require('./sh_simulation.js');
+var ai = require('./ai.js');
 
 var clients = [];
 var games = [];
