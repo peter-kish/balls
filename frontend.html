@@ -21,7 +21,8 @@
 				<input id="input_name" type="text" onkeydown="FE.handleNameKeyPress(event)">
 				<button id="button_main_ok" type="button" onclick="FE.setName()">Connect</button><br/>
 				<button id="button_main_host" type="button" onclick="FE.hostMenu()">Host</button>
-				<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/><br/>
+				<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/>
+				<button id="button_main_bot" type="button" onclick="FE.joinBot()">Play against a bot</button><br/><br/>
 				<span><b>Online Players:</b></span><br/>
 				<table id = "table_main_players">
 				</table>
@@ -37,6 +38,7 @@
 				<select id="list_join_clients" size="20"></select>
 				<br/>
 				<button id="button_join_join" type="button" onclick="FE.joinClient()">Join</button>
+				<!-- <button id="button_join_joinBot" type="button" onclick="FE.joinBot()">Play against a bot</button> -->
 				<button id="button_join_refresh" type="button" onclick="FE.joinRefresh()">Refresh</button>
 				<button id="button_join_back" type="button" onclick="FE.mainMenu()">Back</button>
 			</div>

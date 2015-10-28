@@ -12,6 +12,7 @@ var ai = require('./ai.js');
 
 var clients = [];
 var games = [];
+var botId = "BOT";
 
 var server = http.createServer(function(request, response) {
 	if(request.url.indexOf('.js') != -1){
@@ -151,7 +152,26 @@ function handleClientHosting(id) {
 }
 
 function handleClientJoin(id, hostId) {
-    var joinerClientData = getClient(id);
+	if (isBot(hostId)) {
+		handleClientJoinBot(id);
+	} else {
+    	handleClientJoinPlayer(id, hostId);
+	}
+}
+
+function handleClientJoinBot(id) {
+	var joinerClientData = getClient(id);
+    if (joinerClientData.state == "idle") {
+		console.log(joinerClientData.name + " started playing against a bot.");
+        joinerClientData.state = "playing";
+        unicast(id, JSON.stringify({msgType: "gameStart", msgData: {player1: id, player2: botId}}));
+        broadcast(JSON.stringify({msgType: "newState", msgData: {id: id, state: "playing"}}));
+        createGame(id, botId);
+    }
+}
+
+function handleClientJoinPlayer(id, hostId) {
+	var joinerClientData = getClient(id);
     var hosterClientData = getClient(hostId);
     if (joinerClientData.state == "idle" && hosterClientData.state == "hosting") {
 		console.log(joinerClientData.name + " and " + hosterClientData.name + " started playing.");
@@ -185,7 +205,15 @@ function handleClientTurn(id, x, y, strength) {
 			var originalState = sim.getState(game.simulation);
         	var resultState = sim.simulateTurn(game.simulation, id, x, y, strength);
         	unicast(id, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
-        	unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
+			if (!isBot(opponentId)) {
+        		unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
+			} else {
+				var aiTurn = ai.getTurn(1, sim.getState(game.simulation));
+				console.log("Bot played (" + aiTurn.x + "," + aiTurn.y + ") - " + aiTurn.strength);
+				originalState = sim.getState(game.simulation);
+	        	resultState = sim.simulateTurn(game.simulation, botId, aiTurn.x, aiTurn.y, aiTurn.strength);
+				unicast(id, JSON.stringify({msgType: "turn", msgData: {id: botId, x: aiTurn.x, y: aiTurn.y, strength: aiTurn.strength, result: resultState, origin: originalState}}));
+			}
 		}
     }
 }
@@ -280,6 +308,10 @@ function getOpponentId(id) {
 			return game.id1;
 		}
 	}
+}
+
+function isBot(id) {
+	return id == botId;
 }
 
 function getGameContainingClient(id) {

@@ -328,11 +328,7 @@
 
             var state = exports.getState(sim);
             state.tickCount = tickCount;
-            if (victory == 0 || victory == 1) {
-                state.victoryID = sim.playerBall[victory].id;
-            } else {
-                state.victoryID = "";
-            }
+            state.victory = victory;
 
             return state;
         }
@@ -391,10 +387,10 @@
     exports.getGoalPosition = function(playerIndex) {
         var position = new V2D.Vector2d(0, 0);
         if (playerIndex == 0) { // Player 1
-            position.x = gameFrame.width / 2;
-            position.y = gameFrame.height - goalPostRadius;
+            position.x = simFrame.width / 2;
+            position.y = simFrame.height - goalPostRadius;
         } else if (playerIndex == 1) { // Player 2
-            position.x = gameFrame.width / 2;
+            position.x = simFrame.width / 2;
             position.y = goalPostRadius;
         }
         return position;

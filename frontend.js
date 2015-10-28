@@ -32,6 +32,7 @@ var FE = (function () {
         if (!CL.authenticated) {
             enableElement("button_main_host", false);
             enableElement("button_main_join", false);
+            enableElement("button_main_bot", false);
             enableElement("button_main_ok", false);
         }
         var chatDiv = document.getElementById("game_chat_container");
@@ -46,6 +47,7 @@ var FE = (function () {
     function onAuthentication() {
         enableElement("button_main_host", true);
         enableElement("button_main_join", true);
+        enableElement("button_main_bot", true);
         document.getElementById("span_name").innerHTML = "Enter name:";
         document.getElementById("button_main_ok").innerHTML = "Change Name";
     }
@@ -257,6 +259,10 @@ var FE = (function () {
         var select = document.getElementById("list_join_clients");
         var hostID = select.options[select.selectedIndex].value;
         CL.join(hostID);
+    }
+
+    module.joinBot = function() {
+        CL.joinBot();
     }
 
     module.mainMenu = function() {

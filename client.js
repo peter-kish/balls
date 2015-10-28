@@ -7,6 +7,7 @@ var CL = (function () {
     var connection;
     var clientList = [];
     var missedTurnMsg = null;
+    var botId = "BOT";
 
     function addClient(id, name) {
         if (getClient(id))
@@ -20,6 +21,14 @@ var CL = (function () {
     }
 
     function getClient(id) {
+        if (isBot(id)) {
+            var bot = {};
+            bot.id = botId;
+            bot.name = "BOT";
+            bot.state = "playing";
+            return bot;
+        }
+        
         for (var i = 0; i < clientList.length; i++) {
             if (clientList[i].id == id) {
                 return clientList[i];
@@ -46,6 +55,10 @@ var CL = (function () {
             SIM.turn(module.simulation, missedTurnMsg.id, missedTurnMsg.x, missedTurnMsg.y, missedTurnMsg.strength);
             missedTurnMsg = null;
         }
+    }
+
+    function isBot(id) {
+        return id == botId;
     }
 
     // Public
@@ -190,6 +203,11 @@ var CL = (function () {
     module.join = function(hostId) {
         if (module.connected)
             connection.send(JSON.stringify({msgType: "join", msgData: {hostId: hostId}}));
+    }
+
+    module.joinBot = function() {
+        if (module.connected)
+            connection.send(JSON.stringify({msgType: "join", msgData: {hostId: botId}}));
     }
 
     module.idle = function() {
