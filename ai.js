@@ -6,8 +6,8 @@ var _p1Index = 0
 var _p2Index = 1
 var _fieldSize = sim.getPlayFieldSize();
 var _maxDistance = Math.sqrt(Math.pow(_fieldSize.width, 2) + Math.pow(_fieldSize.height, 2));
-var _worstScore = Number.MIN_VALUE;
-var _bestScore = Number.MAX_VALUE;
+var _worstScore = Number.MIN_VALUE / 4;
+var _bestScore = Number.MAX_VALUE / 4;
 var _botId = "BOT";
 
 exports.getTurn = function(playerIndex, state) {
@@ -29,7 +29,7 @@ function _getBestTurn(playerIndex, state, turns) {
         simulation.switchTurns();
         sim.setState(simulation, state);
         var resultState = sim.simulateTurn(simulation, playerIndex, turns[i].x, turns[i].y, turns[i].strength);
-        var score = _rateState(playerIndex, resultState);
+        var score = _rateState(playerIndex, resultState) - _rateState(_getOpponentIndex(playerIndex), resultState);
         if (score > bestScore) {
             bestScore = score;
             bestTurnIndex = i;
@@ -48,6 +48,18 @@ function _rateState(playerIndex, state) {
         return _worstScore;
     }
 
+    var goalDistanceScore = _rateDistanceToGoal(playerIndex, state);
+    var goalDistanceWeight = 1;
+    var ballDistanceScore = _rateDistanceToBall(playerIndex, state);
+    var ballDistanceWeight = 0.25;
+
+    var score = (goalDistanceWeight * goalDistanceScore + ballDistanceWeight * ballDistanceScore) / (goalDistanceWeight + ballDistanceWeight);
+
+    //console.log("Rating state: p1" + playerPos[_p1Index] + " p2" + playerPos[_p2Index] + " ball" + ballPos + " with score: " + score);
+    return score;
+}
+
+function _rateDistanceToGoal(playerIndex, state) {
     var playerPos = [];
     playerPos[_p1Index] = new V2D.Vector2d(state.p1Pos.x, state.p1Pos.y);
     playerPos[_p2Index] = new V2D.Vector2d(state.p2Pos.x, state.p2Pos.y);
@@ -55,11 +67,33 @@ function _rateState(playerIndex, state) {
     var goalPos = [];
     goalPos[_p1Index] = sim.getGoalPosition(_p1Index);
     goalPos[_p2Index] = sim.getGoalPosition(_p2Index);
-    var distance = ballPos.distance(goalPos[playerIndex]);
-    var score = distance / _maxDistance
-
-    //console.log("Rating state: p1" + playerPos[_p1Index] + " p2" + playerPos[_p2Index] + " ball" + ballPos + " with score: " + score);
+    var distance = ballPos.distance(goalPos[_getOpponentIndex(playerIndex)]);
+    var score = _maxDistance / distance;
     return score;
+}
+
+function _rateDistanceToBall(playerIndex, state) {
+    var playerPos = [];
+    playerPos[_p1Index] = new V2D.Vector2d(state.p1Pos.x, state.p1Pos.y);
+    playerPos[_p2Index] = new V2D.Vector2d(state.p2Pos.x, state.p2Pos.y);
+    var ballPos = new V2D.Vector2d(state.ballPos.x, state.ballPos.y);
+    var distanceScore = _maxDistance / ballPos.distance(playerPos[playerIndex]);
+    var orientation = 1;
+    var score = 0;
+    if (playerPos[playerIndex].y > ballPos.y) {
+        if (playerIndex == _p2Index) {
+            orientation = -1;
+        }
+    } else {
+        if (playerIndex == _p1Index) {
+            orientation = -1;
+        }
+    }
+    if (orientation == 1) {
+        return distanceScore;
+    } else {
+        return 1 - distanceScore;
+    }
 }
 
 function _getOpponentIndex(playerIndex) {
