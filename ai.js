@@ -2,6 +2,7 @@ var V2D = require('./sh_vector.js');
 var sim = require('./sh_simulation.js');
 
 var _radialIterations = 36;
+var _strengthIterations = 3;
 var _p1Index = 0
 var _p2Index = 1
 var _fieldSize = sim.getPlayFieldSize();
@@ -107,13 +108,15 @@ function _getTurnList(playerPos) {
     var turnList = [];
 
     for (var i = 0; i < _radialIterations; i++) {
-        var v = _getAngleVector((i + 1) * 2 * Math.PI / _radialIterations);
-        var turn = {};
-        v.add(playerPos);
-        turn.x = v.x;
-        turn.y = v.y;
-        turn.strength = 1.0;
-        turnList.push(turn);
+        for (var j = _strengthIterations; j > 0; j--) {
+            var v = _getAngleVector((i + 1) * 2 * Math.PI / _radialIterations);
+            var turn = {};
+            v.add(playerPos);
+            turn.x = v.x;
+            turn.y = v.y;
+            turn.strength = j / _strengthIterations;
+            turnList.push(turn);
+        }
     }
 
     return turnList;
