@@ -110,14 +110,20 @@
         this.playerScore[1] = 0;
 
         this.corners = [];
-        this.corners[0] = new CLL.RoundCorner(new CLL.Rect(0, 0, cornerRadius, cornerRadius),
-                    new CLL.Circle(new V2D.Vector2d(cornerRadius, cornerRadius), cornerRadius));
-        this.corners[1] = new CLL.RoundCorner(new CLL.Rect(simFrame.width - cornerRadius, 0, cornerRadius, cornerRadius),
-                    new CLL.Circle(new V2D.Vector2d(simFrame.width - cornerRadius, cornerRadius), cornerRadius));
-        this.corners[2] = new CLL.RoundCorner(new CLL.Rect(simFrame.width - cornerRadius, simFrame.height - cornerRadius, cornerRadius, cornerRadius),
-                    new CLL.Circle(new V2D.Vector2d(simFrame.width - cornerRadius, simFrame.height - cornerRadius), cornerRadius));
-        this.corners[3] = new CLL.RoundCorner(new CLL.Rect(0, simFrame.height - cornerRadius, cornerRadius, cornerRadius),
-                    new CLL.Circle(new V2D.Vector2d(cornerRadius, simFrame.height - cornerRadius), cornerRadius));
+        {
+            var offset = 2 * goalPostRadius;
+            var sfw = simFrame.width;
+            var sfh = simFrame.height;
+            var cs = (sfw - goalSize) / 2;
+            this.corners[0] = new CLL.RoundCorner(new CLL.Rect(0, offset, cs, cs),
+                        new CLL.Circle(new V2D.Vector2d(cs, cs + offset), cs));
+            this.corners[1] = new CLL.RoundCorner(new CLL.Rect(sfw - cs, offset, cs, cs),
+                        new CLL.Circle(new V2D.Vector2d(sfw - cs, cs + offset), cs));
+            this.corners[2] = new CLL.RoundCorner(new CLL.Rect(sfw - cs, sfh - cs - offset, cs, cs),
+                        new CLL.Circle(new V2D.Vector2d(sfw - cs, sfh - cs - offset), cs));
+            this.corners[3] = new CLL.RoundCorner(new CLL.Rect(0, sfh - cs - offset, cs, cs),
+                        new CLL.Circle(new V2D.Vector2d(cs, sfh - cs - offset), cs));
+        }
     }
 
     Simulation.prototype.resetPlayers = function () {

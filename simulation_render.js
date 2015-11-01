@@ -76,7 +76,7 @@ var SIMR = (function () {
     }
 
     function clearScreen() {
-        CDRAW.drawRect(0, 0, gameFrame.width, gameFrame.height, grassColor);
+        CDRAW.drawRect(0, 0, gameFrame.width, gameFrame.height, goalPostColor);
     }
 
     function renderBall(ball, color, name, outlineColor) {
@@ -133,10 +133,24 @@ var SIMR = (function () {
             }
         }
 
+
         CDRAW.setOrigin(-camera.x, -camera.y);
+
+        var offset = 2 * goalPostRadius;
+        var gfw = gameFrame.width;
+        var gfh = gameFrame.height;
+        var cs = (gfw - goalSize) / 2;
+        //CDRAW.drawRect(0, 0, gfw, gfh, goalPostColor);
+        CDRAW.drawRect(cs, goalPostRadius, gfw - 2 * cs, gfh - offset, grassColor);
+        CDRAW.drawRect(0, offset + cs, gfw, gfh - 2 * offset - 2 * cs, grassColor);
+        CDRAW.drawCircle(cs, cs + offset, cs, grassColor);
+        CDRAW.drawCircle(gfw - cs, cs + offset, cs, grassColor);
+        CDRAW.drawCircle(gfw - cs, gfh - cs - offset, cs, grassColor);
+        CDRAW.drawCircle(cs, gfh - cs - offset, cs, grassColor);
+
         // Draw the goals
-    	CDRAW.drawRect(gameFrame.width/2 - goalSize/2, gameFrame.height - goalPostRadius, goalSize, goalPostRadius, playerColor[0]);
-    	CDRAW.drawRect(gameFrame.width/2 - goalSize/2, 0, goalSize, goalPostRadius, playerColor[1]);
+    	CDRAW.drawRect(gfw/2 - goalSize/2 + goalPostRadius, gameFrame.height - goalPostRadius, goalSize - offset, goalPostRadius, playerColor[0]);
+    	CDRAW.drawRect(gameFrame.width/2 - goalSize/2 + goalPostRadius, 0, goalSize - offset, goalPostRadius, playerColor[1]);
 
         // Draw the lines
     	CDRAW.drawLine(0, gameFrame.height/2, gameFrame.width, gameFrame.height/2, 15, linesColor);
@@ -144,7 +158,7 @@ var SIMR = (function () {
     	CDRAW.drawCircle(gameFrame.width/2, gameFrame.height/2, 20, linesColor);
 
         // Draw the playfield border
-        CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, goalPostColor);
+        //CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, goalPostColor);
 
         // Draw the rounded corners
         CDRAW.drawArc(CL.simulation.corners[0].circle.origin.x, CL.simulation.corners[0].circle.origin.y, CL.simulation.corners[0].circle.radius, Math.PI, 1.5 * Math.PI, 1, goalPostColor);
