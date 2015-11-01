@@ -146,6 +146,12 @@ var SIMR = (function () {
         // Draw the playfield border
         CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, goalPostColor);
 
+        // Draw the rounded corners
+        CDRAW.drawArc(CL.simulation.corners[0].circle.origin.x, CL.simulation.corners[0].circle.origin.y, CL.simulation.corners[0].circle.radius, Math.PI, 1.5 * Math.PI, 1, goalPostColor);
+        CDRAW.drawArc(CL.simulation.corners[1].circle.origin.x, CL.simulation.corners[1].circle.origin.y, CL.simulation.corners[1].circle.radius, 1.5 * Math.PI, 0, 1, goalPostColor);
+        CDRAW.drawArc(CL.simulation.corners[2].circle.origin.x, CL.simulation.corners[2].circle.origin.y, CL.simulation.corners[2].circle.radius, 0, 0.5 * Math.PI, 1, goalPostColor);
+        CDRAW.drawArc(CL.simulation.corners[3].circle.origin.x, CL.simulation.corners[3].circle.origin.y, CL.simulation.corners[3].circle.radius, 0.5 * Math.PI, Math.PI, 1, goalPostColor);
+
         // Draw the score
     	CDRAW.setAlpha(0.5);
     	CDRAW.drawText(gameFrame.width/2, 120, CL.simulation.playerScore[1], 'Calibri', 128, playerColor[1], 'bold', 'center', 'middle');

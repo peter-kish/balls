@@ -16,6 +16,7 @@
     exports.Vector2d.prototype.set = function (vector) {
     	this.x = vector.x;
     	this.y = vector.y;
+        return this;
     };
 
     exports.Vector2d.prototype.add = function(vector) {
@@ -54,6 +55,19 @@
     	var scalar = (this.dot(vector)) / (Math.pow(vector.length(), 2));
     	result.multiply(scalar);
     	return result;
+    }
+
+    exports.Vector2d.prototype.reflection = function(normal) {
+    	var result = (new exports.Vector2d()).set(this);
+        var normalMultiplied = (new exports.Vector2d()).set(normal);
+        normalMultiplied.multiply(2 * this.dot(normal));
+    	result.sub(normalMultiplied);
+    	return result;
+    }
+
+    exports.Vector2d.prototype.reflect = function(normal) {
+    	var reflection = this.reflection(normal);
+    	this.set(reflection);
     }
 
     exports.Vector2d.prototype.normalize = function() {
@@ -107,6 +121,10 @@
 
     exports.projection = function(v1, v2) {
     	return v1.projection(v2);
+    }
+
+    exports.reflection = function(v, n) {
+        return v.reflection(n);
     }
 
     exports.normalized = function(v) {

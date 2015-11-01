@@ -61,6 +61,14 @@ var CDRAW = (function () {
 		context.stroke();
 	}
 
+	module.drawArc = function(x, y, r, startAngle, endAngle, lineWidth, color) {
+		context.beginPath();
+		context.arc(x, y, r, startAngle, endAngle, false);
+		context.lineWidth = lineWidth;
+		context.strokeStyle = color;
+		context.stroke();
+	}
+
 	module.drawRect = function(x, y, w, h, color) {
 		context.beginPath();
 		context.rect(x, y, w, h);

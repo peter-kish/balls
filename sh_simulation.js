@@ -6,6 +6,13 @@
         V2D = this.V2D;
     }
 
+    var CLL = null;
+    if (typeof this.CLL == 'undefined') {
+        CLL = require('./sh_collisions.js');
+    } else {
+        CLL = this.CLL;
+    }
+
     // Private
 
     // Physics constants
@@ -18,35 +25,11 @@
     var ballRadius = 30;
     var goalPostRadius = 15;
     var goalSize = 200;
+    var cornerRadius = 100;
 
     var simFrame = {
     	width: 480,
     	height: 800
-    }
-
-    // Circle-rectangle collision
-    function CRCollision(cx, cy, cr, rx, ry, rw, rh) {
-    	var cdx = Math.abs(cx - (rx+rw/2));
-        var cdy = Math.abs(cy - (ry+rh/2));
-
-        if (cdx > (rw/2 + cr)) { return false; }
-        if (cdy > (rh/2 + cr)) { return false; }
-
-        if (cdx <= (rw/2)) { return true; }
-        if (cdy <= (rh/2)) { return true; }
-
-        var cornerDistance_sq = Math.pow((cdx - rw/2), 2) +
-                             Math.pow((cdy - rh/2), 2);
-
-        return (cornerDistance_sq <= (Math.pow(cr, 2)));
-    }
-
-    function pointInRect(px, py, rx, ry, rw, rh) {
-    	if ((px >= rx) && (px <= rx + rw) && (py >= ry) && (py <= ry + rh))
-    	{
-    		return true;
-    	}
-    	return false;
     }
 
     // Ball class
@@ -125,6 +108,16 @@
         this.createSolidBall(simFrame.width/2 + goalSize/2, simFrame.height - goalPostRadius, goalPostRadius);
         this.playerScore[0] = 0;
         this.playerScore[1] = 0;
+
+        this.corners = [];
+        this.corners[0] = new CLL.RoundCorner(new CLL.Rect(0, 0, cornerRadius, cornerRadius),
+                    new CLL.Circle(new V2D.Vector2d(cornerRadius, cornerRadius), cornerRadius));
+        this.corners[1] = new CLL.RoundCorner(new CLL.Rect(simFrame.width - cornerRadius, 0, cornerRadius, cornerRadius),
+                    new CLL.Circle(new V2D.Vector2d(simFrame.width - cornerRadius, cornerRadius), cornerRadius));
+        this.corners[2] = new CLL.RoundCorner(new CLL.Rect(simFrame.width - cornerRadius, simFrame.height - cornerRadius, cornerRadius, cornerRadius),
+                    new CLL.Circle(new V2D.Vector2d(simFrame.width - cornerRadius, simFrame.height - cornerRadius), cornerRadius));
+        this.corners[3] = new CLL.RoundCorner(new CLL.Rect(0, simFrame.height - cornerRadius, cornerRadius, cornerRadius),
+                    new CLL.Circle(new V2D.Vector2d(cornerRadius, simFrame.height - cornerRadius), cornerRadius));
     }
 
     Simulation.prototype.resetPlayers = function () {
@@ -187,10 +180,10 @@
 
     Simulation.prototype.checkVictory = function (ball) {
         // Collision with a goal
-    	if (CRCollision(ball.position.x, ball.position.y, ball.radius, simFrame.width/2 - goalSize/2, 0, goalSize, goalPostRadius)) {
+    	if (CLL.CRCollision(ball.position.x, ball.position.y, ball.radius, simFrame.width/2 - goalSize/2, 0, goalSize, goalPostRadius)) {
     		return 0;
     	}
-    	if (CRCollision(ball.position.x, ball.position.y, ball.radius, simFrame.width/2 - goalSize/2, simFrame.height - goalPostRadius, goalSize, goalPostRadius)) {
+    	if (CLL.CRCollision(ball.position.x, ball.position.y, ball.radius, simFrame.width/2 - goalSize/2, simFrame.height - goalPostRadius, goalSize, goalPostRadius)) {
     		return 1;
     	}
 
@@ -200,7 +193,16 @@
     Simulation.prototype.update = function () {
         for (var i = 0; i < this.balls.length; i++) {
             this.balls[i].update();
+            // Collisions with rounded corners
+            for (var j = 0; j < this.corners.length; j++) {
+                var collisionBall = {
+                    circle: new CLL.Circle(this.balls[i].position, this.balls[i].radius),
+                    velocity: this.balls[i].velocity
+                };
+                this.corners[j].updateWithBall(collisionBall);
+            }
         }
+
 
         // Calculate collisions
     	for(var i = 0; i < this.balls.length; i++) {
