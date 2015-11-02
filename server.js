@@ -1,7 +1,12 @@
 var PORT_NUMBER = 8080;
 var NAME_LENGTH_LIMIT = 16;
 
-console.log(".:Balls Server:.");
+function LOG(text) {
+	var date = new Date;
+	console.log("[" + date.toLocaleString() + "] " + text);
+}
+
+LOG(".:Balls Server:.");
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
@@ -64,12 +69,12 @@ wsServer.on('request', handleWsRequest);
 function handleWsRequest(request) {
     var connection = request.accept(null, request.origin);
     var id = "";
-    console.log("Connection from " + request.remoteAddress);
+    LOG("Connection from " + request.remoteAddress);
 
     // Message handling
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
-			//console.log(message.utf8Data);
+			//LOG(message.utf8Data);
             var json = JSON.parse(message.utf8Data);
             switch (json.msgType) {
                 case "authRequest":
@@ -102,7 +107,7 @@ function handleWsRequest(request) {
         // handleClientDisconnect(id);
 		var client = getClient(id);
 		if (client) {
-			console.log(client.name + " disconnected.");
+			LOG(client.name + " disconnected.");
 			broadcast(JSON.stringify({msgType: "clientDisconnected", msgData: {id: id, name: client.name}}));
 			removeClient(id);
 		}
@@ -113,13 +118,13 @@ function handleAuthRequest(connection, name) {
 	name = name.substring(0, NAME_LENGTH_LIMIT);
     if (getClientByName(name)) {
         // Denied
-		console.log("Player name (" + name + ") already taken.");
+		LOG("Player name (" + name + ") already taken.");
         var message = JSON.stringify({msgType: "authDenied", msgData: {reason: "Name already taken"}});
         connection.sendUTF(message);
         return "";
     } else {
         // Accepted
-		console.log("Authenticated (" + name + ").");
+		LOG("Authenticated (" + name + ").");
         var clientData = createClient(connection, name);
         var message = JSON.stringify({msgType: "authenticated", msgData: {id: clientData.id}});
         connection.sendUTF(message);
@@ -136,7 +141,7 @@ function handleChangeName(id, newName) {
 
     var clientData = getClient(id);
     if (clientData) {
-		console.log(clientData.name + " changed his name to " + newName.substring(0, NAME_LENGTH_LIMIT));
+		LOG(clientData.name + " changed his name to " + newName.substring(0, NAME_LENGTH_LIMIT));
         clientData.name = newName.substring(0, NAME_LENGTH_LIMIT);
         broadcast(JSON.stringify({msgType: "newName", msgData: {id: id, name: clientData.name}}));
     }
@@ -145,7 +150,7 @@ function handleChangeName(id, newName) {
 function handleClientHosting(id) {
     var clientData = getClient(id);
     if (clientData && clientData.state == "idle") {
-		console.log(clientData.name + " is hosting...");
+		LOG(clientData.name + " is hosting...");
         clientData.state = "hosting";
         broadcast(JSON.stringify({msgType: "newState", msgData: {id: id, state: "hosting"}}));
     }
@@ -162,7 +167,7 @@ function handleClientJoin(id, hostId) {
 function handleClientJoinBot(id) {
 	var joinerClientData = getClient(id);
     if (joinerClientData.state == "idle") {
-		console.log(joinerClientData.name + " started playing against a bot.");
+		LOG(joinerClientData.name + " started playing against a bot.");
         joinerClientData.state = "playing";
         unicast(id, JSON.stringify({msgType: "gameStart", msgData: {player1: id, player2: botId}}));
         broadcast(JSON.stringify({msgType: "newState", msgData: {id: id, state: "playing"}}));
@@ -174,7 +179,7 @@ function handleClientJoinPlayer(id, hostId) {
 	var joinerClientData = getClient(id);
     var hosterClientData = getClient(hostId);
     if (joinerClientData.state == "idle" && hosterClientData.state == "hosting") {
-		console.log(joinerClientData.name + " and " + hosterClientData.name + " started playing.");
+		LOG(joinerClientData.name + " and " + hosterClientData.name + " started playing.");
         joinerClientData.state = "playing";
         hosterClientData.state = "playing";
         unicast(id, JSON.stringify({msgType: "gameStart", msgData: {player1: id, player2: hostId}}));
@@ -188,7 +193,7 @@ function handleClientJoinPlayer(id, hostId) {
 function handleClientIdle(id) {
     var clientData = getClient(id);
     if (clientData) {
-		console.log(clientData.name + " is idle...");
+		LOG(clientData.name + " is idle...");
         clientData.state = "idle";
         broadcast(JSON.stringify({msgType: "newState", msgData: {id: id, state: "idle"}}));
         removeGameContainingClient(id);
@@ -200,7 +205,7 @@ function handleClientTurn(id, x, y, strength) {
     if (clientData && clientData.state == "playing") {
         var game = getGameContainingClient(id);
 		if (game && sim.isTurnValid(game.simulation, id, x, y, strength)) {
-			console.log(getClient(id).name + " played (" + x + "," + y + ") - " + strength);
+			LOG(getClient(id).name + " played (" + x + "," + y + ") - " + strength);
         	var opponentId = getOpponentId(id);
 			var originalState = sim.getState(game.simulation);
         	var resultState = sim.simulateTurn(game.simulation, id, x, y, strength);
@@ -209,7 +214,7 @@ function handleClientTurn(id, x, y, strength) {
         		unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
 			} else {
 				var aiTurn = ai.getTurn(1, sim.getState(game.simulation));
-				console.log("Bot played (" + aiTurn.x + "," + aiTurn.y + ") - " + aiTurn.strength);
+				LOG("Bot played (" + aiTurn.x + "," + aiTurn.y + ") - " + aiTurn.strength);
 				originalState = sim.getState(game.simulation);
 	        	resultState = sim.simulateTurn(game.simulation, botId, aiTurn.x, aiTurn.y, aiTurn.strength);
 				unicast(id, JSON.stringify({msgType: "turn", msgData: {id: botId, x: aiTurn.x, y: aiTurn.y, strength: aiTurn.strength, result: resultState, origin: originalState}}));
@@ -219,7 +224,7 @@ function handleClientTurn(id, x, y, strength) {
 }
 
 function handleClientChat(id, msg) {
-	console.log("[chat] " + getClient(id).name + ": " + msg);
+	LOG("[chat] " + getClient(id).name + ": " + msg);
     broadcast(JSON.stringify({msgType: "chat", msgData: {id: id, message: msg}}));
 }
 
