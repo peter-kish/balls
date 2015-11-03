@@ -78,7 +78,8 @@ function handleWsRequest(request) {
             var json = JSON.parse(message.utf8Data);
             switch (json.msgType) {
                 case "authRequest":
-                    id = handleAuthRequest(connection, json.msgData.name);
+					if (id == "")
+                    	id = handleAuthRequest(connection, json.msgData.name);
                     break;
                 case "changeName":
                     handleChangeName(id, json.msgData.name);
@@ -119,7 +120,7 @@ function handleAuthRequest(connection, name) {
     if (getClientByName(name)) {
         // Denied
 		LOG("Player name (" + name + ") already taken.");
-        var message = JSON.stringify({msgType: "authDenied", msgData: {reason: "Name already taken"}});
+        var message = JSON.stringify({msgType: "authDenied", msgData: {reason: "Name already taken."}});
         connection.sendUTF(message);
         return "";
     } else {
@@ -166,7 +167,7 @@ function handleClientJoin(id, hostId) {
 
 function handleClientJoinBot(id) {
 	var joinerClientData = getClient(id);
-    if (joinerClientData.state == "idle") {
+    if (joinerClientData && joinerClientData.state == "idle") {
 		LOG(joinerClientData.name + " started playing against a bot.");
         joinerClientData.state = "playing";
         unicast(id, JSON.stringify({msgType: "gameStart", msgData: {player1: id, player2: botId}}));
@@ -178,6 +179,8 @@ function handleClientJoinBot(id) {
 function handleClientJoinPlayer(id, hostId) {
 	var joinerClientData = getClient(id);
     var hosterClientData = getClient(hostId);
+	if (!joinerClientData || !hosterClientData)
+		return;
     if (joinerClientData.state == "idle" && hosterClientData.state == "hosting") {
 		LOG(joinerClientData.name + " and " + hosterClientData.name + " started playing.");
         joinerClientData.state = "playing";
@@ -205,7 +208,7 @@ function handleClientTurn(id, x, y, strength) {
     if (clientData && clientData.state == "playing") {
         var game = getGameContainingClient(id);
 		if (game && sim.isTurnValid(game.simulation, id, x, y, strength)) {
-			LOG(getClient(id).name + " played (" + x + "," + y + ") - " + strength);
+			LOG(clientData.name + " played (" + x + "," + y + ") - " + strength);
         	var opponentId = getOpponentId(id);
 			var originalState = sim.getState(game.simulation);
         	var resultState = sim.simulateTurn(game.simulation, id, x, y, strength);
@@ -224,8 +227,11 @@ function handleClientTurn(id, x, y, strength) {
 }
 
 function handleClientChat(id, msg) {
-	LOG("[chat] " + getClient(id).name + ": " + msg);
-    broadcast(JSON.stringify({msgType: "chat", msgData: {id: id, message: msg}}));
+	var client = getClient(id);
+	if (client) {
+		LOG("[chat] " + client.name + ": " + msg);
+    	broadcast(JSON.stringify({msgType: "chat", msgData: {id: id, message: msg}}));
+	}
 }
 
 function handleClientDisconnect(id) {
