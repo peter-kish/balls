@@ -2,6 +2,7 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
+    var activeMenu = "main"; // main, host, join, game
 
     var gameFrame = {
     	width: 480,
@@ -24,19 +25,27 @@ var FE = (function () {
         document.getElementById(id).disabled = !enabled;
     }
 
+    function clearElement(id) {
+        var element = document.getElementById(id);
+        element.innerHTML = "";
+    }
+
+    function scrollToBottom(id) {
+        var element = document.getElementById(id);
+        element.scrollTop = element.scrollHeight;
+    }
+
     function hideAllMenus() {
         showElement("screen_main", false);
         showElement("screen_host", false);
         showElement("screen_join", false);
         showElement("screen_game", false);
         if (!CL.authenticated) {
-            enableElement("button_main_host", false);
-            enableElement("button_main_join", false);
-            enableElement("button_main_bot", false);
             enableElement("button_main_ok", false);
+            showElement("main_connected", false);
         }
-        var chatDiv = document.getElementById("game_chat_container");
-        chatDiv.innerHTML = "";
+        clearElement("game_chat_container");
+        clearElement("main_chat_container");
         SIMR.stop();
     }
 
@@ -45,10 +54,8 @@ var FE = (function () {
     }
 
     function onAuthentication() {
-        enableElement("button_main_host", true);
-        enableElement("button_main_join", true);
-        enableElement("button_main_bot", true);
         enableElement("button_main_ok", true);
+        showElement("main_connected", true);
         document.getElementById("span_name").innerHTML = "Enter name:";
         document.getElementById("button_main_ok").innerHTML = "Change Name";
     }
@@ -91,6 +98,7 @@ var FE = (function () {
         showElement("screen_game", true);
         SIMR.start(document.getElementById("game_canvas"));
         resizeCanvas();
+        activeMenu = "game";
     }
 
     function getMouseCoords(event, element) {
@@ -161,16 +169,25 @@ var FE = (function () {
         }
     }
 
-    var chatIntervalHandle = null;
-    function displayInfoMessage(message) {
-        showElement("game_chat_container", true);
-        var chatDiv = document.getElementById("game_chat_container");
+    function addMessageSpan(divId, message) {
+        var chatDiv = document.getElementById(divId);
         if (chatDiv.innerHTML != "")
             chatDiv.innerHTML += "<br/>"
         chatDiv.innerHTML += "<span>" + message + "</span>";
-        adjustChatbox();
-        if (chatIntervalHandle) window.clearInterval(chatIntervalHandle);
-        chatIntervalHandle = window.setInterval(hideChat, CHAT_HIDE_TIME);
+    }
+
+    var chatIntervalHandle = null;
+    function displayInfoMessage(message) {
+        if (activeMenu == "game") {
+            showElement("game_chat_container", true);
+            addMessageSpan("game_chat_container", message);
+            adjustChatbox();
+            if (chatIntervalHandle) window.clearInterval(chatIntervalHandle);
+            chatIntervalHandle = window.setInterval(hideChat, CHAT_HIDE_TIME);
+        } else {
+            addMessageSpan("main_chat_container", message);
+            scrollToBottom("main_chat_container");
+        }
     }
 
     function displayChatMessage(name, message) {
@@ -244,13 +261,14 @@ var FE = (function () {
         hideAllMenus();
         CL.host();
         showElement("screen_host", true);
+        activeMenu = "host";
     }
 
     module.joinMenu = function() {
         hideAllMenus();
         showElement("screen_join", true);
-
         refreshClientList(CL.getClientList());
+        activeMenu = "join";
     }
 
     module.joinRefresh = function() {
@@ -273,10 +291,16 @@ var FE = (function () {
         document.getElementById("input_name").value = getSafeString(CL.clientName);
         document.getElementById("span_name").innerHTML = "Enter name:";
         showElement("screen_main", true);
+        activeMenu = "main";
     }
 
     module.sendChatMessage = function() {
-        var input = document.getElementById("input_chat");
+        var input = null;
+        if (activeMenu == "game") {
+            input = document.getElementById("input_game_chat");
+        } else {
+            input = document.getElementById("input_main_chat");
+        }
         var message = input.value;
         if (message != "") {
             input.value = "";

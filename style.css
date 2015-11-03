@@ -21,6 +21,12 @@ html, body {
     display: inline-block;
 }
 
+#main_chat_container {
+    height: 200px;
+    width: 300px;
+    overflow: scroll;
+}
+
 #game_canvas_container {
     position: absolute;
     top: 30px;
