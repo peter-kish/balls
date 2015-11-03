@@ -48,6 +48,7 @@ var FE = (function () {
         enableElement("button_main_host", true);
         enableElement("button_main_join", true);
         enableElement("button_main_bot", true);
+        enableElement("button_main_ok", true);
         document.getElementById("span_name").innerHTML = "Enter name:";
         document.getElementById("button_main_ok").innerHTML = "Change Name";
     }
@@ -234,6 +235,7 @@ var FE = (function () {
         }
         if (CL.connected) {
             CL.requestAuthentication(document.getElementById("input_name").value, onAuthentication, onAuthFailed);
+            enableElement("button_main_ok", false);
             return;
         }
     }
