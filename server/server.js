@@ -1,4 +1,4 @@
-var PORT_NUMBER = 8080;
+var DEFAULT_PORT_NUMBER = 8080;
 var NAME_LENGTH_LIMIT = 16;
 
 function LOG(text) {
@@ -18,6 +18,18 @@ var ai = require('./ai.js');
 var clients = [];
 var games = [];
 var botId = "BOT";
+var serverConfig = {};
+
+loadConfig("./config_server.json");
+
+function loadConfig(configFile) {
+	try {
+		var contents = fs.readFileSync(configFile).toString();
+		serverConfig = JSON.parse(contents);
+	} catch(err) {
+		LOG(configFile + " not found. Using default values...");
+	}
+}
 
 var server = http.createServer(function(request, response) {
 	if(request.url.indexOf('.js') != -1){
@@ -59,7 +71,7 @@ var server = http.createServer(function(request, response) {
 	}
 
 });
-server.listen(PORT_NUMBER, function() { });
+server.listen(serverConfig.port ? serverConfig.port : DEFAULT_PORT_NUMBER, function() { });
 
 // create the server
 wsServer = new WebSocketServer({

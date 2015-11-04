@@ -1,7 +1,6 @@
 var CL = (function () {
     SIM.onTurnStart = onTurnStart;
     // Private
-    var SERVER_ADDR = "ws://lateralus.duckdns.org:80";
     var CHAT_MSG_LIMIT = 128;
 
     var connection;
@@ -28,7 +27,7 @@ var CL = (function () {
             bot.state = "playing";
             return bot;
         }
-        
+
         for (var i = 0; i < clientList.length; i++) {
             if (clientList[i].id == id) {
                 return clientList[i];
@@ -86,13 +85,13 @@ var CL = (function () {
 
     module.connect = function(onConectedCallback) {
         module.onConnectionSuccessfull = onConectedCallback;
-        connection = new WebSocket(SERVER_ADDR);
+        connection = new WebSocket(clientConfig.server);
 
         connection.onopen = function () {
 			// connection is opened and ready to use
-            console.log("Connected to " + SERVER_ADDR);
+            console.log("Connected to " + clientConfig.server);
             module.connected = true;
-			if (module.onConnectionSuccessfull) module.onConnectionSuccessfull(SERVER_ADDR);
+			if (module.onConnectionSuccessfull) module.onConnectionSuccessfull(clientConfig.server);
 		};
 
         connection.onerror = function (error) {
