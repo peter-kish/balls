@@ -1,5 +1,5 @@
-var V2D = require('./sh_vector.js');
-var sim = require('./sh_simulation.js');
+var V2D = require('../shared/sh_vector.js');
+var sim = require('../shared/sh_simulation.js');
 
 var _radialIterations = 36;
 var _strengthIterations = 3;

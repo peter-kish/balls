@@ -12,7 +12,7 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var uuid = require('node-uuid');
 var fs = require('fs');
-var sim = require('./sh_simulation.js');
+var sim = require('../shared/sh_simulation.js');
 var ai = require('./ai.js');
 
 var clients = [];
@@ -21,7 +21,11 @@ var botId = "BOT";
 
 var server = http.createServer(function(request, response) {
 	if(request.url.indexOf('.js') != -1){
-		fs.readFile("./" + request.url, function(err, script) {
+		var scriptDir = "../client/desktop/";
+		if (request.url.substring(0,4) == "/sh_") {
+			var scriptDir = "../shared/";
+		}
+		fs.readFile(scriptDir + request.url, function(err, script) {
 			if (err) {
 				throw err;
 			}
@@ -31,7 +35,7 @@ var server = http.createServer(function(request, response) {
 			response.end();
 		});
 	} else if (request.url.indexOf('.css') != -1) {
-		fs.readFile("./" + request.url, function(err, script) {
+		fs.readFile("../client/desktop/" + request.url, function(err, script) {
 			if (err) {
 				throw err;
 			}
@@ -43,7 +47,7 @@ var server = http.createServer(function(request, response) {
 	} else if (request.url.indexOf('.ico') != -1) {
 
 	} else {
-		fs.readFile('./frontend.html', function(err, html) {
+		fs.readFile('../client/desktop/frontend.html', function(err, html) {
 			if (err) {
 				throw err;
 			}

@@ -1,14 +1,14 @@
 (function(exports) {
     var V2D = null;
     if (typeof this.V2D == 'undefined') {
-        V2D = require('./sh_vector.js');
+        V2D = require('../shared/sh_vector.js');
     } else {
         V2D = this.V2D;
     }
 
     var CLL = null;
     if (typeof this.CLL == 'undefined') {
-        CLL = require('./sh_collisions.js');
+        CLL = require('../shared/sh_collisions.js');
     } else {
         CLL = this.CLL;
     }
