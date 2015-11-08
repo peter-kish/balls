@@ -314,6 +314,16 @@
         if (exports.onTurnStart) exports.onTurnStart(this.playerBall[this.currentTurn].id);
     };
 
+    function stateToString() {
+        var result = "P1: ";
+        result += this.p1Pos;
+        result += " P2: "
+        result += this.p2Pos;
+        result += " Ball: "
+        result += this.ballPos;
+        return result;
+    }
+
     // Public
 
     exports.onTurnStart = null;
@@ -364,6 +374,7 @@
         state.p2Pos = new V2D.Vector2d(sim.playerBall[1].position.x, sim.playerBall[1].position.y);
         state.p2Score = sim.playerScore[1]
         state.ballPos = new V2D.Vector2d(sim.playBall.position.x, sim.playBall.position.y);
+        state.toString = stateToString;
         return state;
     }
 

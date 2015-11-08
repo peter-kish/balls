@@ -37,7 +37,6 @@ var FE = (function () {
 
     function hideAllMenus() {
         showElement("screen_main", false);
-        showElement("screen_host", false);
         showElement("screen_join", false);
         showElement("screen_game", false);
         if (!CL.authenticated) {
@@ -258,10 +257,17 @@ var FE = (function () {
     }
 
     module.hostMenu = function() {
-        hideAllMenus();
-        CL.host();
-        showElement("screen_host", true);
-        activeMenu = "host";
+        if (CL.clientState == "idle") {
+            CL.host();
+            enableElement("button_main_join", false);
+            enableElement("button_main_bot", false);
+            document.getElementById("button_main_host").innerHTML = "Stop Hosting";
+        } else if (CL.clientState == "hosting") {
+            CL.idle();
+            enableElement("button_main_join", true);
+            enableElement("button_main_bot", true);
+            document.getElementById("button_main_host").innerHTML = "Host";
+        }
     }
 
     module.joinMenu = function() {

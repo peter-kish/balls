@@ -7,8 +7,8 @@ var _p1Index = 0
 var _p2Index = 1
 var _fieldSize = sim.getPlayFieldSize();
 var _maxDistance = Math.sqrt(Math.pow(_fieldSize.width, 2) + Math.pow(_fieldSize.height, 2));
-var _worstScore = Number.MIN_VALUE / 4;
 var _bestScore = Number.MAX_VALUE / 4;
+var _worstScore = -_bestScore;
 var _botId = "BOT";
 
 exports.getTurn = function(playerIndex, state) {
@@ -36,7 +36,6 @@ function _getBestTurn(playerIndex, state, turns) {
             bestTurnIndex = i;
         }
     }
-
     return turns[bestTurnIndex];
 }
 
@@ -115,11 +114,16 @@ function _getTurnList(playerPos) {
             turn.x = v.x;
             turn.y = v.y;
             turn.strength = j / _strengthIterations;
+            turn.toString = _turnToString;
             turnList.push(turn);
         }
     }
 
     return turnList;
+}
+
+function _turnToString() {
+    return "(" + this.x + ", " + this.y + ", " + this.strength + ")";
 }
 
 function _getAngleVector(angle) {

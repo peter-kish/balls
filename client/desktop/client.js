@@ -76,7 +76,7 @@ var CL = (function () {
 
     module.clientName = "";
     module.clientId = "";
-    module.opponenId = "";
+    module.opponentId = "";
     module.clientState = "idle";
     module.connected = false;
     module.authenticated = false;
@@ -126,8 +126,8 @@ var CL = (function () {
                         break;
                     case "clientDisconnected":
                         console.log(json.msgData.name + " disconnected.");
-                        if (json.msgData.id == module.opponenId) {
-                            if (module.onInfoMessage) module.onInfoMessage(getClient(module.opponenId).name + " has disconnected!");
+                        if (json.msgData.id == module.opponentId) {
+                            if (module.onInfoMessage) module.onInfoMessage(getClient(module.opponentId).name + " has disconnected!");
                         }
                         removeClient(json.msgData.id);
                         if (module.onClientListChanged) module.onClientListChanged(clientList);
@@ -141,15 +141,19 @@ var CL = (function () {
                     case "newState":
                         var client = getClient(json.msgData.id);
                         client.state = json.msgData.state;
-                        if (client.id == module.opponenId && client.state == "idle") {
-                            if (module.onInfoMessage) module.onInfoMessage(getClient(module.opponenId).name + " has left the game!");
+                        if (client.id == module.opponentId && client.state == "idle") {
+                            if (module.onInfoMessage) module.onInfoMessage(getClient(module.opponentId).name + " has left the game!");
                         }
+                        if (client.id == module.clientId) {
+                            module.clientState = client.state;
+                        }
+
                         if (module.onClientListChanged) module.onClientListChanged(clientList);
                         break;
                     case "gameStart":
                         console.log("Game started: " + getClient(json.msgData.player1).name + " VS " + getClient(json.msgData.player2).name);
                         if (json.msgData.player1 == module.clientId || json.msgData.player2 == module.clientId) {
-                            module.opponenId = (json.msgData.player1 == module.clientId) ? json.msgData.player2 : json.msgData.player1;
+                            module.opponentId = (json.msgData.player1 == module.clientId) ? json.msgData.player2 : json.msgData.player1;
                             module.simulation = new SIM.createSimulation(json.msgData.player1, json.msgData.player2);
                             if (module.onGameStarted) module.onGameStarted();
                         }
@@ -210,7 +214,7 @@ var CL = (function () {
     }
 
     module.idle = function() {
-        module.opponenId = "";
+        module.opponentId = "";
         if (module.connected)
             connection.send(JSON.stringify({msgType: "idle"}));
     }
