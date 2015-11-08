@@ -297,6 +297,8 @@ var FE = (function () {
         document.getElementById("input_name").value = getSafeString(CL.clientName);
         document.getElementById("span_name").innerHTML = "Enter name:";
         showElement("screen_main", true);
+        enableElement("button_main_join", true);
+        document.getElementById("button_main_host").innerHTML = "Host";
         activeMenu = "main";
     }
 
