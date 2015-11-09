@@ -3,6 +3,9 @@ logs
 *.log
 npm-debug.log*
 
+# Atom tags file
+tags
+
 # Runtime data
 pids
 *.pid
