@@ -35,11 +35,14 @@ var server = http.createServer(function(request, response) {
 	if(request.url.indexOf('.js') != -1){
 		var scriptDir = "../client/desktop/";
 		if (request.url.substring(0,8) == "/shared/") {
-			var scriptDir = "../shared/";
+			var scriptDir = "../";
 		}
 		fs.readFile(scriptDir + request.url, function(err, script) {
 			if (err) {
-				throw err;
+				response.writeHeader(200, {"Content-Type": "text/html"});
+				response.write("404");
+				response.end();
+				return;
 			}
 
 			response.writeHeader(200, {"Content-Type": "text/javascript"});
@@ -49,7 +52,10 @@ var server = http.createServer(function(request, response) {
 	} else if (request.url.indexOf('.css') != -1) {
 		fs.readFile("../client/desktop/" + request.url, function(err, script) {
 			if (err) {
-				throw err;
+				response.writeHeader(200, {"Content-Type": "text/html"});
+				response.write("404");
+				response.end();
+				return;
 			}
 
 			response.writeHeader(200, {"Content-Type": "text/css"});
@@ -61,7 +67,10 @@ var server = http.createServer(function(request, response) {
 	} else {
 		fs.readFile('../client/desktop/frontend.html', function(err, html) {
 			if (err) {
-				throw err;
+				response.writeHeader(200, {"Content-Type": "text/html"});
+				response.write("404");
+				response.end();
+				return;
 			}
 
 			response.writeHeader(200, {"Content-Type": "text/html"});
