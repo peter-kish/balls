@@ -34,7 +34,7 @@ function loadConfig(configFile) {
 var server = http.createServer(function(request, response) {
 	if(request.url.indexOf('.js') != -1){
 		var scriptDir = "../client/desktop/";
-		if (request.url.substring(0,4) == "/sh_") {
+		if (request.url.substring(0,8) == "/shared/") {
 			var scriptDir = "../shared/";
 		}
 		fs.readFile(scriptDir + request.url, function(err, script) {
