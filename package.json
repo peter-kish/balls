@@ -4,7 +4,9 @@
   "description": "balls",
   "main": "server.js",
   "dependencies": {
+    "express": "^4.13.3",
     "node-uuid": "^1.4.3",
+    "serve-static": "^1.10.0",
     "websocket": "^1.0.22"
   },
   "devDependencies": {},

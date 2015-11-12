@@ -1,3 +1,3 @@
 var clientConfig = {
-    "server": "ws://lateralus.duckdns.org:80"
+    "server": "ws://localhost:8080"
 }

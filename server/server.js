@@ -14,6 +14,8 @@ var uuid = require('node-uuid');
 var fs = require('fs');
 var sim = require('../shared/sh_simulation.js');
 var ai = require('./ai.js');
+var express = require('express');
+var serveStatic = require('serve-static');
 
 var clients = [];
 var games = [];
@@ -31,55 +33,17 @@ function loadConfig(configFile) {
 	}
 }
 
-var server = http.createServer(function(request, response) {
-	if(request.url.indexOf('.js') != -1){
-		var scriptDir = "../client/desktop/";
-		if (request.url.substring(0,8) == "/shared/") {
-			var scriptDir = "../";
-		}
-		fs.readFile(scriptDir + request.url, function(err, script) {
-			if (err) {
-				response.writeHeader(200, {"Content-Type": "text/html"});
-				response.write("404");
-				response.end();
-				return;
-			}
+// app that can serve static content
+var app = express();
 
-			response.writeHeader(200, {"Content-Type": "text/javascript"});
-			response.write(script);
-			response.end();
-		});
-	} else if (request.url.indexOf('.css') != -1) {
-		fs.readFile("../client/desktop/" + request.url, function(err, script) {
-			if (err) {
-				response.writeHeader(200, {"Content-Type": "text/html"});
-				response.write("404");
-				response.end();
-				return;
-			}
+//include static content
+app.use(serveStatic('../shared'));
+app.use(serveStatic('../client/desktop'));
 
-			response.writeHeader(200, {"Content-Type": "text/css"});
-			response.write(script);
-			response.end();
-		});
-	} else if (request.url.indexOf('.ico') != -1) {
+//create server from app
+var server = http.createServer(app);
 
-	} else {
-		fs.readFile('../client/desktop/frontend.html', function(err, html) {
-			if (err) {
-				response.writeHeader(200, {"Content-Type": "text/html"});
-				response.write("404");
-				response.end();
-				return;
-			}
-
-			response.writeHeader(200, {"Content-Type": "text/html"});
-			response.write(html);
-			response.end();
-		});
-	}
-
-});
+//listen to configured port
 server.listen(serverConfig.port ? serverConfig.port : DEFAULT_PORT_NUMBER, function() { });
 
 // create the server
