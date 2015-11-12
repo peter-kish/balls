@@ -17,24 +17,27 @@
 		<script type="text/javascript" src="frontend.js"></script>
 
 		<div id = "wrapper">
+			<div id="screen_connect">
+				<input id="input_connect_name" type="text" onkeydown="FE.handleNameKeyPress(event)">
+				<button id="button_connect_ok" type="button" onclick="FE.connect()">Connect</button><br/>
+			</div>
 			<div id="screen_main">
-				<span id="span_name">Enter name:</span>
+				<span id="span_name">Name:</span>
 				<br/>
-				<input id="input_name" type="text" onkeydown="FE.handleNameKeyPress(event)">
-				<button id="button_main_ok" type="button" onclick="FE.setName()">Connect</button><br/>
-				<div id = "main_connected">
-					<button id="button_main_host" type="button" onclick="FE.hostMenu()">Host</button>
-					<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/>
-					<button id="button_main_bot" type="button" onclick="FE.joinBot()">Play against a bot</button><br/><br/>
-					<div>
-						<div id = "main_chat_container"></div>
-						<input id="input_main_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
-						<button id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
-					</div><br/>
-					<div>
-						<span><b>Online Players:</b></span><br/>
-						<table id = "table_main_players"></table>
-					</div>
+				<input id="input_name" type="text">
+				<button id="button_main_ok" type="button" onclick="FE.setName()">Change Name</button><br/>
+				<button id="button_main_host" type="button" onclick="FE.host()">Host</button>
+				<button id="button_main_stophost" type="button" onclick="FE.stopHost()">Stop Hosting</button>
+				<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/>
+				<button id="button_main_bot" type="button" onclick="FE.joinBot()">Play against a bot</button><br/><br/>
+				<div>
+					<div id = "main_chat_container"></div>
+					<input id="input_main_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
+					<button id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+				</div><br/>
+				<div>
+					<span><b>Online Players:</b></span><br/>
+					<table id = "table_main_players"></table>
 				</div>
 			</div>
 			<div id="screen_join">

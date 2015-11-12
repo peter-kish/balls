@@ -2,7 +2,7 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
-    var activeMenu = "main"; // main, host, join, game
+    var activeMenu = "connect"; // connect, main, host, join, game, playerlist
 
     var gameFrame = {
     	width: 480,
@@ -36,12 +36,12 @@ var FE = (function () {
     }
 
     function hideAllMenus() {
+        showElement("screen_connect", false);
         showElement("screen_main", false);
         showElement("screen_join", false);
         showElement("screen_game", false);
         if (!CL.authenticated) {
-            enableElement("button_main_ok", false);
-            showElement("main_connected", false);
+            enableElement("button_connect_ok", false);
         }
         clearElement("game_chat_container");
         clearElement("main_chat_container");
@@ -49,14 +49,11 @@ var FE = (function () {
     }
 
     function onConnectedToServer() {
-        enableElement("button_main_ok", true);
+        enableElement("button_connect_ok", true);
     }
 
     function onAuthentication() {
-        enableElement("button_main_ok", true);
-        showElement("main_connected", true);
-        document.getElementById("span_name").innerHTML = "Enter name:";
-        document.getElementById("button_main_ok").innerHTML = "Change Name";
+        module.mainMenu();
     }
 
     function onAuthFailed() {
@@ -228,7 +225,7 @@ var FE = (function () {
     var module = {};
 
     module.onPageLoad = function() {
-        module.mainMenu();
+        module.connectMenu();
         CL.connect(onConnectedToServer);
         CL.onClientListChanged = refreshClientList;
         CL.onGameStarted = startGame;
@@ -244,29 +241,38 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
+    module.connect = function() {
+        if (CL.connected) {
+            CL.requestAuthentication(document.getElementById("input_connect_name").value, onAuthentication, onAuthFailed);
+            enableElement("button_connect_ok", false);
+            return;
+        }
+    }
+
     module.setName = function() {
         if (CL.authenticated) {
             CL.changeName(document.getElementById("input_name").value);
             return;
         }
-        if (CL.connected) {
-            CL.requestAuthentication(document.getElementById("input_name").value, onAuthentication, onAuthFailed);
-            enableElement("button_main_ok", false);
-            return;
-        }
     }
 
-    module.hostMenu = function() {
+    module.host = function() {
         if (CL.clientState == "idle") {
             CL.host();
             enableElement("button_main_join", false);
             enableElement("button_main_bot", false);
-            document.getElementById("button_main_host").innerHTML = "Stop Hosting";
-        } else if (CL.clientState == "hosting") {
+            showElement("button_main_stophost", true);
+            showElement("button_main_host", false);
+        }
+    }
+
+    module.stopHost = function() {
+        if (CL.clientState == "hosting") {
             CL.idle();
             enableElement("button_main_join", true);
             enableElement("button_main_bot", true);
-            document.getElementById("button_main_host").innerHTML = "Host";
+            showElement("button_main_stophost", false);
+            showElement("button_main_host", true);
         }
     }
 
@@ -291,14 +297,21 @@ var FE = (function () {
         CL.joinBot();
     }
 
+    module.connectMenu = function() {
+        hideAllMenus();
+        showElement("screen_connect", true);
+        activeMenu = "connect";
+    }
+
     module.mainMenu = function() {
         hideAllMenus();
         CL.idle();
         document.getElementById("input_name").value = getSafeString(CL.clientName);
-        document.getElementById("span_name").innerHTML = "Enter name:";
         showElement("screen_main", true);
         enableElement("button_main_join", true);
-        document.getElementById("button_main_host").innerHTML = "Host";
+        enableElement("button_main_bot", true);
+        showElement("button_main_stophost", false);
+        showElement("button_main_host", true);
         activeMenu = "main";
     }
 
@@ -324,7 +337,7 @@ var FE = (function () {
 
     module.handleNameKeyPress = function(e) {
         if (e.keyCode == 13) {
-            module.setName();
+            module.connect();
         }
     }
 
