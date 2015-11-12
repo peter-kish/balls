@@ -56,7 +56,7 @@ var FE = (function () {
         module.mainMenu();
     }
 
-    function onAuthFailed() {
+    function onAuthFailed(reason) {
         enableElement("button_connect_ok", true);
     }
 
