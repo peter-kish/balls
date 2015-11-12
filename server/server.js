@@ -14,6 +14,8 @@ var uuid = require('node-uuid');
 var fs = require('fs');
 var sim = require('../shared/sh_simulation.js');
 var ai = require('./ai.js');
+var express = require('express');
+var serveStatic = require('serve-static');
 
 var clients = [];
 var games = [];
@@ -31,37 +33,17 @@ function loadConfig(configFile) {
 	}
 }
 
-function serveFile(response, fileName, contentType) {
-	fs.readFile(fileName, function(err, file) {
-		if (err) {
-			response.writeHeader(200, {"Content-Type": "text/html"});
-			response.write("404");
-			response.end();
-			return;
-		}
+// app that can serve static content
+var app = express();
 
-		response.writeHeader(200, {"Content-Type": contentType});
-		response.write(file);
-		response.end();
-	});
-}
+//include static content
+app.use(serveStatic('../shared'));
+app.use(serveStatic('../client/desktop'));
 
-var server = http.createServer(function(request, response) {
-	if(request.url.indexOf('.js') != -1){
-		var scriptDir = "../client/desktop/";
-		if (request.url.substring(0,8) == "/shared/") {
-			var scriptDir = "../";
-		}
-		serveFile(response, scriptDir + request.url, "text/javascript");
-	} else if (request.url.indexOf('.css') != -1) {
-		serveFile(response, "../client/desktop/" + request.url, "text/css");
-	} else if (request.url.indexOf('.ico') != -1) {
+//create server from app
+var server = http.createServer(app);
 
-	} else {
-		serveFile(response, "../client/desktop/frontend.html", "text/html");
-	}
-
-});
+//listen to configured port
 server.listen(serverConfig.port ? serverConfig.port : DEFAULT_PORT_NUMBER, function() { });
 
 // create the server
