@@ -112,6 +112,7 @@ var CL = (function () {
                     case "authDenied":
                         console.log("Authentication failed");
                         if (module.onAuthFailed) module.onAuthFailed();
+                        break;
                     case "clientList":
                         clearClients();
                         clientList = json.msgData.list;

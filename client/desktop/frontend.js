@@ -57,7 +57,7 @@ var FE = (function () {
     }
 
     function onAuthFailed() {
-        document.getElementById("span_name").innerHTML = "Name already taken! Enter a different one:";
+        enableElement("button_connect_ok", true);
     }
 
     function refreshClientList(clientList) {
