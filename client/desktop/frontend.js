@@ -17,50 +17,20 @@ var FE = (function () {
         return s.replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
     }
 
-    function showElement(id, visible) {
-        document.getElementById(id).style.display = visible?"block":"none";
-    }
-
-    function enableElement(id, enabled) {
-        document.getElementById(id).disabled = !enabled;
-    }
-
-    function clearElement(id) {
-        var element = document.getElementById(id);
-        element.innerHTML = "";
-    }
-
     function scrollToBottom(id) {
         var element = document.getElementById(id);
         element.scrollTop = element.scrollHeight;
     }
 
-    function hideAllMenus() {
-        showElement("screen_main", false);
-        showElement("screen_join", false);
-        showElement("screen_game", false);
-        if (!CL.authenticated) {
-            // enableElement("button_main_ok", false);
-            showElement("main_connected", false);
-        }
-        clearElement("game_chat_container");
-        clearElement("main_chat_container");
-        SIMR.stop();
-    }
-
-    function onConnectedToServer() {
-        // enableElement("button_main_ok", true);
-    }
-
     function onAuthentication() {
-        // enableElement("button_main_ok", true);
-        // showElement("main_connected", true);
-        // document.getElementById("span_name").innerHTML = "Enter name:";
-        // document.getElementById("button_main_ok").innerHTML = "Change Name";
+      var name = $('#input_name').val();
+      $('#screen_main').hide();
+      $('#main_connected').show();
+      $('#set_name').val(name);
     }
 
     function onAuthFailed() {
-        document.getElementById("span_name").innerHTML = "Name already taken! Enter a different one:";
+      $("#error_login").text("Name already taken! Enter a different one");
     }
 
     function refreshClientList(clientList) {
@@ -93,11 +63,9 @@ var FE = (function () {
     }
 
     function startGame(id1, id2) {
-        hideAllMenus();
-        showElement("screen_game", true);
+        SIMR.stop();
         SIMR.start(document.getElementById("game_canvas"));
         resizeCanvas();
-        activeMenu = "game";
     }
 
     function getMouseCoords(event, element) {
@@ -171,18 +139,14 @@ var FE = (function () {
     function addMessageSpan(divId, message) {
         var chatDiv = document.getElementById(divId);
         if (chatDiv.innerHTML != "")
-            chatDiv.innerHTML += "<br/>"
+            chatDiv.innerHTML += "\n"
         chatDiv.innerHTML += message;
     }
 
     var chatIntervalHandle = null;
     function displayInfoMessage(message) {
-        if (activeMenu == "game") {
-            showElement("game_chat_container", true);
+        if ($('#game_chat_container:visible').length) {
             addMessageSpan("game_chat_container", message);
-            adjustChatbox();
-            if (chatIntervalHandle) window.clearInterval(chatIntervalHandle);
-            chatIntervalHandle = window.setInterval(hideChat, CHAT_HIDE_TIME);
         } else {
             addMessageSpan("main_chat_container", message);
             scrollToBottom("main_chat_container");
@@ -192,11 +156,6 @@ var FE = (function () {
     function displayChatMessage(name, message) {
         var message = "[" + getSafeString(name) + "]: " + getSafeString(message);
         displayInfoMessage(message);
-    }
-
-    function hideChat() {
-        showElement("game_chat_container", false);
-        window.clearInterval(chatIntervalHandle);
     }
 
     function resizeCanvas() {
@@ -229,7 +188,7 @@ var FE = (function () {
 
     module.onPageLoad = function() {
         module.mainMenu();
-        CL.connect(onConnectedToServer);
+        CL.connect();
         CL.onClientListChanged = refreshClientList;
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
@@ -244,46 +203,36 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
-    module.setName = function() {
+    module.setName = function(name) {
         if (CL.authenticated) {
-            CL.changeName(document.getElementById("input_name").value);
+            CL.changeName(name);
             return;
         }
         if (CL.connected) {
-            CL.requestAuthentication(document.getElementById("input_name").value, onAuthentication, onAuthFailed);
-            // enableElement("button_main_ok", false);
-            return;
+            CL.requestAuthentication(name, onAuthentication, onAuthFailed);
         }
     }
 
     module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
-            enableElement("button_main_join", false);
-            enableElement("button_main_bot", false);
-            document.getElementById("button_main_host").innerHTML = "Stop Hosting";
+            return true;
         } else if (CL.clientState == "hosting") {
             CL.idle();
-            enableElement("button_main_join", true);
-            enableElement("button_main_bot", true);
-            document.getElementById("button_main_host").innerHTML = "Host";
+            return false;
         }
     }
 
     module.joinMenu = function() {
-        hideAllMenus();
-        showElement("screen_join", true);
+        SIMR.stop();
         refreshClientList(CL.getClientList());
-        activeMenu = "join";
     }
 
     module.joinRefresh = function() {
         refreshClientList(CL.getClientList());
     }
 
-    module.joinClient = function() {
-        var select = document.getElementById("list_join_clients");
-        var hostID = select.options[select.selectedIndex].value;
+    module.joinClient = function(hostId) {
         CL.join(hostID);
     }
 
@@ -292,40 +241,12 @@ var FE = (function () {
     }
 
     module.mainMenu = function() {
-        hideAllMenus();
+        SIMR.stop();
         CL.idle();
-        document.getElementById("input_name").value = getSafeString(CL.clientName);
-        document.getElementById("span_name").innerHTML = "Enter name:";
-        showElement("screen_main", true);
-        enableElement("button_main_join", true);
-        document.getElementById("button_main_host").innerHTML = "Host";
-        activeMenu = "main";
     }
 
-    module.sendChatMessage = function() {
-        var input = null;
-        if (activeMenu == "game") {
-            input = document.getElementById("input_game_chat");
-        } else {
-            input = document.getElementById("input_main_chat");
-        }
-        var message = input.value;
-        if (message != "") {
-            input.value = "";
-            CL.chat(message);
-        }
-    }
-
-    module.handleChatKeyPress = function(e) {
-        if (e.keyCode == 13) {
-            module.sendChatMessage();
-        }
-    }
-
-    module.handleNameKeyPress = function(e) {
-        if (e.keyCode == 13) {
-            module.setName();
-        }
+    module.sendChatMessage = function(message) {
+      CL.chat(message);
     }
 
     return module;

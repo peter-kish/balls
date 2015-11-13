@@ -48,6 +48,14 @@ html, body {
   width:100%;
 }
 
+.error {
+  color:red;
+}
+
+#game_input_area {
+  display: inline-block;
+}
+
 /*#wrapper {
     position: absolute;
     top: 0;

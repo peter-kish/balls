@@ -6,11 +6,8 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	</head>
-	<body onload="FE.onPageLoad();">
-
-
+	<body>
 		<div id = "wrapper" class="container-fluid">
-
 			<div id="screen_main" class="text-center">
 				<h1 class="main-header"> BALLS </h1>
 				<div class="row">
@@ -18,7 +15,7 @@
 				</div>
 				<div class="row top-buffer-medium">
 					<div class="col-xs-18 col-md-12">
-						<span id="span_name" class="width-medium">Enter name</span>
+						<span id="span_name" class="width-medium">Enter name</span><br/><span id="error_login" class="width-medium error"></span>
 					</div>
 				</div>
 				<div class="row top-buffer-medium">
@@ -28,26 +25,26 @@
 				</div>
 				<div class="row top-buffer-medium">
 					<div class="col-xs-18 col-md-12">
-						<button id="button_main_ok" class="btn btn-primary width-medium disabled" type="button" onclick="FE.setName()">Connect</button>
+						<button id="button_main_ok" class="btn btn-primary width-medium disabled" type="button">Connect</button>
 					</div>
 				</div>
 			</div>
 			<div id = "main_connected">
 				<div class="row text-center top-buffer-medium">
 						<div class="col-xs-18 col-md-12">
-							<input id="input_name" class="width-medium" type="text" />
-							<button id="button_main_ok" class="btn btn-primary glyphicon glyphicon-edit" type="button" onclick="FE.setName()"></button>
+							<input id="set_name" class="width-medium" type="text" />
+							<button id="button_main_ok" class="btn btn-primary glyphicon glyphicon-edit" type="button"></button>
 						</div>
 				</div>
 				<div class="row text-center top-buffer-medium">
 						<div class="col-xs-18 col-md-12">
-							<button id="button_main_host" class="btn btn-primary" type="button" onclick="FE.hostMenu()">Host</button>
-							<button id="button_main_join" class="btn btn-primary" data-toggle="modal" data-target="#modal_players_join" type="button" onclick="FE.joinMenu()">Join</button>
+							<button id="button_main_host" class="btn btn-primary" type="button">Host</button>
+							<button id="button_main_join" class="btn btn-primary" data-toggle="modal" data-target="#modal_players_join" type="button">Join</button>
 						</div>
 				</div>
 				<div class="row text-center top-buffer-medium">
 						<div class="col-xs-18 col-md-12">
-							<button id="button_main_bot" class="btn btn-primary" type="button" onclick="FE.joinBot()">vs AI</button>
+							<button id="button_main_bot" class="btn btn-primary" type="button">vs AI</button>
 							<button id="button_players" class="btn btn-primary" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
 						</div>
 				</div>
@@ -57,7 +54,7 @@
 				    <div class="input-group">
 							<input id="input_main_chat" type="text" class="form-control" placeholder="Input text">
 				      <span class="input-group-btn">
-				        <button class="btn btn-default" id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+				        <button class="btn btn-default" id="button_main_send" type="button">Send</button>
 				      </span>
 				    </div>
 				  </div>
@@ -69,10 +66,6 @@
 				<div id="game_toolbar" class="row text-center">
 					<button data-toggle="modal" class="btn btn-primary glyphicon glyphicon-envelope" data-target="#modal_chat" type="button"></button>
 					<button data-toggle="modal" class="btn btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
-
-					<!-- <button id="button_game_back" type="button" onclick="FE.mainMenu()">Back</button>
-					<input id="input_game_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
-					<button id="button_game_send" type="button" onclick="FE.sendChatMessage()">Send</button> -->
 				</div>
 				<div id = "game_canvas_container" class="row text-center">
 					<div id="game_input_area"><canvas id="game_canvas" width="480" height="640"></canvas></div>
@@ -93,8 +86,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="screen_join">
-		</div>
+		<!-- <div id="screen_join">
+		</div> -->
 		<div id="modal_players_join" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -106,9 +99,9 @@
 						<select id="list_join_clients" class="form-control" size="20"></select>
 					</div>
 					<div class="modal-footer">
-						<button id="button_join_join" type="button" class="btn btn-primary" onclick="FE.joinClient()" data-dismiss="modal">Join</button>
-						<button id="button_join_refresh" type="button" class="btn btn-info" onclick="FE.joinRefresh()">Refresh</button>
-						<button id="button_join_back" type="button" class="btn btn-default" onclick="FE.mainMenu()" data-dismiss="modal">Close</button>
+						<button id="button_join_join" type="button" class="btn btn-primary" data-dismiss="modal">Join</button>
+						<button id="button_join_refresh" type="button" class="btn btn-info">Refresh</button>
+						<button id="button_join_back" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>
@@ -126,7 +119,7 @@
 							<div class="input-group">
 								<input id="input_game_chat" type="text" class="form-control" placeholder="Input text">
 								<span class="input-group-btn">
-									<button class="btn btn-default" id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+									<button class="btn btn-default" id="button_game_send" type="button">Send</button>
 								</span>
 							</div>
 						</div>
@@ -141,8 +134,8 @@
 						Surrender and go back go main menu?
 					</div>
 					<div class="modal-footer">
-						<button id="button_join_join" type="button" class="btn btn-primary" onclick="FE.joinClient()" data-dismiss="modal">No</button>
-						<button id="button_join_join" type="button" class="btn btn-danger" onclick="FE.joinClient()" data-dismiss="modal">Yes</button>
+						<button type="button" class="btn btn-primary"  data-dismiss="modal">No</button>
+						<button id="exit_game_button" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
 					</div>
 				</div>
 			</div>
@@ -150,7 +143,7 @@
 
 
 
-
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script type="text/javascript" src="config_client.js"></script>
 		<script type="text/javascript" src="fader.js"></script>
 		<script type="text/javascript" src="sh_vector.js"></script>
@@ -160,7 +153,6 @@
 		<script type="text/javascript" src="draw.js"></script>
 		<script type="text/javascript" src="simulation_render.js"></script>
 		<script type="text/javascript" src="frontend.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="style.js"></script>
 	</body>
