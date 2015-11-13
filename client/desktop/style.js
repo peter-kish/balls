@@ -45,6 +45,7 @@ $(document).ready(function () {
     $('#screen_game').hide();
     $('#main_connected').show();
     $('body').toggleClass("background-color");
+    $('#game_chat_container').text('');
     FE.mainMenu();
   });
 
@@ -116,3 +117,71 @@ $(document).ready(function () {
   });
 
 });
+
+
+var PAINTER = (function () {
+
+  var getSafeString = function (s) {
+      var lt = /</g,
+      gt = />/g,
+      ap = /'/g,
+      ic = /"/g;
+      return s.replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
+  }
+
+  var addMessageSpan = function (divId, message) {
+      if ($(divId).text() != "")
+          $(divId).append("\n");
+      $(divId).append(message);
+  }
+
+  var scrollToBottom = function (id) {
+      $(id).scrollTop($(id)[0].scrollHeight)
+  }
+
+  return {
+    repaintClientsLists: function (clientList) {
+      $('#list_join_clients').find('option').remove();
+      for (var i = 0; i < clientList.length; i++) {
+        if (clientList[i].state == "hosting") {
+          $('#list_join_clients').append($("<option></option>")
+                                  .attr("value",clientList[i].id)
+                                  .text(getSafeString(clientList[i].name)));
+        }
+      }
+
+      $('#table_main_players').find("tr").remove();
+      for (var i = 0; i < clientList.length; i++) {
+        $('#table_main_players').append(
+          '<tr>' +
+            '<td>(' + (i+1) + ')</td>' +
+            '<td>' + getSafeString(clientList[i].name) + '</td>' +
+            '<td>['+ clientList[i].state +']</td>' +
+          '</tr>'
+        );
+      }
+    },
+    setPlayerName: function() {
+      var name = $('#input_name').val();
+      $('#screen_main').hide();
+      $('#main_connected').show();
+      $('#set_name').val(name);
+    },
+    displayErrorMessage: function() {
+      $("#error_login").text("Name already taken! Enter a different one");
+    },
+    printMessage: function(name, message) {
+      if (name) {
+         message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+      }
+      if ($('#game_chat_container:visible').length) {
+          addMessageSpan("#game_chat_container", message);
+          scrollToBottom("#game_chat_container");
+      } else {
+          addMessageSpan("#main_chat_container", message);
+          scrollToBottom("#main_chat_container");
+      }
+    }
+
+  }
+}());

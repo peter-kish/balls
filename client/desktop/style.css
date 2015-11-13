@@ -60,7 +60,7 @@ html, body {
   color:red;
 }
 
-#game_input_area {
+.inline {
   display: inline-block;
 }
 

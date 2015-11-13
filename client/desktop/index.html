@@ -45,12 +45,14 @@
 					<div class="col-md-4"></div>
 				</div>
 				<div class="row text-center">
-						<div class="col-xs-18 col-md-12">
-							<button id="button_main_host" class="btn btn-primary width-small top-buffer-medium" type="button">Host</button>
-							<button id="button_main_join" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players_join" type="button">Join</button>
-							<button id="button_main_bot" class="btn btn-primary width-small top-buffer-medium" type="button">vs AI</button>
-							<button id="button_players" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
-						</div>
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<button id="button_main_host" class="btn btn-primary width-small top-buffer-medium" type="button">Host</button>
+						<button id="button_main_join" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players_join" type="button">Join</button>
+						<button id="button_main_bot" class="btn btn-primary width-small top-buffer-medium" type="button">vs AI</button>
+						<button id="button_players" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
+					</div>
+					<div class="col-md-4"></div>
 				</div>
 				<div class="row text-center top-buffer-medium">
 					<div class="col-md-4"></div>
@@ -74,7 +76,7 @@
 						<button data-toggle="modal" class="btn btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
 				</div>
 				<div id = "game_canvas_container" class="row text-center top-buffer-medium">
-					<div id="game_input_area"><canvas id="game_canvas" width="480" height="640"></canvas></div>
+					<div id="game_input_area" class="inline"><canvas id="game_canvas" width="480" height="640"></canvas></div>
 				</div>
 			</div>
 		</div>
@@ -150,6 +152,7 @@
 
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="config_client.js"></script>
 		<script type="text/javascript" src="fader.js"></script>
 		<script type="text/javascript" src="sh_vector.js"></script>
@@ -158,8 +161,7 @@
 		<script type="text/javascript" src="client.js"></script>
 		<script type="text/javascript" src="draw.js"></script>
 		<script type="text/javascript" src="simulation_render.js"></script>
-		<script type="text/javascript" src="frontend.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="style.js"></script>
+		<script type="text/javascript" src="frontend.js"></script>
 	</body>
 </html>

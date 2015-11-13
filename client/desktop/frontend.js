@@ -9,57 +9,16 @@ var FE = (function () {
     	height: 800
     }
 
-    function getSafeString(s) {
-        var lt = /</g,
-        gt = />/g,
-        ap = /'/g,
-        ic = /"/g;
-        return s.replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
-    }
-
-    function scrollToBottom(id) {
-        var element = document.getElementById(id);
-        element.scrollTop = element.scrollHeight;
-    }
-
     function onAuthentication() {
-      var name = $('#input_name').val();
-      $('#screen_main').hide();
-      $('#main_connected').show();
-      $('#set_name').val(name);
+      PAINTER.setPlayerName();
     }
 
     function onAuthFailed() {
-      $("#error_login").text("Name already taken! Enter a different one");
+      PAINTER.displayErrorMessage();
     }
 
     function refreshClientList(clientList) {
-        var select = document.getElementById("list_join_clients");
-        while (select.length > 0) {
-    		select.remove(0);
-    	}
-    	for (var i = 0; i < clientList.length; i++) {
-            if (clientList[i].state == "hosting") {
-        		var option = document.createElement("option");
-        		option.text = getSafeString(clientList[i].name);
-                option.value = clientList[i].id;
-        		select.add(option);
-            }
-    	}
-
-        var playersTable = document.getElementById("table_main_players");
-        while (playersTable.rows.length > 0) {
-            playersTable.deleteRow(0);
-        }
-        for (var i = 0; i < clientList.length; i++) {
-            var row = playersTable.insertRow(playersTable.rows.length);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            cell1.innerHTML = "(" + (i+1) + ")";
-            cell2.innerHTML = getSafeString(clientList[i].name);
-            cell3.innerHTML = "[" + clientList[i].state + "]";
-        }
+      PAINTER.repaintClientsLists(clientList);
     }
 
     function startGame(id1, id2) {
@@ -128,25 +87,12 @@ var FE = (function () {
         e.preventDefault();
     }
 
-    function addMessageSpan(divId, message) {
-        var chatDiv = document.getElementById(divId);
-        if (chatDiv.innerHTML != "")
-            chatDiv.innerHTML += "\n"
-        chatDiv.innerHTML += message;
-    }
-
     function displayInfoMessage(message) {
-        if ($('#game_chat_container:visible').length) {
-            addMessageSpan("game_chat_container", message);
-        } else {
-            addMessageSpan("main_chat_container", message);
-            scrollToBottom("main_chat_container");
-        }
+      PAINTER.printMessage(null, message);
     }
 
     function displayChatMessage(name, message) {
-        var message = "[" + getSafeString(name) + "]: " + getSafeString(message);
-        displayInfoMessage(message);
+      PAINTER.printMessage(name, message);
     }
 
     function resizeCanvas() {
@@ -200,6 +146,8 @@ var FE = (function () {
         }
     }
 
+// FIND appropriate names for following functions
+
     module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
@@ -236,5 +184,7 @@ var FE = (function () {
       CL.chat(message);
     }
 
+// FIND appropriate names for following functions END
+
     return module;
-}(CL, SIMR));
+}(CL, SIMR, PAINTER));
