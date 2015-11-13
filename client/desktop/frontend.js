@@ -128,14 +128,6 @@ var FE = (function () {
         e.preventDefault();
     }
 
-    function adjustChatbox() {
-        var chatDiv = document.getElementById("game_chat_container");
-        var canvas = document.getElementById("game_canvas");
-        while (chatDiv.offsetHeight > canvas.offsetHeight) {
-            chatDiv.removeChild(chatDiv.childNodes[0]);
-        }
-    }
-
     function addMessageSpan(divId, message) {
         var chatDiv = document.getElementById(divId);
         if (chatDiv.innerHTML != "")
@@ -143,7 +135,6 @@ var FE = (function () {
         chatDiv.innerHTML += message;
     }
 
-    var chatIntervalHandle = null;
     function displayInfoMessage(message) {
         if ($('#game_chat_container:visible').length) {
             addMessageSpan("game_chat_container", message);
@@ -172,14 +163,10 @@ var FE = (function () {
         }
         canvas.width = CDRAW.getScale() * gameFrame.width;
         canvas.height = CDRAW.getScale() * gameFrame.height;
-
-        var chat = document.getElementById("game_chat_container");
-        chat.style.maxWidth = CDRAW.getScale() * gameFrame.width + "px";
     }
 
     function onWindowResize(e) {
         resizeCanvas();
-        adjustChatbox();
     }
 
     // Public

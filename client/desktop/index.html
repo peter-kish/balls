@@ -9,18 +9,20 @@
 	<body>
 		<div id = "wrapper" class="container-fluid">
 			<div id="screen_main" class="text-center">
-				<h1 class="main-header"> BALLS </h1>
 				<div class="row">
+					<h1 class="main-header"> BALLS </h1>
+				</div>
+				<div class="row circle-wrapper">
 					<div class="circle"></div>
 				</div>
 				<div class="row top-buffer-medium">
 					<div class="col-xs-18 col-md-12">
-						<span id="span_name" class="width-medium">Enter name</span><br/><span id="error_login" class="width-medium error"></span>
+						<span id="error_login" class="width-medium error"></span>
 					</div>
 				</div>
 				<div class="row top-buffer-medium">
 					<div class="col-xs-18 col-md-12">
-						<input id="input_name" class="width-medium" type="text" />
+						<input id="input_name" class="width-medium" type="text" placeholder="Enter name" />
 					</div>
 				</div>
 				<div class="row top-buffer-medium">
@@ -31,43 +33,47 @@
 			</div>
 			<div id = "main_connected">
 				<div class="row text-center top-buffer-medium">
-						<div class="col-xs-18 col-md-12">
-							<input id="set_name" class="width-medium" type="text" />
-							<button id="button_main_ok" class="btn btn-primary glyphicon glyphicon-edit" type="button"></button>
-						</div>
-				</div>
-				<div class="row text-center top-buffer-medium">
-						<div class="col-xs-18 col-md-12">
-							<button id="button_main_host" class="btn btn-primary" type="button">Host</button>
-							<button id="button_main_join" class="btn btn-primary" data-toggle="modal" data-target="#modal_players_join" type="button">Join</button>
-						</div>
-				</div>
-				<div class="row text-center top-buffer-medium">
-						<div class="col-xs-18 col-md-12">
-							<button id="button_main_bot" class="btn btn-primary" type="button">vs AI</button>
-							<button id="button_players" class="btn btn-primary" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
-						</div>
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div class="input-group">
+							<input id="set_name" class="form-control" type="text" />
+				      <span class="input-group-btn">
+				        <button id="button_main_edit" class="btn btn-primary glyphicon glyphicon-edit" type="button"></button>
+				      </span>
+				    </div>
+					</div>
+					<div class="col-md-4"></div>
 				</div>
 				<div class="row text-center">
-					<div class="col-xs-18 col-md-12">
-						<textarea id = "main_chat_container" disabled class="form-control" rows="5"></textarea>
+						<div class="col-xs-18 col-md-12">
+							<button id="button_main_host" class="btn btn-primary width-small top-buffer-medium" type="button">Host</button>
+							<button id="button_main_join" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players_join" type="button">Join</button>
+							<button id="button_main_bot" class="btn btn-primary width-small top-buffer-medium" type="button">vs AI</button>
+							<button id="button_players" class="btn btn-primary width-small top-buffer-medium" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
+						</div>
+				</div>
+				<div class="row text-center top-buffer-medium">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<textarea id = "main_chat_container" disabled class="form-control" rows="10"></textarea>
 				    <div class="input-group">
-							<input id="input_main_chat" type="text" class="form-control" placeholder="Input text">
+							<input id="input_main_chat" type="text" class="form-control" placeholder="chat">
 				      <span class="input-group-btn">
 				        <button class="btn btn-default" id="button_main_send" type="button">Send</button>
 				      </span>
 				    </div>
 				  </div>
+					<div class="col-md-4"></div>
 				</div>
 			</div>
 
 			<div id="screen_game" class="full-screen">
 
 				<div id="game_toolbar" class="row text-center">
-					<button data-toggle="modal" class="btn btn-primary glyphicon glyphicon-envelope" data-target="#modal_chat" type="button"></button>
-					<button data-toggle="modal" class="btn btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
+						<button data-toggle="modal" class="btn btn-primary glyphicon glyphicon-envelope" data-target="#modal_chat" type="button"></button>
+						<button data-toggle="modal" class="btn btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
 				</div>
-				<div id = "game_canvas_container" class="row text-center">
+				<div id = "game_canvas_container" class="row text-center top-buffer-medium">
 					<div id="game_input_area"><canvas id="game_canvas" width="480" height="640"></canvas></div>
 				</div>
 			</div>
@@ -115,9 +121,9 @@
 						<h4 class="modal-title">Chat</h4>
 					</div>
 					<div class="modal-body">
-							<textarea id = "game_chat_container" disabled class="form-control" rows="5"></textarea>
+							<textarea id = "game_chat_container" disabled class="form-control" rows="8"></textarea>
 							<div class="input-group">
-								<input id="input_game_chat" type="text" class="form-control" placeholder="Input text">
+								<input id="input_game_chat" type="text" class="form-control" placeholder="chat">
 								<span class="input-group-btn">
 									<button class="btn btn-default" id="button_game_send" type="button">Send</button>
 								</span>
@@ -131,7 +137,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-body">
-						Surrender and go back go main menu?
+						Surrender and go back to the loby?
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary"  data-dismiss="modal">No</button>

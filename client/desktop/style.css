@@ -18,6 +18,10 @@ html, body {
   color: grey;
 }
 
+.circle-wrapper {
+  margin-left: -50px !important;
+}
+
 .circle {
   background-color: red;
   width: 100px;
@@ -41,6 +45,10 @@ html, body {
 
 .width-medium {
   width: 30em;
+}
+
+.width-small {
+  width: 10em;
 }
 
 .full-screen {

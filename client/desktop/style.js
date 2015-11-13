@@ -5,7 +5,7 @@ $(document).ready(function () {
   $('#main_connected').hide();
   $('#screen_game').hide();
 
-  $('#button_main_ok').click(function() {
+  $('#button_main_ok, #button_main_edit').click(function() {
     var name;
     if ($("#set_name:visible").length) {
       name = $("#set_name").val();
@@ -45,6 +45,7 @@ $(document).ready(function () {
     $('#screen_game').hide();
     $('#main_connected').show();
     $('body').toggleClass("background-color");
+    FE.mainMenu();
   });
 
   $('#button_main_host').click(function() {
