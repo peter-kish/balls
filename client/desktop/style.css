@@ -64,6 +64,14 @@ html, body {
   display: inline-block;
 }
 
+#game_canvas_container {
+    position: absolute;
+    top: 30px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 /*#wrapper {
     position: absolute;
     top: 0;
