@@ -22,6 +22,7 @@ var FE = (function () {
 
     function startGame(id1, id2) {
         SIMR.stop();
+        PAINTER.startGame();
         SIMR.start(document.getElementById("game_canvas"));
         resizeCanvas();
     }

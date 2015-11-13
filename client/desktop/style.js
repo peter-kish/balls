@@ -184,6 +184,11 @@ var PAINTER = (function () {
           addMessageSpan("#main_chat_container", message);
           scrollToBottom("#main_chat_container");
       }
+    },
+    startGame: function() {
+      $('#main_connected').hide();
+      $('#screen_game').show();
+      $('body').toggleClass("background-color");
     }
 
   }
