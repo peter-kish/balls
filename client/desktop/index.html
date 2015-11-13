@@ -4,8 +4,153 @@
 	<head>
 		<title>Balls</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	</head>
 	<body onload="FE.onPageLoad();">
+
+
+		<div id = "wrapper" class="container-fluid">
+
+			<div id="screen_main" class="text-center">
+				<h1 class="main-header"> BALLS </h1>
+				<div class="row">
+					<div class="circle"></div>
+				</div>
+				<div class="row top-buffer-medium">
+					<div class="col-xs-18 col-md-12">
+						<span id="span_name" class="width-medium">Enter name</span>
+					</div>
+				</div>
+				<div class="row top-buffer-medium">
+					<div class="col-xs-18 col-md-12">
+						<input id="input_name" class="width-medium" type="text" />
+					</div>
+				</div>
+				<div class="row top-buffer-medium">
+					<div class="col-xs-18 col-md-12">
+						<button id="button_main_ok" class="btn btn-primary width-medium disabled" type="button" onclick="FE.setName()">Connect</button>
+					</div>
+				</div>
+			</div>
+			<div id = "main_connected">
+				<div class="row text-center top-buffer-medium">
+						<div class="col-xs-18 col-md-12">
+							<input id="input_name" class="width-medium" type="text" />
+							<button id="button_main_ok" class="btn btn-primary glyphicon glyphicon-edit" type="button" onclick="FE.setName()"></button>
+						</div>
+				</div>
+				<div class="row text-center top-buffer-medium">
+						<div class="col-xs-18 col-md-12">
+							<button id="button_main_host" class="btn btn-primary" type="button" onclick="FE.hostMenu()">Host</button>
+							<button id="button_main_join" class="btn btn-primary" data-toggle="modal" data-target="#modal_players_join" type="button" onclick="FE.joinMenu()">Join</button>
+						</div>
+				</div>
+				<div class="row text-center top-buffer-medium">
+						<div class="col-xs-18 col-md-12">
+							<button id="button_main_bot" class="btn btn-primary" type="button" onclick="FE.joinBot()">vs AI</button>
+							<button id="button_players" class="btn btn-primary" data-toggle="modal" data-target="#modal_players" type="button">Players</button>
+						</div>
+				</div>
+				<div class="row text-center">
+					<div class="col-xs-18 col-md-12">
+						<textarea id = "main_chat_container" disabled class="form-control" rows="5"></textarea>
+				    <div class="input-group">
+							<input id="input_main_chat" type="text" class="form-control" placeholder="Input text">
+				      <span class="input-group-btn">
+				        <button class="btn btn-default" id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+				      </span>
+				    </div>
+				  </div>
+				</div>
+			</div>
+
+			<div id="screen_game" class="full-screen">
+
+				<div id="game_toolbar" class="row text-center">
+					<button data-toggle="modal" class="btn btn-primary glyphicon glyphicon-envelope" data-target="#modal_chat" type="button"></button>
+					<button data-toggle="modal" class="btn btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
+
+					<!-- <button id="button_game_back" type="button" onclick="FE.mainMenu()">Back</button>
+					<input id="input_game_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
+					<button id="button_game_send" type="button" onclick="FE.sendChatMessage()">Send</button> -->
+				</div>
+				<div id = "game_canvas_container" class="row text-center">
+					<div id="game_input_area"><canvas id="game_canvas" width="480" height="640"></canvas></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="modal_players" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Online Players</h4>
+					</div>
+					<div class="modal-body">
+						<table id = "table_main_players" class="table table-striped"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="screen_join">
+		</div>
+		<div id="modal_players_join" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Select a player to join</h4>
+					</div>
+					<div class="modal-body">
+						<select id="list_join_clients" class="form-control" size="20"></select>
+					</div>
+					<div class="modal-footer">
+						<button id="button_join_join" type="button" class="btn btn-primary" onclick="FE.joinClient()" data-dismiss="modal">Join</button>
+						<button id="button_join_refresh" type="button" class="btn btn-info" onclick="FE.joinRefresh()">Refresh</button>
+						<button id="button_join_back" type="button" class="btn btn-default" onclick="FE.mainMenu()" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="modal_chat" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Chat</h4>
+					</div>
+					<div class="modal-body">
+							<textarea id = "game_chat_container" disabled class="form-control" rows="5"></textarea>
+							<div class="input-group">
+								<input id="input_game_chat" type="text" class="form-control" placeholder="Input text">
+								<span class="input-group-btn">
+									<button class="btn btn-default" id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
+								</span>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="modal_exit" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						Surrender and go back go main menu?
+					</div>
+					<div class="modal-footer">
+						<button id="button_join_join" type="button" class="btn btn-primary" onclick="FE.joinClient()" data-dismiss="modal">No</button>
+						<button id="button_join_join" type="button" class="btn btn-danger" onclick="FE.joinClient()" data-dismiss="modal">Yes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
 		<script type="text/javascript" src="config_client.js"></script>
 		<script type="text/javascript" src="fader.js"></script>
 		<script type="text/javascript" src="sh_vector.js"></script>
@@ -15,49 +160,8 @@
 		<script type="text/javascript" src="draw.js"></script>
 		<script type="text/javascript" src="simulation_render.js"></script>
 		<script type="text/javascript" src="frontend.js"></script>
-
-		<div id = "wrapper">
-			<div id="screen_main">
-				<span id="span_name">Enter name:</span>
-				<br/>
-				<input id="input_name" type="text" onkeydown="FE.handleNameKeyPress(event)">
-				<button id="button_main_ok" type="button" onclick="FE.setName()">Connect</button><br/>
-				<div id = "main_connected">
-					<button id="button_main_host" type="button" onclick="FE.hostMenu()">Host</button>
-					<button id="button_main_join" type="button" onclick="FE.joinMenu()">Join</button><br/>
-					<button id="button_main_bot" type="button" onclick="FE.joinBot()">Play against a bot</button><br/><br/>
-					<div>
-						<div id = "main_chat_container"></div>
-						<input id="input_main_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
-						<button id="button_main_send" type="button" onclick="FE.sendChatMessage()">Send</button>
-					</div><br/>
-					<div>
-						<span><b>Online Players:</b></span><br/>
-						<table id = "table_main_players"></table>
-					</div>
-				</div>
-			</div>
-			<div id="screen_join">
-				<span>Select a player to join</span>
-				<br/>
-				<select id="list_join_clients" size="20"></select>
-				<br/>
-				<button id="button_join_join" type="button" onclick="FE.joinClient()">Join</button>
-				<button id="button_join_refresh" type="button" onclick="FE.joinRefresh()">Refresh</button>
-				<button id="button_join_back" type="button" onclick="FE.mainMenu()">Back</button>
-			</div>
-			<div id="screen_game">
-				<div id="game_toolbar">
-					<button id="button_game_back" type="button" onclick="FE.mainMenu()">Back</button>
-					<input id="input_game_chat" type="text" onkeydown="FE.handleChatKeyPress(event)">
-					<button id="button_game_send" type="button" onclick="FE.sendChatMessage()">Send</button>
-				</div>
-				<div id = "game_canvas_container">
-					<div id="game_chat_container"></div>
-					<canvas id="game_canvas" width="480" height="640"></canvas>
-					<div id="game_input_area"></div>
-				</div>
-			</div>
-		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="style.js"></script>
 	</body>
 </html>

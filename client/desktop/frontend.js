@@ -2,7 +2,7 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
-    var activeMenu = "main"; // main, host, join, game
+    // var activeMenu = "main"; // main, host, join, game
 
     var gameFrame = {
     	width: 480,
@@ -40,7 +40,7 @@ var FE = (function () {
         showElement("screen_join", false);
         showElement("screen_game", false);
         if (!CL.authenticated) {
-            enableElement("button_main_ok", false);
+            // enableElement("button_main_ok", false);
             showElement("main_connected", false);
         }
         clearElement("game_chat_container");
@@ -49,14 +49,14 @@ var FE = (function () {
     }
 
     function onConnectedToServer() {
-        enableElement("button_main_ok", true);
+        // enableElement("button_main_ok", true);
     }
 
     function onAuthentication() {
-        enableElement("button_main_ok", true);
-        showElement("main_connected", true);
-        document.getElementById("span_name").innerHTML = "Enter name:";
-        document.getElementById("button_main_ok").innerHTML = "Change Name";
+        // enableElement("button_main_ok", true);
+        // showElement("main_connected", true);
+        // document.getElementById("span_name").innerHTML = "Enter name:";
+        // document.getElementById("button_main_ok").innerHTML = "Change Name";
     }
 
     function onAuthFailed() {
@@ -86,7 +86,7 @@ var FE = (function () {
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
-            cell1.innerHTML = "(" + i + ")";
+            cell1.innerHTML = "(" + (i+1) + ")";
             cell2.innerHTML = getSafeString(clientList[i].name);
             cell3.innerHTML = "[" + clientList[i].state + "]";
         }
@@ -172,7 +172,7 @@ var FE = (function () {
         var chatDiv = document.getElementById(divId);
         if (chatDiv.innerHTML != "")
             chatDiv.innerHTML += "<br/>"
-        chatDiv.innerHTML += "<span>" + message + "</span>";
+        chatDiv.innerHTML += message;
     }
 
     var chatIntervalHandle = null;
@@ -251,7 +251,7 @@ var FE = (function () {
         }
         if (CL.connected) {
             CL.requestAuthentication(document.getElementById("input_name").value, onAuthentication, onAuthFailed);
-            enableElement("button_main_ok", false);
+            // enableElement("button_main_ok", false);
             return;
         }
     }
