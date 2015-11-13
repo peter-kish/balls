@@ -2,19 +2,19 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
-    // var activeMenu = "main"; // main, host, join, game
 
     var gameFrame = {
     	width: 480,
     	height: 800
     }
 
+<<<<<<< HEAD
     function onAuthentication() {
       PAINTER.setPlayerName();
     }
 
-    function onAuthFailed() {
-      PAINTER.displayErrorMessage();
+    function onAuthFailed(reason) {
+      PAINTER.displayErrorMessage(reason);
     }
 
     function refreshClientList(clientList) {
@@ -136,6 +136,7 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
+
     module.setName = function(name) {
         if (CL.authenticated) {
             CL.changeName(name);
@@ -173,6 +174,12 @@ var FE = (function () {
 
     module.joinBot = function() {
         CL.joinBot();
+    }
+
+    module.connectMenu = function() {
+        hideAllMenus();
+        showElement("screen_connect", true);
+        activeMenu = "connect";
     }
 
     module.mainMenu = function() {

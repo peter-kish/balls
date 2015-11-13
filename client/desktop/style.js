@@ -167,8 +167,8 @@ var PAINTER = (function () {
       $('#main_connected').show();
       $('#set_name').val(name);
     },
-    displayErrorMessage: function() {
-      $("#error_login").text("Name already taken! Enter a different one");
+    displayErrorMessage: function(reason) {
+      $("#error_login").text(reason);
     },
     printMessage: function(name, message) {
       if (name) {
