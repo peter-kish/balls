@@ -106,6 +106,9 @@ $(document).ready(function () {
 
   $('#button_join_join').click(function() {
     FE.joinClient(selectedPlayer);
+    $('#main_connected').hide();
+    $('#screen_game').show();
+    $('body').toggleClass("background-color");
   });
 
   $('#button_join_refresh').click(function(){

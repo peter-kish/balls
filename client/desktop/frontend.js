@@ -8,7 +8,6 @@ var FE = (function () {
     	height: 800
     }
 
-<<<<<<< HEAD
     function onAuthentication() {
       PAINTER.setPlayerName();
     }
@@ -169,7 +168,7 @@ var FE = (function () {
     }
 
     module.joinClient = function(hostId) {
-        CL.join(hostID);
+        CL.join(hostId);
     }
 
     module.joinBot = function() {
