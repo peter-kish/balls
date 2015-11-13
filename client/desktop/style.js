@@ -177,7 +177,8 @@ var PAINTER = (function () {
       if (name) {
          message = "[" + getSafeString(name) + "]: " + getSafeString(message);
       }
-      if ($('#game_chat_container:visible').length) {
+      if ($('#screen_game:visible').length) {
+          $('#modal_chat_init_button').trigger('click');
           addMessageSpan("#game_chat_container", message);
           scrollToBottom("#game_chat_container");
       } else {
