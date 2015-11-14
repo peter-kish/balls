@@ -48,6 +48,10 @@ html, body {
   width: 100%;
 }
 
+.width-half {
+  width: 50%;
+}
+
 .width-small {
   width: 10em;
 }
@@ -68,17 +72,17 @@ html, body {
   display: inline-block;
 }
 
+.game-menu-button {
+  top: 0 !important;
+  border-radius: 0 !important;
+}
+
 #screen_connected {
   display: none;
 }
 
 #screen_game {
   display: none;
-}
-
-#game_toolbar {
-  position: absolute !important;
-  width:100%;
 }
 
 #game_canvas_container {
