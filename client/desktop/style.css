@@ -54,6 +54,9 @@ html, body {
 .full-screen {
   height:100%;
   width:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .error {
@@ -64,12 +67,21 @@ html, body {
   display: inline-block;
 }
 
+#game_toolbar {
+  position: absolute !important;
+  width:100%;
+}
+
 #game_canvas_container {
     position: absolute;
-    top: 30px;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+#game_input_area {
+  position:relative;
 }
 
 /*#wrapper {
