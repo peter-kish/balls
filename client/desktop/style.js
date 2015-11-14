@@ -25,7 +25,7 @@ $(document).ready(function () {
      }
   })
   .on("keypress", function(event) {
-    if (event.keyCode === 13){
+    if (event.keyCode === 13 && $("#input_name").val().length > 0){
       $('#button_main_ok').trigger('click');
     }
   });
