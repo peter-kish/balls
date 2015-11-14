@@ -14,7 +14,8 @@ html, body {
 
 .main-header {
   text-shadow: 2px 2px black;
-  font-size: 8em;
+  /*font-size: 80px;*/
+  font-size: 10vmax;
   color: grey;
 }
 
@@ -24,10 +25,10 @@ html, body {
 
 .circle {
   background-color: red;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  box-shadow: 70px 0 0 0 #3531ff;
+  box-shadow: 50px 0 0 0 #3531ff;
   margin: auto;
 }
 
@@ -44,7 +45,7 @@ html, body {
 }
 
 .width-medium {
-  width: 30em;
+  width: 100%;
 }
 
 .width-small {
