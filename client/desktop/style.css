@@ -1,11 +1,6 @@
 html, body {
-  /*width: 100%;
-  height: 100%;
-  margin: 0px;
-  border: 0;*/
   overflow: hidden;
   display: block;
-  /*background-color: black;*/
 }
 
 .background-color {
@@ -14,7 +9,6 @@ html, body {
 
 .main-header {
   text-shadow: 2px 2px black;
-  /*font-size: 80px;*/
   font-size: 10vmax;
   color: grey;
 }
@@ -96,54 +90,3 @@ html, body {
 #game_input_area {
   position:relative;
 }
-
-/*#wrapper {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #FFFFFF;
-}
-
-#game_canvas_wrapper {
-    display: inline-block;
-}
-
-#main_chat_container {
-    height: 200px;
-    width: 300px;
-    overflow: scroll;
-}
-
-#game_canvas_container {
-    position: absolute;
-    top: 30px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-#game_chat_container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-    opacity: 0.5;
-    overflow: hidden;
-    width: 100%;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    padding-right: 10px;
-    padding-left: 10px;
-}
-
-#game_input_area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 10;
-    opacity: 0.5;
-}*/
