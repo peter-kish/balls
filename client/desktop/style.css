@@ -68,6 +68,14 @@ html, body {
   display: inline-block;
 }
 
+#screen_connected {
+  display: none;
+}
+
+#screen_game {
+  display: none;
+}
+
 #game_toolbar {
   position: absolute !important;
   width:100%;

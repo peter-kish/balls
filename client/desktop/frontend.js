@@ -96,19 +96,21 @@ var FE = (function () {
     }
 
     function resizeCanvas() {
-        var canvas = document.getElementById("game_canvas");
-        var container = document.getElementById("game_canvas_container");
-        var input = document.getElementById("game_input_area");
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
+        if ($("#screen_game:visible").length > 0) {
+          var canvas = document.getElementById("game_canvas");
+          var container = document.getElementById("game_canvas_container");
+          var input = document.getElementById("game_input_area");
+          canvas.width = container.clientWidth;
+          canvas.height = container.clientHeight;
 
-        if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
-        	CDRAW.setScale(canvas.height / gameFrame.height);
-        } else {
-        	CDRAW.setScale(canvas.width / gameFrame.width);
+          if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
+          	CDRAW.setScale(canvas.height / gameFrame.height);
+          } else {
+          	CDRAW.setScale(canvas.width / gameFrame.width);
+          }
+          canvas.width = CDRAW.getScale() * gameFrame.width;
+          canvas.height = CDRAW.getScale() * gameFrame.height;
         }
-        canvas.width = CDRAW.getScale() * gameFrame.width;
-        canvas.height = CDRAW.getScale() * gameFrame.height;
     }
 
     function onWindowResize(e) {
@@ -174,12 +176,6 @@ var FE = (function () {
 
     module.joinBot = function() {
         CL.joinBot();
-    }
-
-    module.connectMenu = function() {
-        hideAllMenus();
-        showElement("screen_connect", true);
-        activeMenu = "connect";
     }
 
     module.mainMenu = function() {
