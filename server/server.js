@@ -53,7 +53,7 @@ new compressor.minify({
 });
 
 new compressor.minify({
-  type: 'yui-css',
+  type: 'clean-css',
   fileIn: '../client/desktop/css/*.css',
   fileOut: path.resolve('../client/desktop/dist/style.css'),
 	sync: true,
