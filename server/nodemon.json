@@ -1,0 +1,11 @@
+{
+  "verbose": true,
+  "watch": [
+    "../client/desktop/css/**.css",
+    "../client/desktop/js/**.js"
+  ],
+  "events": {
+    "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+  },
+  "ext": "js css"
+}
