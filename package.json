@@ -4,6 +4,7 @@
   "description": "balls",
   "main": "server.js",
   "dependencies": {
+    "clean-css": "^3.4.8",
     "express": "^4.13.3",
     "node-minify": "^1.3.6",
     "node-uuid": "^1.4.3",
