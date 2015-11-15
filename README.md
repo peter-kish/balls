@@ -3,7 +3,7 @@
 #### Requirements
 
  - node
- - npm ^0.12.0
+ - npm
 
 #### Install
 
