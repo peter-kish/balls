@@ -6,15 +6,17 @@ $(document).ready(function () {
   $('#screen_game').hide();
 
   $('#button_main_ok, #button_main_edit').click(function() {
-    var name;
-    if ($("#set_name:visible").length) {
-      name = $("#set_name").val();
+    if (!$(this).hasClass('disabled')) {
+      var name;
+      if ($("#set_name:visible").length) {
+        name = $("#set_name").val();
+      }
+      else {
+        name = $("#input_name").val();
+      }
+      $('#main_connected').show();
+      FE.setName(name);
     }
-    else {
-      name = $("#input_name").val();
-    }
-    $('#main_connected').show();
-    FE.setName(name);
   });
 
   $('#input_name').on('input',function(){
