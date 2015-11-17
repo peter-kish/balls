@@ -2,99 +2,29 @@ var FE = (function () {
     // Private
 
     var CHAT_HIDE_TIME = 15000;
-    var activeMenu = "connect"; // connect, main, host, join, game, playerlist
 
     var gameFrame = {
     	width: 480,
     	height: 800
     }
 
-    function getSafeString(s) {
-        var lt = /</g,
-        gt = />/g,
-        ap = /'/g,
-        ic = /"/g;
-        return s.replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
-    }
-
-    function showElement(id, visible) {
-        document.getElementById(id).style.display = visible?"block":"none";
-    }
-
-    function enableElement(id, enabled) {
-        document.getElementById(id).disabled = !enabled;
-    }
-
-    function clearElement(id) {
-        var element = document.getElementById(id);
-        element.innerHTML = "";
-    }
-
-    function scrollToBottom(id) {
-        var element = document.getElementById(id);
-        element.scrollTop = element.scrollHeight;
-    }
-
-    function hideAllMenus() {
-        showElement("screen_connect", false);
-        showElement("screen_main", false);
-        showElement("screen_join", false);
-        showElement("screen_game", false);
-        if (!CL.authenticated) {
-            enableElement("button_connect_ok", false);
-        }
-        clearElement("game_chat_container");
-        clearElement("main_chat_container");
-        SIMR.stop();
-    }
-
-    function onConnectedToServer() {
-        enableElement("button_connect_ok", true);
-    }
-
     function onAuthentication() {
-        module.mainMenu();
+      PAINTER.setPlayerName();
     }
 
     function onAuthFailed(reason) {
-        enableElement("button_connect_ok", true);
+      PAINTER.displayErrorMessage(reason);
     }
 
     function refreshClientList(clientList) {
-        var select = document.getElementById("list_join_clients");
-        while (select.length > 0) {
-    		select.remove(0);
-    	}
-    	for (var i = 0; i < clientList.length; i++) {
-            if (clientList[i].state == "hosting") {
-        		var option = document.createElement("option");
-        		option.text = getSafeString(clientList[i].name);
-                option.value = clientList[i].id;
-        		select.add(option);
-            }
-    	}
-
-        var playersTable = document.getElementById("table_main_players");
-        while (playersTable.rows.length > 0) {
-            playersTable.deleteRow(0);
-        }
-        for (var i = 0; i < clientList.length; i++) {
-            var row = playersTable.insertRow(playersTable.rows.length);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            cell1.innerHTML = "(" + i + ")";
-            cell2.innerHTML = getSafeString(clientList[i].name);
-            cell3.innerHTML = "[" + clientList[i].state + "]";
-        }
+      PAINTER.repaintClientsLists(clientList);
     }
 
     function startGame(id1, id2) {
-        hideAllMenus();
-        showElement("screen_game", true);
+        SIMR.stop();
+        PAINTER.startGame();
         SIMR.start(document.getElementById("game_canvas"));
         resizeCanvas();
-        activeMenu = "game";
     }
 
     function getMouseCoords(event, element) {
@@ -157,67 +87,34 @@ var FE = (function () {
         e.preventDefault();
     }
 
-    function adjustChatbox() {
-        var chatDiv = document.getElementById("game_chat_container");
-        var canvas = document.getElementById("game_canvas");
-        while (chatDiv.offsetHeight > canvas.offsetHeight) {
-            chatDiv.removeChild(chatDiv.childNodes[0]);
-        }
-    }
-
-    function addMessageSpan(divId, message) {
-        var chatDiv = document.getElementById(divId);
-        if (chatDiv.innerHTML != "")
-            chatDiv.innerHTML += "<br/>"
-        chatDiv.innerHTML += "<span>" + message + "</span>";
-    }
-
-    var chatIntervalHandle = null;
     function displayInfoMessage(message) {
-        if (activeMenu == "game") {
-            showElement("game_chat_container", true);
-            addMessageSpan("game_chat_container", message);
-            adjustChatbox();
-            if (chatIntervalHandle) window.clearInterval(chatIntervalHandle);
-            chatIntervalHandle = window.setInterval(hideChat, CHAT_HIDE_TIME);
-        } else {
-            addMessageSpan("main_chat_container", message);
-            scrollToBottom("main_chat_container");
-        }
+      PAINTER.printMessage(null, message);
     }
 
     function displayChatMessage(name, message) {
-        var message = "[" + getSafeString(name) + "]: " + getSafeString(message);
-        displayInfoMessage(message);
-    }
-
-    function hideChat() {
-        showElement("game_chat_container", false);
-        window.clearInterval(chatIntervalHandle);
+      PAINTER.printMessage(name, message);
     }
 
     function resizeCanvas() {
-        var canvas = document.getElementById("game_canvas");
-        var container = document.getElementById("game_canvas_container");
-        var input = document.getElementById("game_input_area");
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
+        if ($("#screen_game:visible").length > 0) {
+          var canvas = document.getElementById("game_canvas");
+          var container = document.getElementById("game_canvas_container");
+          var input = document.getElementById("game_input_area");
+          canvas.width = container.clientWidth;
+          canvas.height = container.clientHeight;
 
-        if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
-        	CDRAW.setScale(canvas.height / gameFrame.height);
-        } else {
-        	CDRAW.setScale(canvas.width / gameFrame.width);
+          if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
+          	CDRAW.setScale(canvas.height / gameFrame.height);
+          } else {
+          	CDRAW.setScale(canvas.width / gameFrame.width);
+          }
+          canvas.width = CDRAW.getScale() * gameFrame.width;
+          canvas.height = CDRAW.getScale() * gameFrame.height;
         }
-        canvas.width = CDRAW.getScale() * gameFrame.width;
-        canvas.height = CDRAW.getScale() * gameFrame.height;
-
-        var chat = document.getElementById("game_chat_container");
-        chat.style.maxWidth = CDRAW.getScale() * gameFrame.width + "px";
     }
 
     function onWindowResize(e) {
         resizeCanvas();
-        adjustChatbox();
     }
 
     // Public
@@ -225,8 +122,8 @@ var FE = (function () {
     var module = {};
 
     module.onPageLoad = function() {
-        module.connectMenu();
-        CL.connect(onConnectedToServer);
+        module.mainMenu();
+        CL.connect();
         CL.onClientListChanged = refreshClientList;
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
@@ -241,105 +138,56 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
-    module.connect = function() {
-        if (CL.connected) {
-            CL.requestAuthentication(document.getElementById("input_connect_name").value, onAuthentication, onAuthFailed);
-            enableElement("button_connect_ok", false);
-            return;
-        }
-    }
 
-    module.setName = function() {
+    module.setName = function(name) {
         if (CL.authenticated) {
-            CL.changeName(document.getElementById("input_name").value);
+            CL.changeName(name);
             return;
+        }
+        if (CL.connected) {
+            CL.requestAuthentication(name, onAuthentication, onAuthFailed);
         }
     }
 
-    module.host = function() {
+// FIND appropriate names for following functions
+
+    module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
-            enableElement("button_main_join", false);
-            enableElement("button_main_bot", false);
-            showElement("button_main_stophost", true);
-            showElement("button_main_host", false);
-        }
-    }
-
-    module.stopHost = function() {
-        if (CL.clientState == "hosting") {
+            return true;
+        } else if (CL.clientState == "hosting") {
             CL.idle();
-            enableElement("button_main_join", true);
-            enableElement("button_main_bot", true);
-            showElement("button_main_stophost", false);
-            showElement("button_main_host", true);
+            return false;
         }
     }
 
     module.joinMenu = function() {
-        hideAllMenus();
-        showElement("screen_join", true);
+        SIMR.stop();
         refreshClientList(CL.getClientList());
-        activeMenu = "join";
     }
 
     module.joinRefresh = function() {
         refreshClientList(CL.getClientList());
     }
 
-    module.joinClient = function() {
-        var select = document.getElementById("list_join_clients");
-        var hostID = select.options[select.selectedIndex].value;
-        CL.join(hostID);
+    module.joinClient = function(hostId) {
+        CL.join(hostId);
     }
 
     module.joinBot = function() {
         CL.joinBot();
     }
 
-    module.connectMenu = function() {
-        hideAllMenus();
-        showElement("screen_connect", true);
-        activeMenu = "connect";
-    }
-
     module.mainMenu = function() {
-        hideAllMenus();
+        SIMR.stop();
         CL.idle();
-        document.getElementById("input_name").value = getSafeString(CL.clientName);
-        showElement("screen_main", true);
-        enableElement("button_main_join", true);
-        enableElement("button_main_bot", true);
-        showElement("button_main_stophost", false);
-        showElement("button_main_host", true);
-        activeMenu = "main";
     }
 
-    module.sendChatMessage = function() {
-        var input = null;
-        if (activeMenu == "game") {
-            input = document.getElementById("input_game_chat");
-        } else {
-            input = document.getElementById("input_main_chat");
-        }
-        var message = input.value;
-        if (message != "") {
-            input.value = "";
-            CL.chat(message);
-        }
+    module.sendChatMessage = function(message) {
+      CL.chat(message);
     }
 
-    module.handleChatKeyPress = function(e) {
-        if (e.keyCode == 13) {
-            module.sendChatMessage();
-        }
-    }
-
-    module.handleNameKeyPress = function(e) {
-        if (e.keyCode == 13) {
-            module.connect();
-        }
-    }
+// FIND appropriate names for following functions END
 
     return module;
-}(CL, SIMR));
+}(CL, SIMR, PAINTER));

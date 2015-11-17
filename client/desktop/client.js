@@ -64,7 +64,6 @@ var CL = (function () {
 
     var module = {};
 
-    module.onConnectionSuccessfull = null;
     module.onAuthSuccessfull = null;
     module.onAuthFailed = null;
     module.onError = null;
@@ -84,14 +83,12 @@ var CL = (function () {
     module.simulation = null;
 
     module.connect = function(onConectedCallback) {
-        module.onConnectionSuccessfull = onConectedCallback;
         connection = new WebSocket(clientConfig.server);
 
         connection.onopen = function () {
 			// connection is opened and ready to use
             console.log("Connected to " + clientConfig.server);
             module.connected = true;
-			if (module.onConnectionSuccessfull) module.onConnectionSuccessfull(clientConfig.server);
 		};
 
         connection.onerror = function (error) {
