@@ -98,11 +98,11 @@ var FE = (function () {
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
           var canvas = document.getElementById("game_canvas");
-          var container = document.getElementById("screen_game");
+          var container = document.getElementById("game_canvas_container");
           var input = document.getElementById("game_input_area");
-          var gameToolbar = document.getElementById("modal_chat_init_button");
+
           canvas.width = container.clientWidth;
-          canvas.height = container.clientHeight + gameToolbar.offsetHeight;
+          canvas.height = container.clientHeight;
 
           if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
           	CDRAW.setScale(canvas.height / gameFrame.height);
