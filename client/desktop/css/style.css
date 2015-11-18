@@ -71,11 +71,7 @@ html, body {
   border-radius: 0 !important;
 }
 
-#screen_connected {
-  display: none;
-}
-
-#screen_game {
+.hidden-section {
   display: none;
 }
 

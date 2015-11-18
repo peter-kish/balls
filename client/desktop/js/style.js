@@ -2,9 +2,6 @@ $(document).ready(function () {
 
   FE.onPageLoad();
 
-  $('#main_connected').hide();
-  $('#screen_game').hide();
-
   $('#button_main_ok, #button_main_edit').click(function() {
     if (!$(this).hasClass('disabled')) {
       var name;
