@@ -98,7 +98,7 @@ var FE = (function () {
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
           var canvas = document.getElementById("game_canvas");
-          var container = document.getElementById("game_canvas_container");
+          var container = document.getElementById("screen_game");
           var input = document.getElementById("game_input_area");
           canvas.width = container.clientWidth;
           canvas.height = container.clientHeight;
