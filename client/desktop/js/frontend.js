@@ -100,8 +100,9 @@ var FE = (function () {
           var canvas = document.getElementById("game_canvas");
           var container = document.getElementById("screen_game");
           var input = document.getElementById("game_input_area");
+          var gameToolbar = document.getElementById("modal_chat_init_button");
           canvas.width = container.clientWidth;
-          canvas.height = container.clientHeight;
+          canvas.height = container.clientHeight + gameToolbar.offsetHeight;
 
           if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
           	CDRAW.setScale(canvas.height / gameFrame.height);
