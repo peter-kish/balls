@@ -94,7 +94,7 @@ $(document).ready(function () {
 
   var selectedPlayer;
 
-  $('#list_join_clients').on('click', function() {
+  $('#list_join_clients').on('change', function() {
     selectedPlayer = this.value;
     if(this.value) {
       $('#button_join_join').prop('disabled', false);
