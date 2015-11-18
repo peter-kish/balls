@@ -12,7 +12,6 @@ $(document).ready(function () {
         name = $("#input_name").val();
       }
       FE.setName(name);
-      $('#main_connected').show();
     }
   });
 
