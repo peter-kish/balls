@@ -17,7 +17,6 @@ var ai = require('./ai.js');
 var express = require('express');
 var serveStatic = require('serve-static');
 var compressor = require('node-minify');
-var autoprefixer = require('express-autoprefixer')
 
 var clients = [];
 var games = [];
@@ -76,7 +75,6 @@ var app = express();
 app.use(serveStatic('../shared/'));
 app.use(serveStatic('../client/desktop/dist/'));
 app.use(serveStatic('../client/desktop/'));
-app.use(autoprefixer({ browsers: 'last 2 versions', cascade: false }));
 
 //create server from app
 var server = http.createServer(app);
