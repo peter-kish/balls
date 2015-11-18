@@ -66,9 +66,8 @@ html, body {
   display: inline-block;
 }
 
-.game-menu-button {
-  top: 0 !important;
-  border-radius: 0 !important;
+.relative {
+  position: relative;
 }
 
 .hidden-section {
@@ -81,9 +80,14 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    margin-bottom: 22px;
 }
 
 #game_input_area {
   position:relative;
+}
+
+#game_toolbar {
+  position: absolute;
+  z-index:100;
+  width:100%;
 }
