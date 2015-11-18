@@ -14,8 +14,8 @@ $(document).ready(function () {
       else {
         name = $("#input_name").val();
       }
-      $('#main_connected').show();
       FE.setName(name);
+      $('#main_connected').show();
     }
   });
 
