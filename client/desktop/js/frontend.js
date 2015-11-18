@@ -154,10 +154,10 @@ var FE = (function () {
     module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
-            return true;
+            return false;
         } else if (CL.clientState == "hosting") {
             CL.idle();
-            return false;
+            return true;
         }
     }
 
