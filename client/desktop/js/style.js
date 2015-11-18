@@ -47,11 +47,14 @@ $(document).ready(function () {
     $('body').toggleClass("background-color");
     $('#game_chat_container').text('');
     FE.mainMenu();
+    $('#button_main_join').prop('disabled', false);
+    $('#button_main_bot').prop('disabled', false);
+    $('#button_main_host').text('Host');
   });
 
   $('#button_main_host').click(function() {
     var hosting = FE.hostMenu();
-    if (hosting) {
+    if (!hosting) {
       $('#button_main_join').prop('disabled', true);
       $('#button_main_bot').prop('disabled', true);
       $('#button_main_host').text('Stop Hosting');
@@ -117,6 +120,9 @@ $(document).ready(function () {
 
   $('#button_join_back').click(function(){
     FE.mainMenu();
+    $('#button_main_join').prop('disabled', false);
+    $('#button_main_bot').prop('disabled', false);
+    $('#button_main_host').text('Host');
   });
 
 });
