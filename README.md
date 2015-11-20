@@ -1,15 +1,11 @@
 # Balls
 
-#### Requirements 
+#### Requirements
 
  - node
  - npm
- 
+
 #### Running
- 
+
  ```npm install```
- ```cd server```
- ```node server.js```
- 
-
-
+ ```./bserver start```
