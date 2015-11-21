@@ -97,6 +97,7 @@
         this.playerScore = [];
         this.currentTurn = 0;
         this.idle = true;
+        this.scoreLimit = 3;
 
         this.playerBall[0] = this.createBall(id1, simFrame.width / 2, simFrame.height * 3 / 4, ballRadius);
         this.playerBall[0].marked = true;
@@ -280,6 +281,9 @@
         if (victory >= 0) {
             this.resetPlayers();
             this.playerScore[victory]++;
+            if (this.playerScore[victory] >= this.scoreLimit) {
+                if (exports.onVictory) exports.onVictory(this.playerBall[victory].id)
+            }
         }
 
         if (this.areAllBallsIdle()) {
@@ -327,6 +331,7 @@
     // Public
 
     exports.onTurnStart = null;
+    exports.onVictory = null;
 
     exports.createSimulation = function(id1, id2) {
         var sim = new Simulation(id1, id2);

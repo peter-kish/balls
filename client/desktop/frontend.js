@@ -95,6 +95,10 @@ var FE = (function () {
       PAINTER.printMessage(name, message);
     }
 
+    function displayVictoryDialog(id) {
+        PAINTER.endGame(CL.getClientName(id));
+    }
+
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
           var canvas = document.getElementById("game_canvas");
@@ -128,6 +132,7 @@ var FE = (function () {
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
+        CL.onVictory = displayVictoryDialog;
         var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);

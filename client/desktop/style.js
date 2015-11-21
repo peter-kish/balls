@@ -50,6 +50,14 @@ $(document).ready(function () {
     FE.mainMenu();
   });
 
+  $('#back_to_lobby_button').click(function(){
+    $('#screen_game').hide();
+    $('#main_connected').show();
+    $('body').toggleClass("background-color");
+    $('#game_chat_container').text('');
+    FE.mainMenu();
+  });
+
   $('#button_main_host').click(function() {
     var hosting = FE.hostMenu();
     if (hosting) {
@@ -191,6 +199,10 @@ var PAINTER = (function () {
       $('#main_connected').hide();
       $('#screen_game').show();
       $('body').toggleClass("background-color");
+    },
+    endGame: function(name) {
+      $('#victory_message').text(name + " has won the match!");
+      $('#modal_victory').modal({backdrop: 'static', keyboard: false});
     }
 
   }
