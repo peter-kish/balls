@@ -8,7 +8,7 @@ html, body {
 }
 
 .main-header {
-  text-shadow: 2px 2px black;
+  font-weight: bold;
   font-size: 10vmax;
   color: grey;
 }
@@ -18,11 +18,11 @@ html, body {
 }
 
 .circle {
-  background-color: red;
+  background-color: #d84a38;
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  box-shadow: 60px 0 0 0 #3531ff;
+  box-shadow: 60px 0 0 0 #4486f6;
   margin: auto;
 }
 
