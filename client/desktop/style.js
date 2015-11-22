@@ -5,15 +5,14 @@ $(document).ready(function () {
   $('#main_connected').hide();
   $('#screen_game').hide();
 
-  $('#button_main_ok, #button_main_edit').click(function() {
-    var name;
-    if ($("#set_name:visible").length) {
-      name = $("#set_name").val();
-    }
-    else {
-      name = $("#input_name").val();
-    }
+  $('#button_main_ok').click(function() {
+    var name = $("#input_name").val();
     $('#main_connected').show();
+    FE.requestAuthentication(name);
+  });
+
+  $('#button_main_edit').click(function() {
+    var name = $("#set_name").val();
     FE.setName(name);
   });
 
