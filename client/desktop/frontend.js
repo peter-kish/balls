@@ -8,12 +8,17 @@ var FE = (function () {
     	height: 800
     }
 
+    function onConnected() {
+        PAINTER.enableConnection();
+    }
+
     function onAuthentication() {
       PAINTER.setPlayerName();
     }
 
     function onAuthFailed(reason) {
       PAINTER.displayErrorMessage(reason);
+      PAINTER.enableConnection();
     }
 
     function refreshClientList(clientList) {
@@ -127,7 +132,7 @@ var FE = (function () {
 
     module.onPageLoad = function() {
         module.mainMenu();
-        CL.connect();
+        CL.connect(onConnected);
         CL.onClientListChanged = refreshClientList;
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;

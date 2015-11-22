@@ -7,7 +7,7 @@ $(document).ready(function () {
 
   $('#button_main_ok').click(function() {
     var name = $("#input_name").val();
-    $('#main_connected').show();
+    $('#button_main_ok').addClass("disabled");
     FE.requestAuthentication(name);
   });
 
@@ -16,15 +16,7 @@ $(document).ready(function () {
     FE.setName(name);
   });
 
-  $('#input_name').on('input',function(){
-     if($(this).val().length > 0) {
-       $('#button_main_ok').removeClass("disabled");
-     }
-     else {
-       $('#button_main_ok').addClass("disabled");
-     }
-  })
-  .on("keypress", function(event) {
+  $('#input_name').on("keypress", function(event) {
     if (event.keyCode === 13 && $("#input_name").val().length > 0){
       $('#button_main_ok').trigger('click');
     }
@@ -171,6 +163,9 @@ var PAINTER = (function () {
           '</tr>'
         );
       }
+    },
+    enableConnection: function() {
+      $('#button_main_ok').removeClass("disabled");
     },
     setPlayerName: function() {
       var name = $('#input_name').val();
