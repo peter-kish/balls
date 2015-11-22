@@ -35,3 +35,10 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
+
+#dist folder
+client/desktop/dist/*
+!client/desktop/dist/.gitkeep
+
+#nohup
+server/nohup.out

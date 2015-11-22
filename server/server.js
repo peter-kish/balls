@@ -16,6 +16,7 @@ var sim = require('../shared/sh_simulation.js');
 var ai = require('./ai.js');
 var express = require('express');
 var serveStatic = require('serve-static');
+var compressor = require('node-minify');
 
 var clients = [];
 var games = [];
@@ -33,12 +34,47 @@ function loadConfig(configFile) {
 	}
 }
 
+var path = require('path');
+
+//compress files
+new compressor.minify({
+  type: 'uglifyjs',
+  fileIn: '../client/desktop/js/*.js',
+  fileOut: path.resolve('../client/desktop/dist/script.js'),
+	sync: true,
+  callback: function(err, min){
+		if (err) {
+    	console.log(err);
+		}
+		else {
+			console.log("js uglified")
+		}
+  }
+});
+
+new compressor.minify({
+  type: 'clean-css',
+  fileIn: '../client/desktop/css/*.css',
+  fileOut: path.resolve('../client/desktop/dist/style.css'),
+	sync: true,
+  callback: function(err, min){
+		if (err) {
+    	console.log(err);
+		}
+		else {
+			console.log("css compressed")
+		}
+  }
+});
+
+
 // app that can serve static content
 var app = express();
 
 //include static content
-app.use(serveStatic('../shared'));
-app.use(serveStatic('../client/desktop'));
+app.use(serveStatic('../shared/'));
+app.use(serveStatic('../client/desktop/dist/'));
+app.use(serveStatic('../client/desktop/'));
 
 //create server from app
 var server = http.createServer(app);

@@ -8,7 +8,7 @@ html, body {
 }
 
 .main-header {
-  font-weight: bold;
+  text-shadow: 2px 2px black;
   font-size: 10vmax;
   color: grey;
 }
@@ -18,11 +18,11 @@ html, body {
 }
 
 .circle {
-  background-color: #d84a38;
+  background-color: red;
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  box-shadow: 60px 0 0 0 #4486f6;
+  box-shadow: 60px 0 0 0 #3531ff;
   margin: auto;
 }
 
@@ -66,16 +66,11 @@ html, body {
   display: inline-block;
 }
 
-.game-menu-button {
-  top: 0 !important;
-  border-radius: 0 !important;
+.relative {
+  position: relative;
 }
 
-#screen_connected {
-  display: none;
-}
-
-#screen_game {
+.hidden-section {
   display: none;
 }
 
@@ -85,9 +80,14 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    margin-bottom: 22px;
 }
 
 #game_input_area {
   position:relative;
+}
+
+#game_toolbar {
+  position: absolute;
+  z-index:100;
+  width:100%;
 }

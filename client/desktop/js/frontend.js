@@ -95,15 +95,12 @@ var FE = (function () {
       PAINTER.printMessage(name, message);
     }
 
-    function displayVictoryDialog(id) {
-        PAINTER.endGame(CL.getClientName(id));
-    }
-
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
           var canvas = document.getElementById("game_canvas");
           var container = document.getElementById("game_canvas_container");
           var input = document.getElementById("game_input_area");
+
           canvas.width = container.clientWidth;
           canvas.height = container.clientHeight;
 
@@ -132,7 +129,6 @@ var FE = (function () {
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
-        CL.onVictory = displayVictoryDialog;
         var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);
@@ -159,10 +155,10 @@ var FE = (function () {
     module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
-            return true;
+            return false;
         } else if (CL.clientState == "hosting") {
             CL.idle();
-            return false;
+            return true;
         }
     }
 
