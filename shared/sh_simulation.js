@@ -48,23 +48,6 @@
     		this.position.add(this.velocity);
     		this.velocity.multiply(1.0 - drag);
 
-    		if (this.position.y + this.radius > simFrame.height) {
-    			this.position.y = simFrame.height - this.radius;
-    			this.velocity.y *= -bounce;
-    		}
-    		if (this.position.y - this.radius < 0) {
-    			this.position.y = this.radius;
-    			this.velocity.y *= -bounce;
-    		}
-    		if (this.position.x + this.radius > simFrame.width) {
-    			this.position.x = simFrame.width - this.radius;
-    			this.velocity.x *= -bounce;
-    		}
-    		if (this.position.x - this.radius < 0) {
-    			this.position.x = this.radius;
-    			this.velocity.x *= -bounce;
-    		}
-
     		if (this.velocity.length() < stoppingEpsilon) {
     			this.velocity.x = 0.0;
     			this.velocity.y = 0.0;
@@ -207,6 +190,24 @@
                     velocity: this.balls[i].velocity
                 };
                 this.corners[j].updateWithBall(collisionBall);
+            }
+
+            // Collisions with screen borders
+            if (this.balls[i].position.y + this.balls[i].radius > simFrame.height) {
+                this.balls[i].position.y = simFrame.height - this.balls[i].radius;
+                this.balls[i].velocity.y *= -bounce;
+            }
+            if (this.balls[i].position.y - this.balls[i].radius < 0) {
+                this.balls[i].position.y = this.balls[i].radius;
+                this.balls[i].velocity.y *= -bounce;
+            }
+            if (this.balls[i].position.x + this.balls[i].radius > simFrame.width) {
+                this.balls[i].position.x = simFrame.width - this.balls[i].radius;
+                this.balls[i].velocity.x *= -bounce;
+            }
+            if (this.balls[i].position.x - this.balls[i].radius < 0) {
+                this.balls[i].position.x = this.balls[i].radius;
+                this.balls[i].velocity.x *= -bounce;
             }
         }
 
