@@ -119,6 +119,15 @@ $(document).ready(function () {
     FE.mainMenu();
   });
 
+  $('#modal_chat_init_button').click(function() {
+      $('#modal_chat_init_button').removeClass("btn-primary");
+      $('#modal_chat_init_button').addClass("btn-primary:visited");
+  });
+
+  $('#modal_chat').on('shown.bs.modal', function() {
+      $('#input_game_chat').focus();
+  })
+
 });
 
 
@@ -181,7 +190,10 @@ var PAINTER = (function () {
          message = "[" + getSafeString(name) + "]: " + getSafeString(message);
       }
       if ($('#screen_game:visible').length) {
-          $('#modal_chat_init_button').trigger('click');
+          if(!$('#modal_chat:visible').length) {
+              $('#modal_chat_init_button').removeClass("btn-primary:visited");
+              $('#modal_chat_init_button').addClass("btn-primary");
+          }
           addMessageSpan("#game_chat_container", message);
           scrollToBottom("#game_chat_container");
       } else {
