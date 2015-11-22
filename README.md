@@ -2,8 +2,8 @@
 
 #### Requirements
 
- - node
- - npm ^0.12.0
+ - node ```^0.12.2```
+ - npm
 
 #### Install
 
