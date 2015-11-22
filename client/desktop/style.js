@@ -2,18 +2,19 @@ $(document).ready(function () {
 
   FE.onPageLoad();
 
-  $('#button_main_ok').click(function() {
-    if (!$(this).hasClass('disabled')) {
-      var name = $("#input_name").val();
-      FE.requestAuthentication(name);
-    }
-  });
+  $('#main_connected').hide();
+  $('#screen_game').hide();
 
-  $('#button_main_edit').click(function() {
-    if (!$(this).hasClass('disabled')) {
-      var name = $("#set_name").val();
-      FE.setName(name);
+  $('#button_main_ok, #button_main_edit').click(function() {
+    var name;
+    if ($("#set_name:visible").length) {
+      name = $("#set_name").val();
     }
+    else {
+      name = $("#input_name").val();
+    }
+    $('#main_connected').show();
+    FE.setName(name);
   });
 
   $('#input_name').on('input',function(){
@@ -47,14 +48,19 @@ $(document).ready(function () {
     $('body').toggleClass("background-color");
     $('#game_chat_container').text('');
     FE.mainMenu();
-    $('#button_main_join').prop('disabled', false);
-    $('#button_main_bot').prop('disabled', false);
-    $('#button_main_host').text('Host');
+  });
+
+  $('#back_to_lobby_button').click(function(){
+    $('#screen_game').hide();
+    $('#main_connected').show();
+    $('body').toggleClass("background-color");
+    $('#game_chat_container').text('');
+    FE.mainMenu();
   });
 
   $('#button_main_host').click(function() {
     var hosting = FE.hostMenu();
-    if (!hosting) {
+    if (hosting) {
       $('#button_main_join').prop('disabled', true);
       $('#button_main_bot').prop('disabled', true);
       $('#button_main_host').text('Stop Hosting');
@@ -97,7 +103,7 @@ $(document).ready(function () {
 
   var selectedPlayer;
 
-  $('#list_join_clients').on('change', function() {
+  $('#list_join_clients').on('click', function() {
     selectedPlayer = this.value;
     if(this.value) {
       $('#button_join_join').prop('disabled', false);
@@ -120,14 +126,6 @@ $(document).ready(function () {
 
   $('#button_join_back').click(function(){
     FE.mainMenu();
-    $('#button_main_join').prop('disabled', false);
-    $('#button_main_bot').prop('disabled', false);
-    $('#button_main_host').text('Host');
-  });
-
-  $('#modal_chat_init_button').click(function() {
-    $(this).css('color', 'white');
-    $(this).css('background-color', 'blue');
   });
 
 });
@@ -185,32 +183,26 @@ var PAINTER = (function () {
       $("#error_login").text(reason);
     },
     printMessage: function(name, message) {
-
+      if (name) {
+         message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+      }
       if ($('#screen_game:visible').length) {
-        if (name == null) {
-          $("#player_left_game_message").text(message);
-          $('#player_left_game').modal('show');
-        }
-        else {
-          message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+          $('#modal_chat_init_button').trigger('click');
           addMessageSpan("#game_chat_container", message);
           scrollToBottom("#game_chat_container");
-          if ($('#set_name').val() != name) {
-            $('#modal_chat_init_button').css('color', 'red');
-            $('#modal_chat_init_button').css('background-color', 'whitesmoke');
-          }
-        }
-      }
-      else {
+      } else {
           addMessageSpan("#main_chat_container", message);
           scrollToBottom("#main_chat_container");
       }
-
     },
     startGame: function() {
       $('#main_connected').hide();
       $('#screen_game').show();
       $('body').toggleClass("background-color");
+    },
+    endGame: function(name) {
+      $('#victory_message').text(name + " has won the match!");
+      $('#modal_victory').modal({backdrop: 'static', keyboard: false});
     }
 
   }

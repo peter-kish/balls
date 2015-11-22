@@ -95,12 +95,15 @@ var FE = (function () {
       PAINTER.printMessage(name, message);
     }
 
+    function displayVictoryDialog(id) {
+        PAINTER.endGame(CL.getClientName(id));
+    }
+
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
           var canvas = document.getElementById("game_canvas");
           var container = document.getElementById("game_canvas_container");
           var input = document.getElementById("game_input_area");
-
           canvas.width = container.clientWidth;
           canvas.height = container.clientHeight;
 
@@ -129,6 +132,7 @@ var FE = (function () {
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
+        CL.onVictory = displayVictoryDialog;
         var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);
@@ -139,13 +143,12 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
-    module.requestAuthentication = function(name) {
-        if (CL.connected) {
-            CL.requestAuthentication(name, onAuthentication, onAuthFailed);
-        }
-    }
 
     module.setName = function(name) {
+        if (CL.authenticated) {
+            CL.changeName(name);
+            return;
+        }
         if (CL.connected) {
             CL.requestAuthentication(name, onAuthentication, onAuthFailed);
         }
@@ -156,10 +159,10 @@ var FE = (function () {
     module.hostMenu = function() {
         if (CL.clientState == "idle") {
             CL.host();
-            return false;
+            return true;
         } else if (CL.clientState == "hosting") {
             CL.idle();
-            return true;
+            return false;
         }
     }
 

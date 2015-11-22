@@ -3,8 +3,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<head>
 		<title>Balls</title>
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	</head>
 	<body>
 		<div id = "wrapper" class="container-fluid">
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 			</div>
-			<div id = "main_connected" class="hidden-section">
+			<div id = "main_connected">
 				<div class="row text-center top-buffer-medium">
 					<div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2">
 						<div class="input-group">
@@ -66,12 +66,12 @@
 			</div>
 		</div>
 
-		<div id="screen_game" class="full-screen hidden-section">
+		<div id="screen_game" class="full-screen">
 			<div id = "game_canvas_container" class="text-center">
-				<div class="inline relative">
+				<div class="inline">
 					<div id="game_toolbar" class="toolbar">
-						<button id="modal_chat_init_button" data-toggle="modal" class=" pull-left btn btn-xs btn-primary glyphicon glyphicon-comment" data-target="#modal_chat" type="button"></button>
-						<button data-toggle="modal" class="pull-right btn btn-xs btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
+						<button id="modal_chat_init_button" data-toggle="modal" class="game-menu-button width-half pull-left btn btn-xs btn-primary glyphicon glyphicon-envelope" data-target="#modal_chat" type="button"></button>
+						<button data-toggle="modal" class="game-menu-button width-half pull-right btn btn-xs btn-danger glyphicon glyphicon-remove-sign" data-target="#modal_exit" type="button"></button>
 					</div>
 					<div id="game_input_area" class="inline">
 						<canvas id="game_canvas" width="480" height="640"></canvas>
@@ -159,25 +159,19 @@
 			</div>
 		</div>
 
-		<div id="player_left_game" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div id="player_left_game_message" class="modal-body">
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
 
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="config_client.js"></script>
+		<script type="text/javascript" src="fader.js"></script>
 		<script type="text/javascript" src="sh_vector.js"></script>
 		<script type="text/javascript" src="sh_collisions.js"></script>
 		<script type="text/javascript" src="sh_simulation.js"></script>
-		<script type="text/javascript" src="script.js"></script>
+		<script type="text/javascript" src="client.js"></script>
+		<script type="text/javascript" src="draw.js"></script>
+		<script type="text/javascript" src="simulation_render.js"></script>
+		<script type="text/javascript" src="style.js"></script>
+		<script type="text/javascript" src="frontend.js"></script>
 	</body>
 </html>
