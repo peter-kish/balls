@@ -4,6 +4,7 @@ $(document).ready(function () {
 
   $('#main_connected').hide();
   $('#screen_game').hide();
+  $('#input_name').focus();
 
   $('#button_main_ok').click(function() {
     var name = $("#input_name").val();
