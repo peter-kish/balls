@@ -124,6 +124,11 @@ $(document).ready(function () {
     $('#button_main_host').text('Host');
   });
 
+  $('#modal_chat_init_button').click(function() {
+    $(this).css('color', 'white');
+    $(this).css('background-color', 'blue');
+  });
+
 });
 
 
@@ -179,17 +184,27 @@ var PAINTER = (function () {
       $("#error_login").text(reason);
     },
     printMessage: function(name, message) {
-      if (name) {
-         message = "[" + getSafeString(name) + "]: " + getSafeString(message);
-      }
+
       if ($('#screen_game:visible').length) {
-          $('#modal_chat_init_button').trigger('click');
+        if (name == null) {
+          $("#player_left_game_message").text(message);
+          $('#player_left_game').modal('show');
+        }
+        else {
+          message = "[" + getSafeString(name) + "]: " + getSafeString(message);
           addMessageSpan("#game_chat_container", message);
           scrollToBottom("#game_chat_container");
-      } else {
+          if ($('#set_name').val() != name) {
+            $('#modal_chat_init_button').css('color', 'red');
+            $('#modal_chat_init_button').css('background-color', 'whitesmoke');
+          }
+        }
+      }
+      else {
           addMessageSpan("#main_chat_container", message);
           scrollToBottom("#main_chat_container");
       }
+
     },
     startGame: function() {
       $('#main_connected').hide();
