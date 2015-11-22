@@ -2,15 +2,16 @@ $(document).ready(function () {
 
   FE.onPageLoad();
 
-  $('#button_main_ok, #button_main_edit').click(function() {
+  $('#button_main_ok').click(function() {
     if (!$(this).hasClass('disabled')) {
-      var name;
-      if ($("#set_name:visible").length) {
-        name = $("#set_name").val();
-      }
-      else {
-        name = $("#input_name").val();
-      }
+      var name = $("#input_name").val();
+      FE.requestAuthentication(name);
+    }
+  });
+
+  $('#button_main_edit').click(function() {
+    if (!$(this).hasClass('disabled')) {
+      var name = $("#set_name").val();
       FE.setName(name);
     }
   });

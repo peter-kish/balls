@@ -139,12 +139,13 @@ var FE = (function () {
         window.onresize = onWindowResize;
     }
 
+    module.requestAuthentication = function(name) {
+        if (CL.connected) {
+            CL.requestAuthentication(name, onAuthentication, onAuthFailed);
+        }
+    }
 
     module.setName = function(name) {
-        if (CL.authenticated) {
-            CL.changeName(name);
-            return;
-        }
         if (CL.connected) {
             CL.requestAuthentication(name, onAuthentication, onAuthFailed);
         }
