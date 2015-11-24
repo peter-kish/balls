@@ -126,6 +126,7 @@ var CL = (function () {
                         break;
                     case "clientConnected":
                         console.log(json.msgData.name + " connected.");
+                        if (module.onInfoMessage) module.onInfoMessage(json.msgData.name + " connected.");
                         addClient(json.msgData.id, json.msgData.name);
                         if (json.msgData.id == module.clientId)
                             module.clientName = json.msgData.name;
@@ -133,15 +134,14 @@ var CL = (function () {
                         break;
                     case "clientDisconnected":
                         console.log(json.msgData.name + " disconnected.");
-                        if (json.msgData.id == module.opponentId) {
-                            if (module.onInfoMessage) module.onInfoMessage(getClient(module.opponentId).name + " has disconnected!");
-                        }
+                        if (module.onInfoMessage) module.onInfoMessage(json.msgData.name + " disconnected.");
                         removeClient(json.msgData.id);
                         if (module.onClientListChanged) module.onClientListChanged(clientList);
                         break;
                     case "newName":
                         var client = getClient(json.msgData.id);
                         console.log(client.name + " changed his name to " + json.msgData.name);
+                        if (module.onInfoMessage) module.onInfoMessage(client.name + " changed his name to " + json.msgData.name);
                         client.name = json.msgData.name;
                         if (module.onClientListChanged) module.onClientListChanged(clientList);
                         break;

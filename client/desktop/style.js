@@ -195,13 +195,13 @@ var PAINTER = (function () {
     },
     printMessage: function(name, message) {
       if (name) {
-         message = "[" + getSafeString(name) + "]: " + getSafeString(message);
-      }
-      if ($('#screen_game:visible').length) {
+        message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+        if ($('#screen_game:visible').length) {
           if(!$('#modal_chat:visible').length) {
-              $('#modal_chat_init_button').removeClass("btn-primary:visited");
-              $('#modal_chat_init_button').addClass("btn-primary");
+            $('#modal_chat_init_button').removeClass("btn-primary:visited");
+            $('#modal_chat_init_button').addClass("btn-primary");
           }
+        }
       }
       addMessageSpan("#game_chat_container", message);
       scrollToBottom("#game_chat_container");
