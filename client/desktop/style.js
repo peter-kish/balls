@@ -213,8 +213,8 @@ var PAINTER = (function () {
       $('#screen_game').show();
       $('body').toggleClass("background-color");
     },
-    endGame: function(name) {
-      $('#victory_message').text(name + " has won the match!");
+    endGame: function(message) {
+      $('#victory_message').text(message);
       $('#modal_victory').modal({backdrop: 'static', keyboard: false});
     }
 

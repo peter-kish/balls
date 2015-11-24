@@ -9,7 +9,7 @@ var FE = (function () {
     }
 
     function onConnected() {
-        PAINTER.enableConnection();
+      PAINTER.enableConnection();
     }
 
     function onAuthentication() {
@@ -19,6 +19,10 @@ var FE = (function () {
     function onAuthFailed(reason) {
       PAINTER.displayErrorMessage(reason);
       PAINTER.enableConnection();
+    }
+
+    function onOpponentLeft(opponentId) {
+      PAINTER.endGame(CL.getClientName(opponentId) + " has left the match!");
     }
 
     function refreshClientList(clientList) {
@@ -101,7 +105,7 @@ var FE = (function () {
     }
 
     function displayVictoryDialog(id) {
-        PAINTER.endGame(CL.getClientName(id));
+      PAINTER.endGame(CL.getClientName(id) + " has won the match!");
     }
 
     function resizeCanvas() {
@@ -138,6 +142,7 @@ var FE = (function () {
         CL.onChatMessage = displayChatMessage;
         CL.onInfoMessage = displayInfoMessage;
         CL.onVictory = displayVictoryDialog;
+        CL.onOpponentLeft = onOpponentLeft;
         var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);
