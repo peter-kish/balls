@@ -38,7 +38,10 @@ $(document).ready(function () {
     $('#screen_game').hide();
     $('#main_connected').show();
     $('body').toggleClass("background-color");
-    $('#game_chat_container').text('');
+
+    $('#button_main_join').prop('disabled', false);
+    $('#button_main_bot').prop('disabled', false);
+    $('#button_main_host').text('Host');
     FE.mainMenu();
   });
 
@@ -46,7 +49,10 @@ $(document).ready(function () {
     $('#screen_game').hide();
     $('#main_connected').show();
     $('body').toggleClass("background-color");
-    $('#game_chat_container').text('');
+
+    $('#button_main_join').prop('disabled', false);
+    $('#button_main_bot').prop('disabled', false);
+    $('#button_main_host').text('Host');
     FE.mainMenu();
   });
 
@@ -127,6 +133,7 @@ $(document).ready(function () {
 
   $('#modal_chat').on('shown.bs.modal', function() {
       $('#input_game_chat').focus();
+      $('#game_chat_container').scrollTop($('#game_chat_container')[0].scrollHeight)
   })
 
 });
@@ -195,12 +202,11 @@ var PAINTER = (function () {
               $('#modal_chat_init_button').removeClass("btn-primary:visited");
               $('#modal_chat_init_button').addClass("btn-primary");
           }
-          addMessageSpan("#game_chat_container", message);
-          scrollToBottom("#game_chat_container");
-      } else {
-          addMessageSpan("#main_chat_container", message);
-          scrollToBottom("#main_chat_container");
       }
+      addMessageSpan("#game_chat_container", message);
+      scrollToBottom("#game_chat_container");
+      addMessageSpan("#main_chat_container", message);
+      scrollToBottom("#main_chat_container");
     },
     startGame: function() {
       $('#main_connected').hide();
