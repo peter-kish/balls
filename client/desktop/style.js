@@ -216,7 +216,9 @@ var PAINTER = (function () {
     endGame: function(message) {
       $('#victory_message').text(message);
       $('#modal_victory').modal({backdrop: 'static', keyboard: false});
+    },
+    playSoundChecked: function() {
+        return $('#checkbox_main_playsound').is(':checked');
     }
-
   }
 }());

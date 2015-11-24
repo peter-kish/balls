@@ -34,6 +34,12 @@ var FE = (function () {
         PAINTER.startGame();
         SIMR.start(document.getElementById("game_canvas"));
         resizeCanvas();
+
+        if (PAINTER.playSoundChecked()) {
+            console.log("playing sound");
+            var snd = new Audio("whisle.mp3");
+            snd.play();
+        }
     }
 
     function getMouseCoords(event, element) {
