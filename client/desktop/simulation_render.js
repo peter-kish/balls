@@ -3,19 +3,13 @@ var SIMR = (function () {
     // Private
     var animationFrameRequest = null;
     // Constants
-    var textColor = '#CCCCCC'
     var playerColor = [];
     var playerOutlineColor = [];
     playerColor[0] = '#4486f6'
     playerColor[1] = '#d84a38'
-    playerOutlineColor[0] = '#225ec3'
-    playerOutlineColor[1] = '#b32e1d'
-    var ballColor = '#FFFFFF';
-    var ballOutlineColor = '#6e6e6e';
-    var goalPostColor = '#6e6e6e';
-    var grassColor = '#f1f1f1';
-    var nameColor = '#000000';
-    var linesColor = '#d7d7d7';
+    playerOutlineColor[0] = '#0197fd'
+    playerOutlineColor[1] = '#fd3301'
+    var goalPostColor = '#888888';
     var goalPostRadius = 15;
     var goalSize = 200;
     var notificationFader = new FADER.Fader();
@@ -42,6 +36,71 @@ var SIMR = (function () {
     var markerSign = 1;
     var camera = new V2D.Vector2d(0, 0);
 
+    function createSprite(image) {
+        var sprite = {};
+        sprite.image = image;
+        sprite.position = new V2D.Vector2d(0, 0);
+        sprite.origin = new V2D.Vector2d(0, 0);
+        sprite.draw = function() {
+            CDRAW.drawImage(image, sprite.position.x - sprite.origin.x, sprite.position.y - sprite.origin.y);
+        };
+        return sprite;
+    }
+
+    function createTitle(text) {
+        var title = {};
+        title.text = text;
+        title.position = new V2D.Vector2d(0, 0);
+        title.alpha = 1;
+        title.backgroundAlpha = 1;
+        title.color = '#000000';
+        title.backgroundColor = '#FFFFFF';
+        title.background = false;
+        title.size = 18;
+        title.draw = function() {
+            var tw = CDRAW.getTextWidth(title.text, "Calibri", title.size, '#FFFFFF', "bold", "center", "middle") + 12;
+            var th = 18 + 6
+            if (title.background) {
+                CDRAW.setAlpha(title.backgroundAlpha);
+                CDRAW.drawRect(title.position.x - tw/2, title.position.y - th/2, tw, th, title.backgroundColor);
+            }
+            CDRAW.setAlpha(title.alpha);
+            CDRAW.drawText(title.position.x, title.position.y, title.text, "Calibri", title.size, title.color, "bold", "center", "middle");
+            CDRAW.setAlpha(1);
+        }
+        return title;
+    }
+
+    var sprRedBall = createSprite(CDRAW.loadImage("ball_red.svg"));
+    var sprBlueBall = createSprite(CDRAW.loadImage("ball_blue.svg"));
+    var sprWhiteBall = createSprite(CDRAW.loadImage("ball_white.svg"));
+    var sprPlayfield = createSprite(CDRAW.loadImage("playfield.svg"));
+
+    var playerTitle = [];
+    playerTitle[0] = createTitle("Player1");
+    playerTitle[1] = createTitle("Player2");
+    for (var i = 0; i < playerTitle.length; i++) {
+        playerTitle[i].color = '#FFFFFF';
+        playerTitle[i].background = true;
+        playerTitle[i].backgroundColor = '#000000';
+        playerTitle[i].backgroundAlpha = 0.3;
+    }
+
+    var playerScoreTitle = [];
+    playerScoreTitle[0] = createTitle("0");
+    playerScoreTitle[1] = createTitle("0");
+    playerScoreTitle[0].position.set(new V2D.Vector2d(gameFrame.width/2, gameFrame.height - 120))
+    playerScoreTitle[1].position.set(new V2D.Vector2d(gameFrame.width/2, 120))
+    for (var i = 0; i < playerScoreTitle.length; i++) {
+        playerScoreTitle[i].color = playerColor[i];
+        playerScoreTitle[i].alpha = 0.5;
+        playerScoreTitle[i].size = 128;
+    }
+
+    var notificationTitle = createTitle("");
+    notificationTitle.position.set(new V2D.Vector2d(gameFrame.width/2, gameFrame.height/2));
+    notificationTitle.size = 32;
+
     function initAnimationFrame() {
         var lastTime = 0;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -67,6 +126,20 @@ var SIMR = (function () {
             };
     }
 
+    function getMarkedBall() {
+        if (CL.simulation.playerBall[0].marked) {
+            return CL.simulation.playerBall[0];
+        }
+        return CL.simulation.playerBall[1];
+    }
+
+    function getMarkedPlayer() {
+        if (CL.simulation.playerBall[0].marked) {
+            return 0;
+        }
+        return 1;
+    }
+
     initAnimationFrame();
 
     function drawFrame() {
@@ -79,24 +152,27 @@ var SIMR = (function () {
         CDRAW.drawRect(0, 0, gameFrame.width, gameFrame.height, goalPostColor);
     }
 
-    function renderBall(ball, color, name, outlineColor) {
-        if (!outlineColor) outlineColor = '#000000'
-        if (mouseDown && ball.marked && ball.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
+    function drawAim() {
+        var markedBall = getMarkedBall();
+        if (mouseDown && markedBall.id == CL.clientId && CL.simulation.areAllBallsIdle()) {
             var target = new V2D.Vector2d(mouse.x, mouse.y);
-            if (target.distance(ball.position) > MAX_STRENGTH_DISTANCE) {
-                target = V2D.sub(mouse, ball.position);
+            if (target.distance(markedBall.position) > MAX_STRENGTH_DISTANCE) {
+                target = V2D.sub(mouse, markedBall.position);
                 target.normalize();
                 target.multiply(MAX_STRENGTH_DISTANCE);
-                target.add(ball.position);
+                target.add(markedBall.position);
             }
             CDRAW.setAlpha(0.25);
             CDRAW.setLineCap("round");
-            CDRAW.drawLine(ball.position.x, ball.position.y, target.x, target.y, ball.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
+            CDRAW.drawLine(markedBall.position.x, markedBall.position.y, target.x, target.y, markedBall.radius * 2, CDRAW.rgb(1.0 - strength, strength, 0));
             CDRAW.setAlpha(1.0);
             CDRAW.setLineCap("butt");
         }
-    	CDRAW.drawCircle(ball.position.x, ball.position.y, ball.radius, color);
-        if (ball.marked && CL.simulation.areAllBallsIdle()) {
+    }
+
+    function drawBallMarker() {
+        var markedBall = getMarkedBall();
+        if (CL.simulation.areAllBallsIdle()) {
             if (markerFader.isTimeUp()) {
                 markerFader.start(markerTime);
                 markerSign *= -1;
@@ -105,16 +181,31 @@ var SIMR = (function () {
             if (markerSign < 0) {
                 alpha = 1.0 - alpha;
             }
-            CDRAW.drawCircleOutline(ball.position.x, ball.position.y, ball.radius + 6 * alpha, 6, outlineColor);
+            CDRAW.drawCircleOutline(markedBall.position.x, markedBall.position.y, markedBall.radius + 6 * alpha, 6, playerOutlineColor[getMarkedPlayer()]);
         }
-        CDRAW.drawText(ball.position.x, ball.position.y, name, "Calibri", 18, nameColor, "bold", "center", "middle");
     }
 
-    function render() {
-        clearScreen();
-        CL.simulation.update();
+    function setDrawablesParams(simulation) {
+        sprRedBall.position.set(simulation.playerBall[1].position);
+        sprRedBall.origin.set(new V2D.Vector2d(simulation.playerBall[1].radius, simulation.playerBall[1].radius));
+        sprBlueBall.position.set(simulation.playerBall[0].position);
+        sprBlueBall.origin.set(new V2D.Vector2d(simulation.playerBall[0].radius, simulation.playerBall[0].radius));
+        sprWhiteBall.position.set(simulation.playBall.position);
+        sprWhiteBall.origin.set(new V2D.Vector2d(simulation.playBall.radius, simulation.playBall.radius));
 
-        if (mouseDown && CL.simulation.areAllBallsIdle()) {
+        playerTitle[0].position.set(simulation.playerBall[0].position);
+        playerTitle[0].text = playerName[0];
+        playerTitle[1].position.set(simulation.playerBall[1].position);
+        playerTitle[1].text = playerName[1];
+
+        playerScoreTitle[0].text = simulation.playerScore[0];
+        playerScoreTitle[1].text = simulation.playerScore[1];
+
+        notificationTitle.text = notificationMessage;
+    }
+
+    function moveCamera(simulation) {
+        if (mouseDown && simulation.areAllBallsIdle()) {
             if (canvasMouse.x < playfieldBorder && camera.x > -gameFrame.width / 2) {
                 camera.x -= cameraSpeed * ((playfieldBorder - canvasMouse.x) / playfieldBorder);
             } else if (canvasMouse.x > gameFrame.width - playfieldBorder && camera.x < gameFrame.width / 2) {
@@ -132,71 +223,44 @@ var SIMR = (function () {
                 camera.y = 0;
             }
         }
+    }
 
+    function render() {
+        clearScreen();
+        CL.simulation.update();
+        setDrawablesParams(CL.simulation)
+        moveCamera(CL.simulation);
 
         CDRAW.setOrigin(-camera.x, -camera.y);
 
-        var offset = 2 * goalPostRadius;
-        var gfw = gameFrame.width;
-        var gfh = gameFrame.height;
-        var cs = (gfw - goalSize) / 2;
-        //CDRAW.drawRect(0, 0, gfw, gfh, goalPostColor);
-        CDRAW.drawRect(cs, goalPostRadius, gfw - 2 * cs, gfh - offset, grassColor);
-        CDRAW.drawRect(0, offset + cs, gfw, gfh - 2 * offset - 2 * cs, grassColor);
-        CDRAW.drawCircle(cs, cs + offset, cs, grassColor);
-        CDRAW.drawCircle(gfw - cs, cs + offset, cs, grassColor);
-        CDRAW.drawCircle(gfw - cs, gfh - cs - offset, cs, grassColor);
-        CDRAW.drawCircle(cs, gfh - cs - offset, cs, grassColor);
-
-        // Draw the goals
-    	CDRAW.drawRect(gfw/2 - goalSize/2 + goalPostRadius, gameFrame.height - goalPostRadius, goalSize - offset, goalPostRadius, playerColor[0]);
-    	CDRAW.drawRect(gameFrame.width/2 - goalSize/2 + goalPostRadius, 0, goalSize - offset, goalPostRadius, playerColor[1]);
-
-        // Draw the lines
-    	CDRAW.drawLine(0, gameFrame.height/2, gameFrame.width, gameFrame.height/2, 15, linesColor);
-    	CDRAW.drawCircleOutline(gameFrame.width/2, gameFrame.height/2, 100, 15, linesColor);
-    	CDRAW.drawCircle(gameFrame.width/2, gameFrame.height/2, 20, linesColor);
-
-        // Draw the playfield border
-        //CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, goalPostColor);
-
-        // Draw the rounded corners
-        CDRAW.drawArc(CL.simulation.corners[0].circle.origin.x, CL.simulation.corners[0].circle.origin.y, CL.simulation.corners[0].circle.radius, Math.PI, 1.5 * Math.PI, 1, goalPostColor);
-        CDRAW.drawArc(CL.simulation.corners[1].circle.origin.x, CL.simulation.corners[1].circle.origin.y, CL.simulation.corners[1].circle.radius, 1.5 * Math.PI, 0, 1, goalPostColor);
-        CDRAW.drawArc(CL.simulation.corners[2].circle.origin.x, CL.simulation.corners[2].circle.origin.y, CL.simulation.corners[2].circle.radius, 0, 0.5 * Math.PI, 1, goalPostColor);
-        CDRAW.drawArc(CL.simulation.corners[3].circle.origin.x, CL.simulation.corners[3].circle.origin.y, CL.simulation.corners[3].circle.radius, 0.5 * Math.PI, Math.PI, 1, goalPostColor);
+        // Draw the playfield
+        sprPlayfield.draw();
 
         // Draw the score
-    	CDRAW.setAlpha(0.5);
-    	CDRAW.drawText(gameFrame.width/2, 120, CL.simulation.playerScore[1], 'Calibri', 128, playerColor[1], 'bold', 'center', 'middle');
-    	CDRAW.drawText(gameFrame.width/2, gameFrame.height - 120, CL.simulation.playerScore[0], 'Calibri', 128, playerColor[0], 'bold', 'center', 'middle');
-    	CDRAW.setAlpha(1.0);
+        playerScoreTitle[0].draw();
+        playerScoreTitle[1].draw();
 
-        for (var i = 0; i < CL.simulation.balls.length; i++) {
-            if (CL.simulation.balls[i] != CL.simulation.playerBall[0] &&
-                CL.simulation.balls[i] != CL.simulation.playerBall[1] &&
-                CL.simulation.balls[i] != CL.simulation.playBall) {
-                renderBall(CL.simulation.balls[i], goalPostColor, "");
-            }
-        }
+        /// Draw the aim
+        drawAim();
 
-        renderBall(CL.simulation.playerBall[0], playerColor[0], playerName[0], playerOutlineColor[0]);
-        renderBall(CL.simulation.playerBall[1], playerColor[1], playerName[1], playerOutlineColor[1]);
+        // Draw the ball marker
+        drawBallMarker();
 
-        if (CL.simulation.playBall) {
-            renderBall(CL.simulation.playBall, ballColor, "");
-    		CDRAW.drawCircleOutline(CL.simulation.playBall.position.x,
-                CL.simulation.playBall.position.y,
-                CL.simulation.playBall.radius,
-                3,
-                ballOutlineColor);
-    	}
+        // Draw the balls
+        sprRedBall.draw();
+        sprBlueBall.draw();
+        sprWhiteBall.draw();
 
+        // Draw player names
+        playerTitle[0].draw();
+        playerTitle[1].draw();
+
+        // Draw notifications
         if (!notificationFader.isTimeUp()) {
-            CDRAW.setAlpha(1.0 - notificationFader.getProgress());
-            CDRAW.drawText(gameFrame.width/2, gameFrame.height/2, notificationMessage, 'Calibri', 32, '#000000', 'bold', 'center', 'middle');
-            CDRAW.setAlpha(1.0);
+            notificationTitle.alpha = 1.0 - notificationFader.getProgress();
+            notificationTitle.draw();
         }
+
         CDRAW.resetOrigin();
         CDRAW.drawRectOutline(0, 0, gameFrame.width-1, gameFrame.height-1, 1, '#000000');
     }
@@ -256,12 +320,14 @@ var SIMR = (function () {
     }
 
     module.getStrength = function () {
-        var currentPlayerPos = CL.simulation.playerBall[CL.simulation.currentTurn].position;
-        var dragDistance = V2D.distance(currentPlayerPos, mouse);
-        var strength = dragDistance;
-        strength = Math.min(MAX_STRENGTH_DISTANCE, strength);
-        strength /= MAX_STRENGTH_DISTANCE;
-        return strength;
+        if (CL.simulation) {
+            var currentPlayerPos = CL.simulation.playerBall[CL.simulation.currentTurn].position;
+            var dragDistance = V2D.distance(currentPlayerPos, mouse);
+            var strength = dragDistance;
+            strength = Math.min(MAX_STRENGTH_DISTANCE, strength);
+            strength /= MAX_STRENGTH_DISTANCE;
+            return strength;
+        }
     }
 
     return module;
