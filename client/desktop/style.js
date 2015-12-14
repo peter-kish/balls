@@ -1,3 +1,13 @@
+(function($) {
+    $.each(['show','hide'], function(i, val) {
+        var _org = $.fn[val];
+        $.fn[val] = function() {
+            _org.apply(this, arguments);
+            this.trigger(val);
+        };
+    });
+})(jQuery);
+
 $(document).ready(function () {
 
     FE.onPageLoad();
@@ -34,7 +44,7 @@ $(document).ready(function () {
         $('#button_main_join').hide();
         $('#button_main_bot').prop('disabled', true);
         $('#button_main_host').removeClass('width-45');
-        $('#button_main_host').addClass('width-90');
+        $('#button_main_host').addClass('width-full');
         $('#button_main_host').text('Stop Hosting');
     }
 
@@ -42,7 +52,7 @@ $(document).ready(function () {
         $('#button_main_join').show();
         $('#button_main_bot').prop('disabled', false);
         $('#button_main_host').addClass('width-45');
-        $('#button_main_host').removeClass('width-90');
+        $('#button_main_host').removeClass('width-full');
         $('#button_main_host').text('Host');
     }
 
@@ -128,8 +138,23 @@ $(document).ready(function () {
         $('.dialog').hide();
     });
 
-});
+    function fitElements() {
+        var twoBorders = 2; // TODO: get this from css
+        var marginS = 10; // TODO: get this from css
+        $('#set_name').width($('#main_connected').width() - $('#button_main_edit').outerWidth(true) - twoBorders);
+        $('#input_main_chat').width($('#main_connected').width() - $('#button_main_send').outerWidth(true) - twoBorders - 1);
+        $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
+        $('#game_chat_container').height($('#dialog_chat_window').height() - $('#dialog_chat_titlebar').height() - $('#dialog_chat_chatbar').height() - marginS - 2*twoBorders);
+    }
 
+    $(window).on('resize', function() {
+        fitElements();
+    });
+
+    $('.menu-screen, .dialog').on('show', function () {
+        fitElements();
+    });
+});
 
 var PAINTER = (function () {
 
@@ -229,7 +254,7 @@ var PAINTER = (function () {
                 $('#button_main_join').show();
                 $('#button_main_bot').prop('disabled', false);
                 $('#button_main_host').addClass('width-45');
-                $('#button_main_host').removeClass('width-90');
+                $('#button_main_host').removeClass('width-full');
                 $('#button_main_host').text('Host');
                 FE.mainMenu();
                 $("#dialog-info").hide();

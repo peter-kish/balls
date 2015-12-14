@@ -47,7 +47,7 @@ html, body {
     margin: 0 auto;
     padding: 10px;
     position: relative;
-    height: 100%;
+    height: calc(100% - 20px);
 }
 
 .text-field {
@@ -70,7 +70,7 @@ html, body {
 
 .button {
     margin: 0;
-    padding: 0;
+    padding: 0 10px 0 10px;
     border-width: 1px;
     background-color: #4486f6;
     border-top-color: #a0bae9;
@@ -83,7 +83,7 @@ html, body {
 
 .button-danger {
     margin: 0;
-    padding: 0;
+    padding: 0 10px 0 10px;
     border-width: 1px;
     background-color: #d84a38;
     border-top-color: #eb9f97;
@@ -96,7 +96,7 @@ html, body {
 
 .button:disabled {
     margin: 0;
-    padding: 0;
+    padding: 0 10px 0 10px;
     border-width: 1px;
     background-color: #4486f6;
     border-top-color: #a0bae9;
@@ -109,7 +109,7 @@ html, body {
 
 .disabled {
     margin: 0;
-    padding: 0;
+    padding: 0 10px 0 10px;
     border-width: 1px;
     background-color: #4486f6;
     border-top-color: #a0bae9;
@@ -182,6 +182,14 @@ html, body {
 
 .bottom-buffer-l {
     margin-bottom:60px;
+}
+
+.left-buffer-s {
+    margin-left:10px;
+}
+
+.right-buffer-s {
+    margin-left:10px;
 }
 
 .side-buffer-s {
@@ -326,7 +334,11 @@ html, body {
 }
 
 #wrapper {
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #screen_game {

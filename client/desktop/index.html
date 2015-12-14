@@ -13,27 +13,29 @@
 				<button id="button_main_ok" class="width-full button disabled text-l top-buffer-s" type="button">Connect</button>
 			</div>
 			<div id = "main_connected" class="menu-screen">
-				<div class="subcontainer top-buffer-s">
-					<input id="set_name" class="text-field text-l float-l width-70" type="text" />
-					<button id="button_main_edit" class="button text-l float-l icon-edit side-buffer-s" type="button"></button>
-				</div>
-				<div class="subcontainer top-buffer-s">
-					<button id="button_main_host" class="button text-l width-45" type="button">Host</button>
-					<button id="button_main_join" class="button text-l width-45" type="button">Join</button>
-				</div>
-				<div class="subcontainer top-buffer-s">
-					<button id="button_main_bot" class="button text-l width-45" type="button">vs AI</button>
-					<button id="button_players" class="button text-l width-45" type="button">Players</button>
-				</div>
-				<div class="subcontainer top-buffer-s">
-					<label><input id="checkbox_main_playsound" type="checkbox" value=""/>Play a sound when the match starts</label>
+				<div id="main_connected_toolbar" class="subcontainer">
+					<div class="subcontainer">
+						<input id="set_name" class="text-field text-l float-l" type="text" />
+						<button id="button_main_edit" class="button text-l float-r icon-edit left-buffer-s" type="button"></button>
+					</div>
+					<div class="subcontainer top-buffer-s">
+						<button id="button_main_host" class="button text-l width-45 float-l" type="button">Host</button>
+						<button id="button_main_join" class="button text-l width-45 float-r" type="button">Join</button>
+					</div>
+					<div class="subcontainer top-buffer-s">
+						<button id="button_main_bot" class="button text-l width-45 float-l" type="button">vs AI</button>
+						<button id="button_players" class="button text-l width-45 float-r" type="button">Players</button>
+					</div>
+					<div class="subcontainer top-buffer-s">
+						<label><input id="checkbox_main_playsound" type="checkbox" value=""/>Play a sound when the match starts</label>
+					</div>
 				</div>
 				<div class="subcontainer top-buffer-s">
 					<textarea id = "main_chat_container" disabled class="text-field text-m width-full" rows="10"></textarea>
 				</div>
-				<div class="subcontainer">
+				<div id="main_connected_chatbar" class="subcontainer">
 					<input id="input_main_chat" type="text" class="text-field text-m width-70 float-l" placeholder="chat">
-					<button class="button text-m width-25 float-r" id="button_main_send" type="button">Send</button>
+					<button id="button_main_send" class="button text-m float-r left-buffer-s" type="button">Send</button>
 				</div>
 			</div>
 
@@ -90,19 +92,17 @@
 
 			<div id="dialog-chat" class="dialog">
 				<div class="dialog-row">
-					<div class="dialog-window height-full">
-						<div class="subcontainer">
+					<div id="dialog_chat_window" class="dialog-window height-full">
+						<div id="dialog_chat_titlebar" class="subcontainer">
 							<label class="text-l text-left float-l top-buffer-s side-buffer-s">Chat</label>
 							<button class="button-danger icon-close dialog-closer text-l float-r top-buffer-s bottom-buffer-s side-buffer-s" type="button"></button>
 						</div>
 						<div class="subcontainer side-buffer-s">
-							<div>
-								<textarea id = "game_chat_container" disabled class="text-field text-m width-full" rows="10"></textarea>
-							</div>
-							<div>
-								<input id="input_game_chat" type="text" class="text-field text-m width-70 float-l" placeholder="chat">
-								<button id="button_game_send" class="button text-m width-25 float-r" type="button">Send</button>
-							</div>
+							<textarea id = "game_chat_container" disabled class="text-field text-m width-full" rows="10"></textarea>
+						</div>
+						<div id="dialog_chat_chatbar" class="subcontainer side-buffer-s">
+							<input id="input_game_chat" type="text" class="text-field text-m width-70 float-l" placeholder="chat">
+							<button id="button_game_send" class="button text-m width-25 float-r" type="button">Send</button>
 						</div>
 					</div>
 				</div>
