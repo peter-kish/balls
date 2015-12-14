@@ -9,24 +9,24 @@ var FE = (function () {
     }
 
     function onConnected() {
-      PAINTER.enableConnection();
+        PAINTER.enableConnection();
     }
 
     function onAuthentication() {
-      PAINTER.setPlayerName();
+        PAINTER.setPlayerName();
     }
 
     function onAuthFailed(reason) {
-      PAINTER.displayErrorMessage(reason);
-      PAINTER.enableConnection();
+        PAINTER.displayErrorMessage(reason);
+        PAINTER.enableConnection();
     }
 
     function onOpponentLeft(opponentId) {
-      PAINTER.endGame(CL.getClientName(opponentId) + " has left the match!");
+        PAINTER.endGame(CL.getClientName(opponentId) + " has left the match!");
     }
 
     function refreshClientList(clientList) {
-      PAINTER.repaintClientsLists(clientList);
+        PAINTER.repaintClientsLists(clientList);
     }
 
     function startGame(id1, id2) {
@@ -103,32 +103,32 @@ var FE = (function () {
     }
 
     function displayInfoMessage(message) {
-      PAINTER.printMessage(null, message);
+        PAINTER.printMessage(null, message);
     }
 
     function displayChatMessage(name, message) {
-      PAINTER.printMessage(name, message);
+        PAINTER.printMessage(name, message);
     }
 
     function displayVictoryDialog(id) {
-      PAINTER.endGame(CL.getClientName(id) + " has won the match!");
+        PAINTER.endGame(CL.getClientName(id) + " has won the match!");
     }
 
     function resizeCanvas() {
         if ($("#screen_game:visible").length > 0) {
-          var canvas = document.getElementById("game_canvas");
-          var container = document.getElementById("game_canvas_container");
-          var input = document.getElementById("game_input_area");
-          canvas.width = container.clientWidth;
-          canvas.height = container.clientHeight;
+            var canvas = document.getElementById("game_canvas");
+            var container = document.getElementById("game_canvas_container");
+            var input = document.getElementById("game_input_area");
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
 
-          if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
-          	CDRAW.setScale(canvas.height / gameFrame.height);
-          } else {
-          	CDRAW.setScale(canvas.width / gameFrame.width);
-          }
-          canvas.width = CDRAW.getScale() * gameFrame.width;
-          canvas.height = CDRAW.getScale() * gameFrame.height;
+            if (canvas.width / canvas.height > gameFrame.width / gameFrame.height) {
+            	CDRAW.setScale(canvas.height / gameFrame.height);
+            } else {
+            	CDRAW.setScale(canvas.width / gameFrame.width);
+            }
+            canvas.width = CDRAW.getScale() * gameFrame.width;
+            canvas.height = CDRAW.getScale() * gameFrame.height;
         }
     }
 
@@ -207,7 +207,7 @@ var FE = (function () {
     }
 
     module.sendChatMessage = function(message) {
-      CL.chat(message);
+        CL.chat(message);
     }
 
 // FIND appropriate names for following functions END
