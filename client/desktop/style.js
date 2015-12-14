@@ -23,10 +23,6 @@ $(document).ready(function () {
     }
   });
 
-  $('#modal_players').on('shown.bs.modal', function () {
-    $('#button_players').focus()
-  });
-
   $('#button_main_bot').click(function(){
     $('body').toggleClass("background-color");
     $('#main_connected').hide();
@@ -34,15 +30,33 @@ $(document).ready(function () {
     FE.joinBot();
   });
 
-  $('#exit_game_button').click(function(){
-    $('#screen_game').hide();
-    $('#main_connected').show();
-    $('body').toggleClass("background-color");
+  function startHosting() {
+      $('#button_main_join').hide();
+      $('#button_main_bot').prop('disabled', true);
+      $('#button_main_host').removeClass('width-45');
+      $('#button_main_host').addClass('width-90');
+      $('#button_main_host').text('Stop Hosting');
+  }
 
-    $('#button_main_join').prop('disabled', false);
-    $('#button_main_bot').prop('disabled', false);
-    $('#button_main_host').text('Host');
-    FE.mainMenu();
+  function stopHosting() {
+      $('#button_main_join').show();
+      $('#button_main_bot').prop('disabled', false);
+      $('#button_main_host').addClass('width-45');
+      $('#button_main_host').removeClass('width-90');
+      $('#button_main_host').text('Host');
+  }
+
+  $('#game_exit_button').click(function(){
+      $('#dialog-yesno').show();
+      $('#dialog-yesno-text').text("Surrender and go back to the lobby?");
+      $('#dialog-yesno-yes').click(function() {
+          $('#screen_game').hide();
+          $('#main_connected').show();
+          $('body').toggleClass("background-color");
+          stopHosting();
+          FE.mainMenu();
+          $('#dialog-yesno').hide();
+      });
   });
 
   $('#back_to_lobby_button').click(function(){
@@ -50,23 +64,25 @@ $(document).ready(function () {
     $('#main_connected').show();
     $('body').toggleClass("background-color");
 
-    $('#button_main_join').prop('disabled', false);
-    $('#button_main_bot').prop('disabled', false);
-    $('#button_main_host').text('Host');
+    stopHosting();
     FE.mainMenu();
   });
 
   $('#button_main_host').click(function() {
     var hosting = FE.hostMenu();
     if (hosting) {
-      $('#button_main_join').prop('disabled', true);
-      $('#button_main_bot').prop('disabled', true);
-      $('#button_main_host').text('Stop Hosting');
+      startHosting();
     } else {
-      $('#button_main_join').prop('disabled', false);
-      $('#button_main_bot').prop('disabled', false);
-      $('#button_main_host').text('Host');
+      stopHosting();
     }
+  });
+
+  $('#button_main_join').click(function() {
+      $("#dialog-join").show();
+  });
+
+  $('#button_players').click(function() {
+      $("#dialog-player-list").show();
   });
 
   $('#button_main_send, #button_game_send').click(function(){
@@ -95,46 +111,22 @@ $(document).ready(function () {
     }
   });
 
-  $('#button_main_join').click(function(){
-    $('#button_join_join').prop('disabled', true);
-  });
-
-  var selectedPlayer;
-
-  $('#list_join_clients').on('click', function() {
-    selectedPlayer = this.value;
-    if(this.value) {
-      $('#button_join_join').prop('disabled', false);
-    }
-    else {
-      $('#button_join_join').prop('disabled', true);
-    }
-  });
-
-  $('#button_join_join').click(function() {
-    FE.joinClient(selectedPlayer);
-    $('#main_connected').hide();
-    $('#screen_game').show();
-    $('body').toggleClass("background-color");
-  });
-
-  $('#button_join_refresh').click(function(){
-    FE.joinRefresh();
-  });
-
-  $('#button_join_back').click(function(){
-    FE.mainMenu();
-  });
-
-  $('#modal_chat_init_button').click(function() {
-      $('#modal_chat_init_button').removeClass("btn-primary");
-      $('#modal_chat_init_button').addClass("btn-primary:visited");
+  $('#game_chat_button').click(function() {
+      $('#game_chat_button').removeClass("icon-chat-notify");
+      $('#game_chat_button').addClass("icon-chat");
+      $('#dialog-chat').show();
   });
 
   $('#modal_chat').on('shown.bs.modal', function() {
       $('#input_game_chat').focus();
       $('#game_chat_container').scrollTop($('#game_chat_container')[0].scrollHeight)
   })
+
+  $('.dialog').hide();
+
+  $('.dialog-closer').on('click', function() {
+      $('.dialog').hide();
+  });
 
 });
 
@@ -161,25 +153,35 @@ var PAINTER = (function () {
 
   return {
     repaintClientsLists: function (clientList) {
-      $('#list_join_clients').find('option').remove();
-      for (var i = 0; i < clientList.length; i++) {
-        if (clientList[i].state == "hosting") {
-          $('#list_join_clients').append($("<option></option>")
-                                  .attr("value",clientList[i].id)
-                                  .text(getSafeString(clientList[i].name)));
-        }
-      }
-
       $('#table_main_players').find("tr").remove();
       for (var i = 0; i < clientList.length; i++) {
         $('#table_main_players').append(
           '<tr>' +
-            '<td>(' + (i+1) + ')</td>' +
             '<td>' + getSafeString(clientList[i].name) + '</td>' +
-            '<td>['+ clientList[i].state +']</td>' +
+            '<td>'+ clientList[i].state +'</td>' +
           '</tr>'
         );
       }
+
+      $('#table_main_join').find("tr").remove();
+      for (var i = 0; i < clientList.length; i++) {
+          if (clientList[i].state == "hosting") {
+            $('#table_main_join').append(
+              '<tr>' +
+                '<td>' + getSafeString(clientList[i].name) + '</td>' +
+                '<td><button class="button button-join default-rect text-m" value='+ clientList[i].id +'>Join</button></td>' +
+              '</tr>'
+            );
+          }
+      }
+
+      $('.button-join').click(function() {
+        FE.joinClient(this.value);
+        $('.dialog').hide();
+        $('#main_connected').hide();
+        $('#screen_game').show();
+        $('body').toggleClass("background-color");
+      });
     },
     enableConnection: function() {
       $('#button_main_ok').removeClass("disabled");
@@ -191,15 +193,19 @@ var PAINTER = (function () {
       $('#set_name').val(name);
     },
     displayErrorMessage: function(reason) {
-      $("#error_login").text(reason);
+      $("#dialog-info").show();
+      $("#dialog-info-text").text(reason);
+      $('#dialog-info-ok').click(function(){
+          $("#dialog-info").hide();
+      });
     },
     printMessage: function(name, message) {
       if (name) {
         message = "[" + getSafeString(name) + "]: " + getSafeString(message);
         if ($('#screen_game:visible').length) {
-          if(!$('#modal_chat:visible').length) {
-            $('#modal_chat_init_button').removeClass("btn-primary:visited");
-            $('#modal_chat_init_button').addClass("btn-primary");
+          if(!$('#dialog-chat:visible').length) {
+            $('#game_chat_button').removeClass("icon-chat");
+            $('#game_chat_button').addClass("icon-chat-notify");
           }
         }
       }
@@ -214,8 +220,20 @@ var PAINTER = (function () {
       $('body').toggleClass("background-color");
     },
     endGame: function(message) {
-      $('#victory_message').text(message);
-      $('#modal_victory').modal({backdrop: 'static', keyboard: false});
+      $("#dialog-info").show();
+      $("#dialog-info-text").text(message);
+      $('#dialog-info-ok').click(function(){
+          $('#screen_game').hide();
+          $('#main_connected').show();
+          $('body').toggleClass("background-color");
+          $('#button_main_join').show();
+          $('#button_main_bot').prop('disabled', false);
+          $('#button_main_host').addClass('width-45');
+          $('#button_main_host').removeClass('width-90');
+          $('#button_main_host').text('Host');
+          FE.mainMenu();
+          $("#dialog-info").hide();
+      });
     },
     playSoundChecked: function() {
         return $('#checkbox_main_playsound').is(':checked');

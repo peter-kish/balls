@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="60"
+   height="60"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="chat_notification_icon.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9195959"
+     inkscape:cx="49.167547"
+     inkscape:cy="3.7694912"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1858"
+     inkscape:window-height="1058"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="2.5px"
+       spacingy="2.5px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-992.3622)">
+    <rect
+       style="fill:#4486f6;fill-opacity:1;stroke:none"
+       id="rect2984"
+       width="60"
+       height="60"
+       x="0"
+       y="0"
+       transform="translate(0,992.3622)" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       d="M 12.5 10 C 8.345 10 5 13.345 5 17.5 L 5 32.5 C 5 36.655 8.345 40 12.5 40 L 30 40 L 30 55 L 45 40 L 47.5 40 C 51.655 40 55 36.655 55 32.5 L 55 17.5 C 55 13.345 51.655 10 47.5 10 L 12.5 10 z "
+       transform="translate(0,992.3622)"
+       id="rect2985" />
+    <text
+       xml:space="preserve"
+       style="font-size:69.59539795px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#d40000;fill-opacity:1;stroke:none;font-family:sans-serif"
+       x="5"
+       y="1044.8622"
+       id="text3757"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3759"
+         x="5"
+         y="1044.8622"
+         style="font-size:69.59539795px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#d40000;font-family:Calibri;-inkscape-font-specification:Calibri Bold">!</tspan></text>
+  </g>
+</svg>
