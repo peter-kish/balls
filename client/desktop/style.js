@@ -145,7 +145,12 @@ $(document).ready(function () {
         $('#input_main_chat').width($('#main_connected').width() - $('#button_main_send').outerWidth(true) - twoBorders - 1);
         $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
         $('#game_chat_container').height($('#dialog_chat_window').height() - $('#dialog_chat_titlebar').height() - $('#dialog_chat_chatbar').height() - marginS - 2*twoBorders);
+        $('.center-vertically').each(function() {
+            $(this).css({top: ($(this).parent().height() - $(this).height()) / 2});
+        });
     }
+
+    fitElements();
 
     $(window).on('resize', function() {
         fitElements();

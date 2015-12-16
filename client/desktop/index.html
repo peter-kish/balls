@@ -8,9 +8,11 @@
 	<body>
 		<div id = "wrapper" class="text-center">
 			<div id="screen_main" class="menu-screen">
-				<img src="balls_title.svg" class="strech-h text-center top-buffer-l"/>
-				<input id="input_name" class="width-full text-field text-l top-buffer-l" type="text" placeholder="Enter name" />
-				<button id="button_main_ok" class="width-full button disabled text-l top-buffer-s" type="button">Connect</button>
+				<div id="connect_menu" class="subcontainer center-vertically">
+					<img src="balls_title.svg" class="strech-h text-center"/>
+					<input id="input_name" class="width-full text-field text-l" type="text" placeholder="Enter name" />
+					<button id="button_main_ok" class="width-full button disabled text-l top-buffer-s" type="button">Connect</button>
+				</div>
 			</div>
 			<div id = "main_connected" class="menu-screen">
 				<div id="main_connected_toolbar" class="subcontainer">
@@ -41,7 +43,7 @@
 
 			<div id="dialog-info" class="dialog">
 				<div class="dialog-row">
-					<div class="dialog-window">
+					<div class="dialog-window center-vertically">
 						<label id="dialog-info-text" class="text-l top-buffer-s">Dialog info</label>
 						<div>
 							<button id="dialog-info-ok" class="button width-45 text-l top-buffer-s bottom-buffer-s" type="button">Ok</button>
@@ -52,7 +54,7 @@
 
 			<div id="dialog-yesno" class="dialog">
 				<div class="dialog-row">
-					<div class="dialog-window">
+					<div class="dialog-window center-vertically">
 						<label id="dialog-yesno-text" class="text-l top-buffer-s">Dialog info</label>
 						<div>
 							<button id="dialog-yesno-yes" class="button width-45 text-l top-buffer-s bottom-buffer-s" type="button">Yes</button>
@@ -114,7 +116,7 @@
 				<div class="inline relative">
 					<div id="game_toolbar" class="toolbar">
 						<button id="game_chat_button" class="button icon-chat float-l offset-thin" data-target="#modal_chat" type="button"></button>
-						<button id="game_exit_button" class="button icon-close float-r offset-thin" data-target="#modal_exit" type="button"></button>
+						<button id="game_exit_button" class="button-danger icon-close float-r offset-thin" data-target="#modal_exit" type="button"></button>
 					</div>
 					<div id="game_input_area" class="inline">
 						<canvas id="game_canvas" width="480" height="640"></canvas>

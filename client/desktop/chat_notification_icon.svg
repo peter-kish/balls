@@ -26,7 +26,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="7.9195959"
      inkscape:cx="49.167547"
-     inkscape:cy="3.7694912"
+     inkscape:cy="2.6962041"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -70,6 +70,11 @@
        x="0"
        y="0"
        transform="translate(0,992.3622)" />
+    <path
+       id="path2987"
+       d="m 14.5,1004.3622 c -4.155,0 -7.5,3.345 -7.5,7.5 l 0,15 c 0,4.155 3.345,7.5 7.5,7.5 l 17.5,0 0,15 15,-15 2.5,0 c 4.155,0 7.5,-3.345 7.5,-7.5 l 0,-15 c 0,-4.155 -3.345,-7.5 -7.5,-7.5 l -35,0 z"
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
        d="M 12.5 10 C 8.345 10 5 13.345 5 17.5 L 5 32.5 C 5 36.655 8.345 40 12.5 40 L 30 40 L 30 55 L 45 40 L 47.5 40 C 51.655 40 55 36.655 55 32.5 L 55 17.5 C 55 13.345 51.655 10 47.5 10 L 12.5 10 z "
