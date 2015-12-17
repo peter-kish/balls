@@ -105,11 +105,11 @@ function handleWsRequest(request) {
 }
 
 function handleAuthRequest(connection, name) {
-	name = name.substring(0, NAME_LENGTH_LIMIT);
-    if (getClientByName(name)) {
+	var validationResult = validateName(name);
+    if (validationResult != "") {
         // Denied
-		LOG("Player name (" + name + ") already taken.");
-        var message = JSON.stringify({msgType: "authDenied", msgData: {reason: "Name already taken."}});
+		LOG("Player name (" + name + ") denied: " + validationResult);
+        var message = JSON.stringify({msgType: "authDenied", msgData: {reason: validationResult}});
         connection.sendUTF(message);
         return "";
     } else {
@@ -126,15 +126,32 @@ function handleAuthRequest(connection, name) {
 }
 
 function handleChangeName(id, newName) {
-	if (getClientByName(newName))
-		return;
-
+	var validationResult = validateName(newName);
     var clientData = getClient(id);
     if (clientData) {
-		LOG(clientData.name + " changed his name to " + newName.substring(0, NAME_LENGTH_LIMIT));
-        clientData.name = newName.substring(0, NAME_LENGTH_LIMIT);
-        broadcast(JSON.stringify({msgType: "newName", msgData: {id: id, name: clientData.name}}));
+		if (validationResult == "") {
+			LOG(clientData.name + " changed his name to " + newName.substring(0, NAME_LENGTH_LIMIT));
+			clientData.name = newName.substring(0, NAME_LENGTH_LIMIT);
+			broadcast(JSON.stringify({msgType: "newName", msgData: {id: id, name: clientData.name}}));
+		} else {
+			LOG("New player name for " + clientData.name + " denied: " + validationResult);
+		}
     }
+}
+
+function validateName(name) {
+	LOG("Validating name " + name + ", length: " + name.length);
+	if (getClientByName(name)) {
+		return "Name already taken.";
+	}
+	if (name.length > NAME_LENGTH_LIMIT) {
+		return "Name too long."
+	}
+	if (name.length <= 1) {
+		return "Name too short."
+	}
+
+	return "";
 }
 
 function handleClientHosting(id) {
