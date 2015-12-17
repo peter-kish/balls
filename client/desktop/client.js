@@ -80,6 +80,7 @@ var CL = (function () {
     module.onTurnStart = null;
     module.onVictory = null;
     module.onOpponentLeft = null;
+    module.onServerError = null;
 
     module.clientName = "";
     module.clientId = "";
@@ -189,6 +190,10 @@ var CL = (function () {
                         var client = getClient(json.msgData.id);
                         console.log("[" + client.name + "]: " + json.msgData.message);
                         if (module.onChatMessage) module.onChatMessage(client.name, json.msgData.message);
+                        break;
+                    case "serverError":
+                        console.log("<SERVER>: " + json.msgData.message);;
+                        if (module.onServerError) module.onServerError(json.msgData.message);
                         break;
                     default:
 

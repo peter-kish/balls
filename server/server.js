@@ -135,6 +135,7 @@ function handleChangeName(id, newName) {
 			broadcast(JSON.stringify({msgType: "newName", msgData: {id: id, name: clientData.name}}));
 		} else {
 			LOG("New player name for " + clientData.name + " denied: " + validationResult);
+			unicast(id, JSON.stringify({msgType: "serverError", msgData: {message: validationResult}}));
 		}
     }
 }

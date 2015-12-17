@@ -21,6 +21,10 @@ var FE = (function () {
         PAINTER.enableConnection();
     }
 
+    function onServerError(message) {
+        PAINTER.displayErrorMessage(message);
+    }
+
     function onOpponentLeft(opponentId) {
         PAINTER.endGame(CL.getClientName(opponentId) + " has left the match!");
     }
@@ -149,6 +153,7 @@ var FE = (function () {
         CL.onInfoMessage = displayInfoMessage;
         CL.onVictory = displayVictoryDialog;
         CL.onOpponentLeft = onOpponentLeft;
+        CL.onServerError = onServerError;
         var canvas = document.getElementById("game_input_area");
         canvas.addEventListener('mousemove', canvasMouseMove);
         canvas.addEventListener('mousedown', canvasMouseDown);
