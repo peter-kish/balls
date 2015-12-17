@@ -146,7 +146,11 @@ $(document).ready(function () {
         $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
         $('#game_chat_container').height($('#dialog_chat_window').height() - $('#dialog_chat_titlebar').height() - $('#dialog_chat_chatbar').height() - marginS - 2*twoBorders);
         $('.center-vertically').each(function() {
-            $(this).css({top: ($(this).parent().height() - $(this).height()) / 2});
+            if ($(this).height() > $(this).parent().height()) {
+                $(this).css({top: $(this).parent().height() - $(this).height()});
+            } else {
+                $(this).css({top: ($(this).parent().height() - $(this).height()) / 2});
+            }
         });
     }
 
