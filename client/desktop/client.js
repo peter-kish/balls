@@ -76,6 +76,7 @@ var CL = (function () {
     module.onClientListChanged = null;
     module.onGameStarted = null;
     module.onChatMessage = null;
+    module.onLocalChatMessage = null;
     module.onInfoMessage = null;
     module.onTurnStart = null;
     module.onVictory = null;
@@ -188,8 +189,15 @@ var CL = (function () {
                         break;
                     case "chat":
                         var client = getClient(json.msgData.id);
-                        console.log("[" + client.name + "]: " + json.msgData.message);
-                        if (module.onChatMessage) module.onChatMessage(client.name, json.msgData.message);
+                        if (client) {
+                            if (json.msgData.local) {
+                                console.log("LOCAL [" + client.name + "]: " + json.msgData.message);
+                                if (module.onLocalChatMessage) module.onLocalChatMessage(client.name, json.msgData.message);
+                            } else {
+                                console.log("[" + client.name + "]: " + json.msgData.message);
+                                if (module.onChatMessage) module.onChatMessage(client.name, json.msgData.message);
+                            }
+                        }
                         break;
                     case "serverError":
                         console.log("<SERVER>: " + json.msgData.message);;
@@ -246,9 +254,10 @@ var CL = (function () {
         }
     }
 
-    module.chat = function (message) {
-        if (module.connected)
-            connection.send(JSON.stringify({msgType: "chat", msgData: {message: message.substring(0, CHAT_MSG_LIMIT)}}));
+    module.chat = function (message, local) {
+        if (module.connected) {
+            connection.send(JSON.stringify({msgType: "chat", msgData: {local: local, message: message.substring(0, CHAT_MSG_LIMIT)}}));
+        }
     }
 
     module.getClientName = function (id) {

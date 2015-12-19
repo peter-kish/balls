@@ -86,7 +86,7 @@ function handleWsRequest(request) {
                     handleClientTurn(id, json.msgData.x, json.msgData.y, json.msgData.strength);
                     break;
                 case "chat":
-                    handleClientChat(id, json.msgData.message);
+                    handleClientChat(id, json.msgData.message, json.msgData.local);
                 default:
 
             }
@@ -141,7 +141,6 @@ function handleChangeName(id, newName) {
 }
 
 function validateName(name) {
-	LOG("Validating name " + name + ", length: " + name.length);
 	if (getClientByName(name)) {
 		return "Name already taken.";
 	}
@@ -233,11 +232,20 @@ function handleClientTurn(id, x, y, strength) {
     }
 }
 
-function handleClientChat(id, msg) {
+function handleClientChat(id, msg, local) {
 	var client = getClient(id);
 	if (client) {
-		LOG("[chat] " + client.name + ": " + msg);
-    	broadcast(JSON.stringify({msgType: "chat", msgData: {id: id, message: msg}}));
+		if (local) {
+			var opponent = getClient(getOpponentId(id));
+			if (opponent) {
+				LOG("[chat-local] " + client.name + ": " + msg);
+				unicast(id, JSON.stringify({msgType: "chat", msgData: {id: id, message: msg, local: true}}));
+				unicast(opponent.id, JSON.stringify({msgType: "chat", msgData: {id: id, message: msg, local: true}}));
+			}
+		} else {
+			LOG("[chat] " + client.name + ": " + msg);
+			broadcast(JSON.stringify({msgType: "chat", msgData: {id: id, message: msg}}));
+		}
 	}
 }
 
@@ -326,6 +334,7 @@ function getOpponentId(id) {
 			return game.id1;
 		}
 	}
+	return null;
 }
 
 function isBot(id) {

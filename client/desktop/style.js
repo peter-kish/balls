@@ -105,7 +105,11 @@ $(document).ready(function () {
         var message = input.val();
         if (message != "") {
             input.val("");
-            FE.sendChatMessage(message);
+            if ($("#game_local_chat_container:visible").length) {
+                FE.sendChatMessage(message, true);
+            } else {
+                FE.sendChatMessage(message, false);
+            }
         }
     });
 
@@ -127,10 +131,25 @@ $(document).ready(function () {
       $('#dialog-chat').show();
     });
 
-    $('#modal_chat').on('shown.bs.modal', function() {
-        $('#input_game_chat').focus();
-        $('#game_chat_container').scrollTop($('#game_chat_container')[0].scrollHeight)
-    })
+    $('#button_chat_local').click(function() {
+        $('#game_local_chat_container').show();
+        $('#game_chat_container').hide();
+        $('#button_chat_local').removeClass("button-tab");
+        $('#button_chat_local').addClass("button-tab-selected");
+        $('#button_chat_global').removeClass("button-tab-selected");
+        $('#button_chat_global').addClass("button-tab");
+    });
+
+    $('#button_chat_global').click(function() {
+        $('#game_local_chat_container').hide();
+        $('#game_chat_container').show();
+        $('#button_chat_global').removeClass("button-tab");
+        $('#button_chat_global').addClass("button-tab-selected");
+        $('#button_chat_local').removeClass("button-tab-selected");
+        $('#button_chat_local').addClass("button-tab");
+    });
+
+    $('#game_chat_container').hide();
 
     $('.dialog').hide();
 
@@ -144,7 +163,21 @@ $(document).ready(function () {
         $('#set_name').width($('#main_connected').width() - $('#button_main_edit').outerWidth(true) - twoBorders);
         $('#input_main_chat').width($('#main_connected').width() - $('#button_main_send').outerWidth(true) - twoBorders - 1);
         $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
-        $('#game_chat_container').height($('#dialog_chat_window').height() - $('#dialog_chat_titlebar').height() - $('#dialog_chat_chatbar').height() - marginS - 2*twoBorders);
+        $('#game_chat_container').height($('#dialog_chat_window').height() -
+            $('#dialog_chat_titlebar').height() -
+            $('#dialog_chat_tabbar').height() -
+            $('#dialog_chat_chatbar').height() -
+            marginS -
+            2*twoBorders);
+        $('#game_local_chat_container').height($('#dialog_chat_window').height() -
+            $('#dialog_chat_titlebar').height() -
+            $('#dialog_chat_tabbar').height() -
+            $('#dialog_chat_chatbar').height() -
+            marginS -
+            2*twoBorders);
+        $('#tab_filler').width($('#dialog_chat_tabbar').width() - $('#button_chat_global').outerWidth() - $('#button_chat_local').outerWidth() - twoBorders - 1);
+        $('#tab_filler').height($('#button_chat_global').height());
+
         $('.center-vertically').each(function() {
             if ($(this).height() > $(this).parent().height()) {
                 $(this).css({top: $(this).parent().height() - $(this).height()});
@@ -236,6 +269,15 @@ var PAINTER = (function () {
         printMessage: function(name, message) {
             if (name) {
                 message = "[" + getSafeString(name) + "]: " + getSafeString(message);
+            }
+            addMessageSpan("#game_chat_container", message);
+            scrollToBottom("#game_chat_container");
+            addMessageSpan("#main_chat_container", message);
+            scrollToBottom("#main_chat_container");
+        },
+        printLocalMessage: function(name, message) {
+            if (name) {
+                message = "[" + getSafeString(name) + "]: " + getSafeString(message);
                 if ($('#screen_game:visible').length) {
                     if(!$('#dialog-chat:visible').length) {
                         $('#game_chat_button').removeClass("icon-chat");
@@ -243,10 +285,8 @@ var PAINTER = (function () {
                     }
                 }
             }
-            addMessageSpan("#game_chat_container", message);
-            scrollToBottom("#game_chat_container");
-            addMessageSpan("#main_chat_container", message);
-            scrollToBottom("#main_chat_container");
+            addMessageSpan("#game_local_chat_container", message);
+            scrollToBottom("#game_local_chat_container");
         },
         startGame: function() {
             $('#main_connected').hide();

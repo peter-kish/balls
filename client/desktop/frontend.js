@@ -114,6 +114,10 @@ var FE = (function () {
         PAINTER.printMessage(name, message);
     }
 
+    function displayLocalChatMessage(name, message) {
+        PAINTER.printLocalMessage(name, message);
+    }
+
     function displayVictoryDialog(id) {
         PAINTER.endGame(CL.getClientName(id) + " has won the match!");
     }
@@ -150,6 +154,7 @@ var FE = (function () {
         CL.onClientListChanged = refreshClientList;
         CL.onGameStarted = startGame;
         CL.onChatMessage = displayChatMessage;
+        CL.onLocalChatMessage = displayLocalChatMessage;
         CL.onInfoMessage = displayInfoMessage;
         CL.onVictory = displayVictoryDialog;
         CL.onOpponentLeft = onOpponentLeft;
@@ -211,8 +216,8 @@ var FE = (function () {
         CL.idle();
     }
 
-    module.sendChatMessage = function(message) {
-        CL.chat(message);
+    module.sendChatMessage = function(message, local) {
+        CL.chat(message, local);
     }
 
 // FIND appropriate names for following functions END

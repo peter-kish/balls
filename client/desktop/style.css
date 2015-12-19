@@ -59,6 +59,20 @@ html, body {
     color: #6e6e6e;
 }
 
+.text-field-tabbed {
+    margin: 0;
+    padding: 0;
+    border: 1px;
+    border-style: solid;
+    border-top-color: #f1f1f1;
+    border-left-color: #6e6e6e;
+    border-right-color: #6e6e6e;
+    border-bottom-color: #6e6e6e;
+    box-sizing: border-box;
+    background-color : #f1f1f1;
+    color: #6e6e6e;
+}
+
 .text-l {
     font-family: "Calibri";
     font-size: 1.75em;
@@ -119,6 +133,32 @@ html, body {
     border-bottom-color: #235dbe;
     color: #a0bae9;
     text-shadow: 0px 0px 0px #000;
+}
+
+.button-tab {
+    margin: 0;
+    padding: 0 10px 0 10px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #d8d8d8;
+    border-top-color: #6e6e6e;
+    border-left-color: #6e6e6e;
+    border-right-color: #6e6e6e;
+    border-bottom-color: #6e6e6e;
+    color: #6e6e6e;
+}
+
+.button-tab-selected {
+    margin: 0;
+    padding: 0 10px 0 10px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #f1f1f1;
+    border-top-color: #6e6e6e;
+    border-left-color: #6e6e6e;
+    border-right-color: #6e6e6e;
+    border-bottom-color: #f1f1f1;
+    color: #6e6e6e;
 }
 
 .icon-edit {
@@ -366,4 +406,13 @@ html, body {
 
 #connect_menu {
     position: relative;
+}
+
+#tab_filler {
+    border: 1px;
+    border-style: solid;
+    border-top-color: #ffffff;
+    border-left-color: #ffffff;
+    border-right-color: #ffffff;
+    border-bottom-color: #6e6e6e;
 }

@@ -99,8 +99,15 @@
 							<label class="text-l text-left float-l top-buffer-s side-buffer-s">Chat</label>
 							<button class="button-danger icon-close dialog-closer text-l float-r top-buffer-s bottom-buffer-s side-buffer-s" type="button"></button>
 						</div>
+						<div id="dialog_chat_tabbar" class="subcontainer side-buffer-s">
+							<button id="button_chat_local" class="button-tab-selected text-m float-l" type="button">Local</button>
+							<button id="button_chat_global" class="button-tab text-m float-l" type="button">Global</button>
+							<div id="tab_filler" class="float-l">
+							</div>
+						</div>
 						<div class="subcontainer side-buffer-s">
-							<textarea id = "game_chat_container" disabled class="text-field text-m width-full" rows="10"></textarea>
+							<textarea id = "game_chat_container" disabled class="text-field-tabbed text-m width-full" rows="10"></textarea>
+							<textarea id = "game_local_chat_container" disabled class="text-field-tabbed text-m width-full" rows="10"></textarea>
 						</div>
 						<div id="dialog_chat_chatbar" class="subcontainer side-buffer-s">
 							<input id="input_game_chat" type="text" class="text-field text-m width-70 float-l" placeholder="chat">
