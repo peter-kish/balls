@@ -206,15 +206,18 @@ var SIMR = (function () {
 
     function moveCamera(simulation) {
         if (mouseDown && simulation.areAllBallsIdle()) {
-            if (canvasMouse.x < playfieldBorder && camera.x > -gameFrame.width / 2) {
-                camera.x -= cameraSpeed * ((playfieldBorder - canvasMouse.x) / playfieldBorder);
-            } else if (canvasMouse.x > gameFrame.width - playfieldBorder && camera.x < gameFrame.width / 2) {
-                camera.x += cameraSpeed * ((canvasMouse.x - gameFrame.width + playfieldBorder) / playfieldBorder);
-            }
-            if (canvasMouse.y < playfieldBorder && camera.y > -gameFrame.height / 2) {
-                camera.y -= cameraSpeed * ((playfieldBorder - canvasMouse.y) / playfieldBorder);
-            } else if (canvasMouse.y > gameFrame.height - playfieldBorder && camera.y < gameFrame.height / 2) {
-                camera.y += cameraSpeed * ((canvasMouse.y - gameFrame.height + playfieldBorder) / playfieldBorder);
+            if (module.getStrength() < 1.0)
+            {
+                if (canvasMouse.x < playfieldBorder && camera.x > -gameFrame.width / 2) {
+                    camera.x -= cameraSpeed * ((playfieldBorder - canvasMouse.x) / playfieldBorder);
+                } else if (canvasMouse.x > gameFrame.width - playfieldBorder && camera.x < gameFrame.width / 2) {
+                    camera.x += cameraSpeed * ((canvasMouse.x - gameFrame.width + playfieldBorder) / playfieldBorder);
+                }
+                if (canvasMouse.y < playfieldBorder && camera.y > -gameFrame.height / 2) {
+                    camera.y -= cameraSpeed * ((playfieldBorder - canvasMouse.y) / playfieldBorder);
+                } else if (canvasMouse.y > gameFrame.height - playfieldBorder && camera.y < gameFrame.height / 2) {
+                    camera.y += cameraSpeed * ((canvasMouse.y - gameFrame.height + playfieldBorder) / playfieldBorder);
+                }
             }
         } else {
             camera.multiply(0.75);
