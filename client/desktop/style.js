@@ -8,197 +8,198 @@
     });
 })(jQuery);
 
-$(document).ready(function () {
+var PAINTER = (function () {
+    $(document).ready(function () {
 
-    FE.onPageLoad();
+        FE.onPageLoad();
 
-    $('#main_connected').hide();
-    $('#screen_game').hide();
-    $('#input_name').focus();
-
-    $('#button_main_ok').click(function() {
-        var name = $("#input_name").val();
-        $('#button_main_ok').addClass("disabled");
-        FE.requestAuthentication(name);
-    });
-
-    $('#button_main_edit').click(function() {
-        var name = $("#set_name").val();
-        FE.setName(name);
-    });
-
-    $('#input_name').on("keypress", function(event) {
-        if (event.keyCode === 13 && $("#input_name").val().length > 0){
-            $('#button_main_ok').trigger('click');
-        }
-    });
-
-    $('#button_main_bot').click(function(){
-        $('body').toggleClass("background-color");
         $('#main_connected').hide();
-        $('#screen_game').show();
-        FE.joinBot();
-    });
+        $('#screen_game').hide();
+        $('#input_name').focus();
 
-    function startHosting() {
-        $('#button_main_join').hide();
-        $('#button_main_bot').prop('disabled', true);
-        $('#button_main_host').removeClass('width-45');
-        $('#button_main_host').addClass('width-full');
-        $('#button_main_host').text('Stop Hosting');
-    }
+        $('#button_main_ok').click(function() {
+            var name = $("#input_name").val();
+            $('#button_main_ok').addClass("disabled");
+            FE.requestAuthentication(name);
+        });
 
-    function stopHosting() {
-        $('#button_main_join').show();
-        $('#button_main_bot').prop('disabled', false);
-        $('#button_main_host').addClass('width-45');
-        $('#button_main_host').removeClass('width-full');
-        $('#button_main_host').text('Host');
-    }
+        $('#button_main_edit').click(function() {
+            var name = $("#set_name").val();
+            FE.setName(name);
+        });
 
-    $('#game_exit_button').click(function(){
-        $('#dialog-yesno').show();
-        $('#dialog-yesno-text').text("Surrender and go back to the lobby?");
-        $('#dialog-yesno-yes').click(function() {
+        $('#input_name').on("keypress", function(event) {
+            if (event.keyCode === 13 && $("#input_name").val().length > 0){
+                $('#button_main_ok').trigger('click');
+            }
+        });
+
+        $('#button_main_bot').click(function(){
+            $('body').toggleClass("background-color");
+            $('#main_connected').hide();
+            $('#screen_game').show();
+            FE.joinBot();
+        });
+
+        function startHosting() {
+            $('#button_main_join').hide();
+            $('#button_main_bot').prop('disabled', true);
+            $('#button_main_host').removeClass('width-45');
+            $('#button_main_host').addClass('width-full');
+            $('#button_main_host').text('Stop Hosting');
+        }
+
+        function stopHosting() {
+            $('#button_main_join').show();
+            $('#button_main_bot').prop('disabled', false);
+            $('#button_main_host').addClass('width-45');
+            $('#button_main_host').removeClass('width-full');
+            $('#button_main_host').text('Host');
+        }
+
+        $('#game_exit_button').click(function(){
+            $('#dialog-yesno').show();
+            $('#dialog-yesno-text').text("Surrender and go back to the lobby?");
+            $('#dialog-yesno-yes').click(function() {
+                $('#screen_game').hide();
+                $('#main_connected').show();
+                $('body').toggleClass("background-color");
+                stopHosting();
+                FE.mainMenu();
+                $('#dialog-yesno').hide();
+            });
+        });
+
+        $('#back_to_lobby_button').click(function(){
             $('#screen_game').hide();
             $('#main_connected').show();
             $('body').toggleClass("background-color");
+
             stopHosting();
             FE.mainMenu();
-            $('#dialog-yesno').hide();
         });
-    });
 
-    $('#back_to_lobby_button').click(function(){
-        $('#screen_game').hide();
-        $('#main_connected').show();
-        $('body').toggleClass("background-color");
-
-        stopHosting();
-        FE.mainMenu();
-    });
-
-    $('#button_main_host').click(function() {
-    var hosting = FE.hostMenu();
-    if (hosting) {
-        startHosting();
-    } else {
-        stopHosting();
-    }
-    });
-
-    $('#button_main_join').click(function() {
-        $("#dialog-join").show();
-    });
-
-    $('#button_players').click(function() {
-        $("#dialog-player-list").show();
-    });
-
-    $('#button_main_send, #button_game_send').click(function(){
-        var input;
-        if ($("#input_game_chat:visible").length) {
-            input = $("#input_game_chat");
+        $('#button_main_host').click(function() {
+        var hosting = FE.hostMenu();
+        if (hosting) {
+            startHosting();
         } else {
-            input = $("#input_main_chat");
+            stopHosting();
         }
-        var message = input.val();
-        if (message != "") {
-            input.val("");
-            if ($("#game_local_chat_container:visible").length) {
-                FE.sendChatMessage(message, true);
+        });
+
+        $('#button_main_join').click(function() {
+            $("#dialog-join").show();
+        });
+
+        $('#button_players').click(function() {
+            $("#dialog-player-list").show();
+        });
+
+        $('#button_main_send, #button_game_send').click(function(){
+            var input;
+            if ($("#input_game_chat:visible").length) {
+                input = $("#input_game_chat");
             } else {
-                FE.sendChatMessage(message, false);
+                input = $("#input_main_chat");
             }
-        }
-    });
-
-    $('#input_game_chat').on("keypress", function(event) {
-        if (event.keyCode === 13){
-            $('#button_game_send').trigger('click');
-        }
-    });
-
-    $('#input_main_chat').on("keypress", function(event) {
-        if (event.keyCode === 13){
-            $('#button_main_send').trigger('click');
-        }
-    });
-
-    $('#game_chat_button').click(function() {
-      $('#game_chat_button').removeClass("icon-chat-notify");
-      $('#game_chat_button').addClass("icon-chat");
-      $('#dialog-chat').show();
-    });
-
-    $('#button_chat_local').click(function() {
-        $('#game_local_chat_container').show();
-        $('#game_chat_container').hide();
-        $('#button_chat_local').removeClass("button-tab");
-        $('#button_chat_local').addClass("button-tab-selected");
-        $('#button_chat_global').removeClass("button-tab-selected");
-        $('#button_chat_global').addClass("button-tab");
-    });
-
-    $('#button_chat_global').click(function() {
-        $('#game_local_chat_container').hide();
-        $('#game_chat_container').show();
-        $('#button_chat_global').removeClass("button-tab");
-        $('#button_chat_global').addClass("button-tab-selected");
-        $('#button_chat_local').removeClass("button-tab-selected");
-        $('#button_chat_local').addClass("button-tab");
-    });
-
-    $('#game_chat_container').hide();
-
-    $('.dialog').hide();
-
-    $('.dialog-closer').on('click', function() {
-        $('.dialog').hide();
-    });
-
-    function fitElements() {
-        var twoBorders = 2; // TODO: get this from css
-        var marginS = 10; // TODO: get this from css
-        $('#set_name').width($('#main_connected').width() - $('#button_main_edit').outerWidth(true) - twoBorders);
-        $('#input_main_chat').width($('#main_connected').width() - $('#button_main_send').outerWidth(true) - twoBorders - 1);
-        $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
-        $('#game_chat_container').height($('#dialog_chat_window').height() -
-            $('#dialog_chat_titlebar').height() -
-            $('#dialog_chat_tabbar').height() -
-            $('#dialog_chat_chatbar').height() -
-            marginS -
-            2*twoBorders);
-        $('#game_local_chat_container').height($('#dialog_chat_window').height() -
-            $('#dialog_chat_titlebar').height() -
-            $('#dialog_chat_tabbar').height() -
-            $('#dialog_chat_chatbar').height() -
-            marginS -
-            2*twoBorders);
-        $('#tab_filler').width($('#dialog_chat_tabbar').width() - $('#button_chat_global').outerWidth() - $('#button_chat_local').outerWidth() - twoBorders - 1);
-        $('#tab_filler').height($('#button_chat_global').height());
-
-        $('.center-vertically').each(function() {
-            if ($(this).height() > $(this).parent().height()) {
-                $(this).css({top: $(this).parent().height() - $(this).height()});
-            } else {
-                $(this).css({top: ($(this).parent().height() - $(this).height()) / 2});
+            var message = input.val();
+            if (message != "") {
+                input.val("");
+                if ($("#game_local_chat_container:visible").length) {
+                    FE.sendChatMessage(message, true);
+                } else {
+                    FE.sendChatMessage(message, false);
+                }
             }
         });
-    }
 
-    fitElements();
+        $('#input_game_chat').on("keypress", function(event) {
+            if (event.keyCode === 13){
+                $('#button_game_send').trigger('click');
+            }
+        });
 
-    $(window).on('resize', function() {
+        $('#input_main_chat').on("keypress", function(event) {
+            if (event.keyCode === 13){
+                $('#button_main_send').trigger('click');
+            }
+        });
+
+        $('#game_chat_button').click(function() {
+          $('#game_chat_button').removeClass("icon-chat-notify");
+          $('#game_chat_button').addClass("icon-chat");
+          $('#dialog-chat').show();
+          scrollToBottom("#game_chat_container");
+          scrollToBottom("#game_local_chat_container");
+        });
+
+        $('#button_chat_local').click(function() {
+            $('#game_local_chat_container').show();
+            $('#game_chat_container').hide();
+            $('#button_chat_local').removeClass("button-tab");
+            $('#button_chat_local').addClass("button-tab-selected");
+            $('#button_chat_global').removeClass("button-tab-selected");
+            $('#button_chat_global').addClass("button-tab");
+        });
+
+        $('#button_chat_global').click(function() {
+            $('#game_local_chat_container').hide();
+            $('#game_chat_container').show();
+            $('#button_chat_global').removeClass("button-tab");
+            $('#button_chat_global').addClass("button-tab-selected");
+            $('#button_chat_local').removeClass("button-tab-selected");
+            $('#button_chat_local').addClass("button-tab");
+        });
+
+        $('#game_chat_container').hide();
+
+        $('.dialog').hide();
+
+        $('.dialog-closer').on('click', function() {
+            $('.dialog').hide();
+        });
+
+        function fitElements() {
+            var twoBorders = 2; // TODO: get this from css
+            var marginS = 10; // TODO: get this from css
+            $('#set_name').width($('#main_connected').width() - $('#button_main_edit').outerWidth(true) - twoBorders);
+            $('#input_main_chat').width($('#main_connected').width() - $('#button_main_send').outerWidth(true) - twoBorders - 1);
+            $('#main_chat_container').height($('#main_connected').height() - $('#main_connected_toolbar').height() - $('#main_connected_chatbar').height() - marginS - 3*twoBorders);
+            $('#game_chat_container').height($('#dialog_chat_window').height() -
+                $('#dialog_chat_titlebar').height() -
+                $('#dialog_chat_tabbar').height() -
+                $('#dialog_chat_chatbar').height() -
+                marginS -
+                2*twoBorders);
+            $('#game_local_chat_container').height($('#dialog_chat_window').height() -
+                $('#dialog_chat_titlebar').height() -
+                $('#dialog_chat_tabbar').height() -
+                $('#dialog_chat_chatbar').height() -
+                marginS -
+                2*twoBorders);
+            $('#tab_filler').width($('#dialog_chat_tabbar').width() - $('#button_chat_global').outerWidth() - $('#button_chat_local').outerWidth() - twoBorders - 1);
+            $('#tab_filler').height($('#button_chat_global').height());
+
+            $('.center-vertically').each(function() {
+                if ($(this).height() > $(this).parent().height()) {
+                    $(this).css({top: $(this).parent().height() - $(this).height()});
+                } else {
+                    $(this).css({top: ($(this).parent().height() - $(this).height()) / 2});
+                }
+            });
+        }
+
         fitElements();
-    });
 
-    $('.menu-screen, .dialog').on('show', function () {
-        fitElements();
-    });
-});
+        $(window).on('resize', function() {
+            fitElements();
+        });
 
-var PAINTER = (function () {
+        $('.menu-screen, .dialog').on('show', function () {
+            fitElements();
+        });
+    });
 
     var getSafeString = function (s) {
         var lt = /</g,
@@ -292,6 +293,7 @@ var PAINTER = (function () {
             $('#main_connected').hide();
             $('#screen_game').show();
             $('body').toggleClass("background-color");
+            $('#game_local_chat_container').text("");
         },
         endGame: function(message) {
             $("#dialog-info").show();
