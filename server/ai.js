@@ -10,15 +10,18 @@ var _maxDistance = Math.sqrt(Math.pow(_fieldSize.width, 2) + Math.pow(_fieldSize
 var _bestScore = Number.MAX_VALUE / 4;
 var _worstScore = -_bestScore;
 var _botId = "BOT";
+var _easy_jitter = 0.25;
+var _medium_jitter = 0.125;
 
-exports.getTurn = function(playerIndex, state) {
+exports.getTurn = function(playerIndex, state, difficulty) {
     var playerPos = new V2D.Vector2d(0, 0);
     if (playerIndex == _p1Index) {
         playerPos.set(state.p1Pos);
     } else {
         playerPos.set(state.p2Pos);
     }
-    return _getBestTurn(playerIndex, state, _getTurnList(playerPos));
+    var bestTurn = _getBestTurn(playerIndex, state, _getTurnList(playerPos));
+    return _disortTurn(bestTurn, playerPos, difficulty);
 }
 
 function _getBestTurn(playerIndex, state, turns) {
@@ -131,4 +134,28 @@ function _getAngleVector(angle) {
     result.x = Math.cos(angle);
     result.y = Math.sin(angle);
     return result;
+}
+
+function _disortTurn(turn, playerPos, difficulty) {
+    var original = new V2D.Vector2d(turn.x - playerPos.x, turn.y - playerPos.y);
+    var jitter;
+
+    switch (difficulty) {
+        case "easy":
+            jitter = new V2D.Vector2d(Math.random() * _easy_jitter, Math.random() * _easy_jitter);
+            break;
+        case "medium":
+            jitter = new V2D.Vector2d(Math.random() * _medium_jitter, Math.random() * _medium_jitter);
+            break;
+        default:
+            return turn;
+    }
+
+    original.add(jitter);
+    original.normalize();
+    original.add(playerPos);
+    turn.x = original.x;
+    turn.y = original.y;
+
+    return turn;
 }

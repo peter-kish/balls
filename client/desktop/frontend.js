@@ -207,8 +207,8 @@ var FE = (function () {
         CL.join(hostId);
     }
 
-    module.joinBot = function() {
-        CL.joinBot();
+    module.joinBot = function(difficulty) {
+        CL.joinBot(difficulty);
     }
 
     module.mainMenu = function() {

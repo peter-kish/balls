@@ -35,10 +35,31 @@ var PAINTER = (function () {
         });
 
         $('#button_main_bot').click(function(){
+            $('#dialog-difficulty').show();
+        });
+
+        $('#dialog-difficulty-easy').click(function() {
             $('body').toggleClass("background-color");
+            $('#dialog-difficulty').hide();
             $('#main_connected').hide();
             $('#screen_game').show();
-            FE.joinBot();
+            FE.joinBot("easy");
+        });
+
+        $('#dialog-difficulty-medium').click(function() {
+            $('body').toggleClass("background-color");
+            $('#dialog-difficulty').hide();
+            $('#main_connected').hide();
+            $('#screen_game').show();
+            FE.joinBot("medium");
+        });
+
+        $('#dialog-difficulty-hard').click(function() {
+            $('body').toggleClass("background-color");
+            $('#dialog-difficulty').hide();
+            $('#main_connected').hide();
+            $('#screen_game').show();
+            FE.joinBot("hard");
         });
 
         function startHosting() {

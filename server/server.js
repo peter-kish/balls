@@ -77,7 +77,7 @@ function handleWsRequest(request) {
                     handleClientHosting(id);
                     break;
                 case "join":
-                    handleClientJoin(id, json.msgData.hostId);
+                    handleClientJoin(id, json.msgData.hostId, json.msgData.difficulty);
                     break;
                 case "idle":
                     handleClientIdle(id);
@@ -163,22 +163,22 @@ function handleClientHosting(id) {
     }
 }
 
-function handleClientJoin(id, hostId) {
+function handleClientJoin(id, hostId, difficulty) {
 	if (isBot(hostId)) {
-		handleClientJoinBot(id);
+		handleClientJoinBot(id, difficulty);
 	} else {
     	handleClientJoinPlayer(id, hostId);
 	}
 }
 
-function handleClientJoinBot(id) {
+function handleClientJoinBot(id, difficulty) {
 	var joinerClientData = getClient(id);
     if (joinerClientData && joinerClientData.state == "idle") {
-		LOG(joinerClientData.name + " started playing against a bot.");
+		LOG(joinerClientData.name + " started playing against a bot (difficulty: " + difficulty + ").");
         joinerClientData.state = "playing";
         unicast(id, JSON.stringify({msgType: "gameStart", msgData: {player1: id, player2: botId}}));
         broadcast(JSON.stringify({msgType: "newState", msgData: {id: id, state: "playing"}}));
-        createGame(id, botId);
+        createGame(id, botId, difficulty);
     }
 }
 
@@ -222,7 +222,7 @@ function handleClientTurn(id, x, y, strength) {
 			if (!isBot(opponentId)) {
         		unicast(opponentId, JSON.stringify({msgType: "turn", msgData: {id: id, x: x, y: y, strength: strength, result: resultState, origin: originalState}}));
 			} else {
-				var aiTurn = ai.getTurn(1, sim.getState(game.simulation));
+				var aiTurn = ai.getTurn(1, sim.getState(game.simulation), game.difficulty);
 				LOG("Bot played (" + aiTurn.x + "," + aiTurn.y + ") - " + aiTurn.strength);
 				originalState = sim.getState(game.simulation);
 	        	resultState = sim.simulateTurn(game.simulation, botId, aiTurn.x, aiTurn.y, aiTurn.strength);
@@ -316,11 +316,15 @@ function getClientList() {
     return list;
 }
 
-function createGame(id1, id2) {
+function createGame(id1, id2, difficulty) {
+	if (!difficulty)
+		difficulty = "hard";
+
     var gameData = {};
     gameData.id1 = id1;
     gameData.id2 = id2;
     gameData.simulation = sim.createSimulation(id1, id2);
+	gameData.difficulty = difficulty;
     games.push(gameData);
     return gameData;
 }

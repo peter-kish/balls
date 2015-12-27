@@ -233,9 +233,9 @@ var CL = (function () {
             connection.send(JSON.stringify({msgType: "join", msgData: {hostId: hostId}}));
     }
 
-    module.joinBot = function() {
+    module.joinBot = function(difficulty) {
         if (module.connected)
-            connection.send(JSON.stringify({msgType: "join", msgData: {hostId: botId}}));
+            connection.send(JSON.stringify({msgType: "join", msgData: {hostId: botId, difficulty: difficulty}}));
     }
 
     module.idle = function() {
